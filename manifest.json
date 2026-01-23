@@ -1,0 +1,91 @@
+{
+  "name": "المرشد الزراعي الذكي",
+  "short_name": "المرشد الزراعي",
+  "description": "تطبيق زراعي ذكي متكامل مع الذكاء الاصطناعي",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2E7D32",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/72/leaf--v1.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "https://img.icons8.com/color/96/leaf--v1.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "https://img.icons8.com/color/128/leaf--v1.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "https://img.icons8.com/color/192/leaf--v1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://img.icons8.com/color/512/leaf--v1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  
+  "categories": ["education", "productivity", "utilities"],
+  
+  "shortcuts": [
+    {
+      "name": "تشخيص الأمراض",
+      "short_name": "تشخيص",
+      "description": "تشخيص أمراض النباتات بالذكاء الاصطناعي",
+      "url": "./index.html?page=ai&mode=disease",
+      "icons": [
+        {
+          "src": "https://img.icons8.com/color/96/stethoscope.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "تحليل التربة",
+      "short_name": "تحليل تربة",
+      "description": "تحليل التربة والمحاصيل المناسبة",
+      "url": "./index.html?page=ai&mode=soil",
+      "icons": [
+        {
+          "src": "https://img.icons8.com/color/96/test-tube.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "المحاصيل",
+      "short_name": "محاصيل",
+      "description": "مكتبة المحاصيل الزراعية",
+      "url": "./index.html?page=crops",
+      "icons": [
+        {
+          "src": "https://img.icons8.com/color/96/leaf--v1.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  
+  "features": [
+    "تشخيص أمراض النباتات",
+    "تحليل التربة الزراعية",
+    "مكتبة محاصيل شاملة",
+    "عمل بدون اتصال بالإنترنت",
+    "نظام نقاط ومكافآت"
+  ]
+}
