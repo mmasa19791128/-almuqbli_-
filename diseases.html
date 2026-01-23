@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أمراض النباتات - المرشد الزراعي الذكي</title>
+    
+    <!-- نفس مكتبات التطبيق الرئيسي -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+            --danger-color: #D32F2F;
+            --warning-color: #FF9800;
+            --info-color: #1976D2;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .diseases-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
+        }
+        
+        .page-header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        /* شريط البحث والتصفية */
+        .filters-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .category-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            padding: 0.5rem 1.2rem;
+            border: 2px solid var(--primary-color);
+            background: white;
+            color: var(--primary-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .category-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* شبكة الأمراض */
+        .diseases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .disease-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        
+        .disease-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .disease-header {
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--danger-color), #F44336);
+            color: white;
+        }
+        
+        .disease-name {
+            margin: 0;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .disease-type {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        
+        .disease-body {
+            padding: 1.5rem;
+        }
+        
+        .disease-info {
+            margin-bottom: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.8rem;
+            color: #555;
+        }
+        
+        .info-item i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+        
+        .symptoms {
+            background: #FFF3E0;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .symptoms h4 {
+            color: var(--warning-color);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .treatment {
+            background: #E8F5E9;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .treatment h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* إحصائيات */
+        .stats-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 10px;
+            background: #F9F9F9;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* أزرار التنقل */
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+        }
+        
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .diseases-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .category-filters {
+                justify-content: center;
+            }
+            
+            .page-header h1 {
+                font-size: 1.8rem;
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="diseases-container">
+        <!-- رأس الصفحة -->
+        <header class="page-header">
+            <h1>
+                <i class="fas fa-bug"></i>
+                مكتبة أمراض النباتات
+            </h1>
+            <p>تشخيص وعلاج أمراض النباتات الزراعية</p>
+        </header>
+        
+        <!-- شريط البحث والتصفية -->
+        <section class="filters-section">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="🔍 ابحث عن مرض نباتي..." id="searchInput">
+                <button class="nav-btn" onclick="searchDiseases()">
+                    <i class="fas fa-search"></i> بحث
+                </button>
+            </div>
+            
+            <div class="category-filters">
+                <button class="category-btn active" onclick="filterDiseases('all')">الكل</button>
+                <button class="category-btn" onclick="filterDiseases('fungal')">أمراض فطرية</button>
+                <button class="category-btn" onclick="filterDiseases('bacterial')">أمراض بكتيرية</button>
+                <button class="category-btn" onclick="filterDiseases('viral')">أمراض فيروسية</button>
+                <button class="category-btn" onclick="filterDiseases('nutritional')">أمراض تغذوية</button>
+                <button class="category-btn" onclick="filterDiseases('environmental')">أمراض بيئية</button>
+            </div>
+        </section>
+        
+        <!-- إحصائيات -->
+        <section class="stats-section">
+            <h2 style="color: var(--primary-color); text-align: center;">
+                <i class="fas fa-chart-bar"></i> إحصائيات الأمراض
+            </h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDiseases">50</div>
+                    <div>مرض نباتي</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="fungalDiseases">25</div>
+                    <div>مرض فطري</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="treatedDiseases">45</div>
+                    <div>مرض قابل للعلاج</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="preventableDiseases">40</div>
+                    <div>مرض قابل للوقاية</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- شبكة الأمراض -->
+        <section id="diseasesGrid" class="diseases-grid">
+            <!-- الأمراض ستحمل ديناميكياً -->
+        </section>
+        
+        <!-- أزرار التنقل -->
+        <div class="navigation-buttons">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-home"></i> الرئيسية
+            </a>
+            <a href="pages/crops.html" class="nav-btn" style="background: linear-gradient(135deg, #1976D2, #2196F3);">
+                <i class="fas fa-leaf"></i> المحاصيل
+            </a>
+            <a href="pages/ai-diagnosis.html" class="nav-btn" style="background: linear-gradient(135deg, #FF9800, #FFB74D);">
+                <i class="fas fa-robot"></i> التشخيص الذكي
+            </a>
+        </div>
+    </div>
+    
+    <!-- جافاسكريبت -->
+    <script>
+        // بيانات الأمراض (يمكن استبدالها بالبيانات الحقيقية)
+        const diseasesData = [
+            {
+                id: 1,
+                name: "عفن الجذور",
+                type: "fungal",
+                crops: ["الطماطم", "البطاطس", "الفلفل"],
+                symptoms: ["اصفرار الأوراق", "ذبول النبات", "تساقط الأوراق", "رائحة عفنة"],
+                treatment: "استخدام مبيدات فطرية، تحسين الصرف، تقليل الري",
+                prevention: "تجنب الإفراط في الري، استخدام تربة جيدة الصرف",
+                severity: "high"
+            },
+            {
+                id: 2,
+                name: "البياض الدقيقي",
+                type: "fungal",
+                crops: ["العنب", "القرع", "الخيار"],
+                symptoms: ["طبقة بيضاء على الأوراق", "توقف النمو", "تقزم النبات"],
+                treatment: "رش الكبريت المطهر، استخدام مبيدات فطرية",
+                prevention: "تهوية جيدة، تقليم الأوراق المصابة",
+                severity: "medium"
+            },
+            {
+                id: 3,
+                name: "لفحة الطماطم",
+                type: "bacterial",
+                crops: ["الطماطم", "البطاطس"],
+                symptoms: ["بقع بنية على الأوراق", "عفن الثمار", "ذبول سريع"],
+                treatment: "استخدام مبيدات بكتيرية، إزالة النباتات المصابة",
+                prevention: "زراعة أصناف مقاومة، رش وقائي",
+                severity: "high"
+            },
+            {
+                id: 4,
+                name: "فسيفساء الخيار",
+                type: "viral",
+                crops: ["الخيار", "الكوسا", "البطيخ"],
+                symptoms: ["بقع صفراء وخضراء", "تشوه الأوراق", "تقزم النبات"],
+                treatment: "إزالة النباتات المصابة، مكافحة الحشرات الناقلة",
+                prevention: "استخدام بذور سليمة، مكافحة المن",
+                severity: "high"
+            },
+            {
+                id: 5,
+                name: "نقص الحديد",
+                type: "nutritional",
+                crops: ["جميع المحاصيل"],
+                symptoms: ["اصفرار بين العروق", "ضعف النمو", "شحوب الأوراق"],
+                treatment: "إضافة مخلب الحديد، تحسين درجة الحموضة",
+                prevention: "تحليل التربة، إضافة الأسمدة المتوازنة",
+                severity: "low"
+            },
+            {
+                id: 6,
+                name: "حروق الشمس",
+                type: "environmental",
+                crops: ["الخس", "السبانخ", "النباتات الورقية"],
+                symptoms: ["بقع بيضاء أو صفراء", "جفاف حواف الأوراق", "ذبول"],
+                treatment: "توفير ظل، الري في الصباح الباكر",
+                prevention: "زراعة في أماكن مظللة، استخدام شبكات التظليل",
+                severity: "low"
+            }
+        ];
+        
+        // تحميل الأمراض
+        function loadDiseases(diseases = diseasesData) {
+            const grid = document.getElementById('diseasesGrid');
+            grid.innerHTML = '';
+            
+            diseases.forEach(disease => {
+                const severityColors = {
+                    high: '#D32F2F',
+                    medium: '#FF9800',
+                    low: '#4CAF50'
+                };
+                
+                const typeNames = {
+                    fungal: 'فطري',
+                    bacterial: 'بكتيري',
+                    viral: 'فيروسي',
+                    nutritional: 'تغذوي',
+                    environmental: 'بيئي'
+                };
+                
+                const card = document.createElement('div');
+                card.className = 'disease-card';
+                card.innerHTML = `
+                    <div class="disease-header" style="background: linear-gradient(135deg, ${severityColors[disease.severity]}, ${severityColors[disease.severity]}aa);">
+                        <h3 class="disease-name">
+                            <i class="fas fa-bug"></i> ${disease.name}
+                        </h3>
+                        <span class="disease-type">${typeNames[disease.type] || disease.type}</span>
+                    </div>
+                    <div class="disease-body">
+                        <div class="disease-info">
+                            <div class="info-item">
+                                <i class="fas fa-seedling"></i>
+                                <span><strong>المحاصيل:</strong> ${disease.crops.join('، ')}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span><strong>الخطورة:</strong> ${disease.severity === 'high' ? 'عالية' : disease.severity === 'medium' ? 'متوسطة' : 'منخفضة'}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="symptoms">
+                            <h4><i class="fas fa-stethoscope"></i> الأعراض</h4>
+                            <ul>
+                                ${disease.symptoms.map(s => `<li>${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="treatment">
+                            <h4><i class="fas fa-heartbeat"></i> العلاج</h4>
+                            <p>${disease.treatment}</p>
+                            <h4><i class="fas fa-shield-alt"></i> الوقاية</h4>
+                            <p>${disease.prevention}</p>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            // تحديث الإحصائيات
+            updateStatistics();
+        }
+        
+        // البحث
+        function searchDiseases() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = diseasesData.filter(disease => 
+                disease.name.toLowerCase().includes(searchTerm) ||
+                disease.crops.some(crop => crop.toLowerCase().includes(searchTerm)) ||
+                disease.symptoms.some(symptom => symptom.toLowerCase().includes(searchTerm))
+            );
+            loadDiseases(filtered);
+        }
+        
+        // التصفية حسب النوع
+        function filterDiseases(type) {
+            // تحديد الأزرار النشطة
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                loadDiseases(diseasesData);
+            } else {
+                const filtered = diseasesData.filter(disease => disease.type === type);
+                loadDiseases(filtered);
+            }
+        }
+        
+        // تحديث الإحصائيات
+        function updateStatistics() {
+            document.getElementById('totalDiseases').textContent = diseasesData.length;
+            document.getElementById('fungalDiseases').textContent = diseasesData.filter(d => d.type === 'fungal').length;
+            document.getElementById('treatedDiseases').textContent = diseasesData.filter(d => d.treatment).length;
+            document.getElementById('preventableDiseases').textContent = diseasesData.filter(d => d.prevention).length;
+        }
+        
+        // التحميل الأولي
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDiseases();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سوق المحاصيل - المرشد الزراعي الذكي</title>
+    
+    <!-- مكتبات التطبيق الرئيسي -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+            --price-up: #4CAF50;
+            --price-down: #F44336;
+            --price-stable: #FF9800;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* رأس الصفحة */
+        .market-header {
+            background: linear-gradient(135deg, #795548, #A1887F);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .market-header h1 {
+            margin: 0 0 1rem 0;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        /* الحاوية الرئيسية */
+        .market-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* شريط التحكم */
+        .market-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .market-date {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .market-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* تبويبات السوق */
+        .market-tabs {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .market-tab {
+            flex: 1;
+            padding: 1.2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+        }
+        
+        .market-tab.active {
+            background: #F5F5F5;
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .market-tab:hover {
+            background: #F0F0F0;
+        }
+        
+        /* أسعار السوق */
+        .market-prices {
+            margin-bottom: 3rem;
+        }
+        
+        .prices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .price-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        
+        .price-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .product-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .price-change {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .price-up {
+            background: #E8F5E9;
+            color: var(--price-up);
+        }
+        
+        .price-down {
+            background: #FFEBEE;
+            color: var(--price-down);
+        }
+        
+        .price-stable {
+            background: #FFF3E0;
+            color: var(--price-stable);
+        }
+        
+        .price-info {
+            margin: 1rem 0;
+        }
+        
+        .current-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .price-range {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .market-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .market-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Tajawal', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-sell {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .btn-buy {
+            background: #F5F5F5;
+            color: #333;
+        }
+        
+        .market-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* منصة البيع والشراء */
+        .market-platform {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .platform-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .offer-form {
+            background: #F9F9F9;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+        }
+        
+        /* العروض الحالية */
+        .current-offers {
+            margin-top: 2rem;
+        }
+        
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .offer-card {
+            background: #F9F9F9;
+            padding: 1rem;
+            border-radius: 10px;
+            border-right: 4px solid var(--primary-color);
+        }
+        
+        /* الأزرار */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+        }
+        
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            .market-container {
+                padding: 1rem;
+            }
+            
+            .market-controls {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .market-tabs {
+                flex-direction: column;
+            }
+            
+            .prices-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .market-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- رأس الصفحة -->
+    <header class="market-header">
+        <h1>
+            <i class="fas fa-chart-line"></i>
+            سوق المحاصيل الزراعية
+        </h1>
+        <p>أسعار حية - عروض بيع وشراء - توصيات تسويقية</p>
+    </header>
+    
+    <!-- المحتوى الرئيسي -->
+    <div class="market-container">
+        <!-- شريط التحكم -->
+        <div class="market-controls">
+            <div class="market-date">
+                <i class="fas fa-calendar-day"></i>
+                <span id="currentDate">السبت، 15 يناير 2026</span>
+            </div>
+            
+            <div class="market-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalProducts">24</div>
+                    <div class="stat-label">منتج نشط</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="activeOffers">156</div>
+                    <div class="stat-label">عرض نشط</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="avgPrice">+2.3%</div>
+                    <div class="stat-label">متوسط التغير</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- تبويبات السوق -->
+        <div class="market-tabs">
+            <div class="market-tab active" onclick="showTab('prices')">
+                <i class="fas fa-money-bill-wave"></i>
+                الأسعار الحية
+            </div>
+            <div class="market-tab" onclick="showTab('sell')">
+                <i class="fas fa-store"></i>
+                منصة البيع
+            </div>
+            <div class="market-tab" onclick="showTab('buy')">
+                <i class="fas fa-shopping-cart"></i>
+                منصة الشراء
+            </div>
+            <div class="market-tab" onclick="showTab('analysis')">
+                <i class="fas fa-chart-bar"></i>
+                التحليلات
+            </div>
+        </div>
+        
+        <!-- محتوى الأسعار الحية -->
+        <div id="pricesTab" class="market-prices">
+            <h2 style="color: var(--primary-color);">
+                <i class="fas fa-coins"></i> الأسعار اليومية
+            </h2>
+            <p style="color: #666;">أسعار السوق المحدثة لحظة بلحظة</p>
+            
+            <div id="pricesGrid" class="prices-grid">
+                <!-- الأسعار ستحمل ديناميكياً -->
+            </div>
+        </div>
+        
+        <!-- منصة البيع -->
+        <div id="sellTab" class="market-platform" style="display: none;">
+            <h2 class="platform-title">
+                <i class="fas fa-store"></i> منصة البيع
+            </h2>
+            
+            <div class="offer-form">
+                <h3 style="margin-top: 0;">إضافة عرض بيع</h3>
+                
+                <div class="form-group">
+                    <label>اختر المنتج:</label>
+                    <select class="form-control" id="productSelect">
+                        <option value="">-- اختر المنتج --</option>
+                        <option value="tomato">🍅 الطماطم</option>
+                        <option value="potato">🥔 البطاطس</option>
+                        <option value="cucumber">🥒 الخيار</option>
+                        <option value="wheat">🌾 القمح</option>
+                        <option value="onion">🧅 البصل</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>الكمية:</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="number" class="form-control" placeholder="الكمية" id="quantity">
+                        <select class="form-control" style="width: 100px;" id="unit">
+                            <option value="kg">كجم</option>
+                            <option value="ton">طن</option>
+                            <option value="box">صندوق</option>
+                            <option value="sack">شوال</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>سعر الوحدة (ريال):</label>
+                    <input type="number" class="form-control" placeholder="السعر" id="price">
+                </div>
+                
+                <div class="form-group">
+                    <label>موقع البيع:</label>
+                    <input type="text" class="form-control" placeholder="المدينة/المنطقة" id="location">
+                </div>
+                
+                <div class="form-group">
+                    <label>معلومات إضافية:</label>
+                    <textarea class="form-control" rows="3" placeholder="وصف المنتج، الجودة، طرق التواصل..." id="description"></textarea>
+                </div>
+                
+                <button class="market-btn btn-sell" onclick="addSellOffer()" style="width: 100%;">
+                    <i class="fas fa-plus-circle"></i> نشر عرض البيع
+                </button>
+            </div>
+            
+            <!-- العروض الحالية -->
+            <div class="current-offers">
+                <h3 style="color: var(--primary-color);">
+                    <i class="fas fa-list"></i> عروض البيع الحالية
+                </h3>
+                <div id="sellOffers" class="offers-grid">
+                    <!-- عروض البيع ستحمل ديناميكياً -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- منصة الشراء -->
+        <div id="buyTab" class="market-platform" style="display: none;">
+            <h2 class="platform-title">
+                <i class="fas fa-shopping-cart"></i> منصة الشراء
+            </h2>
+            
+            <div class="offer-form">
+                <h3 style="margin-top: 0;">إضافة طلب شراء</h3>
+                
+                <div class="form-group">
+                    <label>المنتج المطلوب:</label>
+                    <input type="text" class="form-control" placeholder="اكتب اسم المنتج الذي تبحث عنه" id="productRequest">
+                </div>
+                
+                <div class="form-group">
+                    <label>الكمية المطلوبة:</label>
+                    <input type="text" class="form-control" placeholder="مثال: 10 طن، 100 صندوق" id="requiredQuantity">
+                </div>
+                
+                <div class="form-group">
+                    <label>الميزانية المتوقعة:</label>
+                    <input type="text" class="form-control" placeholder="الميزانية بالريال" id="budget">
+                </div>
+                
+                <div class="form-group">
+                    <label>طريقة التواصل:</label>
+                    <input type="text" class="form-control" placeholder="رقم الهاتف أو البريد الإلكتروني" id="contact">
+                </div>
+                
+                <button class="market-btn btn-buy" onclick="addBuyRequest()" style="width: 100%;">
+                    <i class="fas fa-bullhorn"></i> نشر طلب الشراء
+                </button>
+            </div>
+            
+            <!-- طلبات الشراء الحالية -->
+            <div class="current-offers">
+                <h3 style="color: var(--primary-color);">
+                    <i class="fas fa-search"></i> طلبات الشراء الحالية
+                </h3>
+                <div id="buyRequests" class="offers-grid">
+                    <!-- طلبات الشراء ستحمل ديناميكياً -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- التحليلات -->
+        <div id="analysisTab" class="market-platform" style="display: none;">
+            <h2 class="platform-title">
+                <i class="fas fa-chart-bar"></i> تحليلات السوق
+            </h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <div>
+                    <h3 style="color: var(--primary-color);">📈 اتجاهات الأسعار</h3>
+                    <div style="background: #F5F5F5; padding: 1rem; border-radius: 10px;">
+                        <p>• الطماطم: ارتفاع 5% هذا الأسبوع</p>
+                        <p>• البطاطس: استقرار في الأسعار</p>
+                        <p>• الخيار: انخفاض 3% بسبب وفرة العرض</p>
+                        <p>• القمح: ارتفاع مستمر منذ 3 أسابيع</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="color: var(--primary-color);">🎯 نصائح تسويقية</h3>
+                    <div style="background: #E8F5E9; padding: 1rem; border-radius: 10px;">
+                        <p>• أفضل وقت لبيع الطماطم: الصباح الباكر</p>
+                        <p>• تخزين البطاطس: مكان بارد وجاف</p>
+                        <p>• تسويق الخضروات: استهدف المطاعم والفنادق</p>
+                        <p>• التفاوض على السعر: كن مرناً في فترات الوفرة</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <h3 style="color: var(--primary-color);">📊 إحصائيات السوق</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div style="background: white; padding: 1rem; border-radius: 10px; text-align: center; border: 2px solid #E0E0E0;">
+                        <div style="font-size: 2rem; color: var(--primary-color);">156</div>
+                        <div>عرض نشط</div>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 10px; text-align: center; border: 2px solid #E0E0E0;">
+                        <div style="font-size: 2rem; color: var(--price-up);">+2.3%</div>
+                        <div>متوسط التغير</div>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 10px; text-align: center; border: 2px solid #E0E0E0;">
+                        <div style="font-size: 2rem; color: #2196F3;">48</div>
+                        <div>مستخدم نشط</div>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 10px; text-align: center; border: 2px solid #E0E0E0;">
+                        <div style="font-size: 2rem; color: #FF9800;">24</div>
+                        <div>منتج متداول</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- أزرار التنقل -->
+        <div class="action-buttons">
+            <a href="index.html" class="action-btn">
+                <i class="fas fa-home"></i> الرئيسية
+            </a>
+            <a href="crops.html" class="action-btn" style="background: linear-gradient(135deg, #43A047, #66BB6A);">
+                <i class="fas fa-leaf"></i> المحاصيل
+            </a>
+            <a href="calendar.html" class="action-btn" style="background: linear-gradient(135deg, #2196F3, #64B5F6);">
+                <i class="fas fa-calendar-alt"></i> التقويم
+            </a>
+            <button class="action-btn" onclick="refreshMarket()" style="background: linear-gradient(135deg, #FF9800, #FFB74D);">
+                <i class="fas fa-sync-alt"></i> تحديث الأسعار
+            </button>
+        </div>
+    </div>
+    
+    <!-- جافاسكريبت -->
+    <script>
+        // بيانات أسعار السوق
+        const marketData = {
+            prices: [
+                {
+                    id: 1,
+                    name: "الطماطم",
+                    icon: "🍅",
+                    currentPrice: 2.5,
+                    minPrice: 2.0,
+                    maxPrice: 3.0,
+                    change: 0.5,
+                    changePercent: 5,
+                    unit: "ريال/كجم",
+                    trend: "up"
+                },
+                {
+                    id: 2,
+                    name: "البطاطس",
+                    icon: "🥔",
+                    currentPrice: 3.2,
+                    minPrice: 2.8,
+                    maxPrice: 4.0,
+                    change: 0,
+                    changePercent: 0,
+                    unit: "ريال/كجم",
+                    trend: "stable"
+                },
+                {
+                    id: 3,
+                    name: "الخيار",
+                    icon: "🥒",
+                    currentPrice: 1.8,
+                    minPrice: 1.5,
+                    maxPrice: 2.2,
+                    change: -0.1,
+                    changePercent: -3,
+                    unit: "ريال/كجم",
+                    trend: "down"
+                },
+                {
+                    id: 4,
+                    name: "القمح",
+                    icon: "🌾",
+                    currentPrice: 1800,
+                    minPrice: 1500,
+                    maxPrice: 2000,
+                    change: 50,
+                    changePercent: 2.9,
+                    unit: "ريال/طن",
+                    trend: "up"
+                },
+                {
+                    id: 5,
+                    name: "البصل",
+                    icon: "🧅",
+                    currentPrice: 1.5,
+                    minPrice: 1.2,
+                    maxPrice: 1.8,
+                    change: 0.2,
+                    changePercent: 4,
+                    unit: "ريال/كجم",
+                    trend: "up"
+                },
+                {
+                    id: 6,
+                    name: "الفلفل",
+                    icon: "🌶️",
+                    currentPrice: 4.5,
+                    minPrice: 3.5,
+                    maxPrice: 5.5,
+                    change: 0.3,
+                    changePercent: 2,
+                    unit: "ريال/كجم",
+                    trend: "up"
+                },
+                {
+                    id: 7,
+                    name: "الليمون",
+                    icon: "🍋",
+                    currentPrice: 3.0,
+                    minPrice: 2.5,
+                    maxPrice: 4.0,
+                    change: -0.2,
+                    changePercent: -1,
+                    unit: "ريال/كجم",
+                    trend: "down"
+                },
+                {
+                    id: 8,
+                    name: "التمر",
+                    icon: "🌴",
+                    currentPrice: 15.0,
+                    minPrice: 10.0,
+                    maxPrice: 20.0,
+                    change: 1.0,
+                    changePercent: 3,
+                    unit: "ريال/كجم",
+                    trend: "up"
+                }
+            ],
+            
+            offers: [
+                {
+                    id: 1,
+                    type: "sell",
+                    product: "الطماطم",
+                    quantity: "10 طن",
+                    price: "2.4 ريال/كجم",
+                    location: "تعز - ماويه",
+                    contact: "734750438",
+                    date: "منذ ساعتين"
+                },
+                {
+                    id: 2,
+                    type: "sell",
+                    product: "البطاطس",
+                    quantity: "5 أطنان",
+                    price: "3.0 ريال/كجم",
+                    location: "صنعاء",
+                    contact: "مزارع أحمد",
+                    date: "منذ 3 ساعات"
+                },
+                {
+                    id: 3,
+                    type: "buy",
+                    product: "القمح",
+                    quantity: "20 طن",
+                    budget: "35,000 ريال",
+                    contact: "مطحنة الوفاء",
+                    date: "منذ يوم"
+                }
+            ]
+        };
+        
+        // عرض التبويب المحدد
+        function showTab(tabName) {
+            // إخفاء جميع التبويبات
+            document.querySelectorAll('.market-platform').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // إزالة النشط من جميع الأزرار
+            document.querySelectorAll('.market-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // إظهار التبويب المحدد
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+            
+            // تحديد الزر النشط
+            event.target.classList.add('active');
+            
+            // تحميل محتوى التبويب
+            if (tabName === 'prices') {
+                loadPrices();
+            } else if (tabName === 'sell') {
+                loadSellOffers();
+            } else if (tabName === 'buy') {
+                loadBuyRequests();
+            }
+        }
+        
+        // تحميل الأسعار
+        function loadPrices() {
+            const grid = document.getElementById('pricesGrid');
+            grid.innerHTML = '';
+            
+            marketData.prices.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'price-card';
+                
+                // تحديد لون التغير
+                let changeClass = 'price-stable';
+                let changeIcon = '➡️';
+                if (product.trend === 'up') {
+                    changeClass = 'price-up';
+                    changeIcon = '📈';
+                } else if (product.trend === 'down') {
+                    changeClass = 'price-down';
+                    changeIcon = '📉';
+                }
+                
+                card.innerHTML = `
+                    <div class="product-header">
+                        <div class="product-name">
+                            ${product.icon} ${product.name}
+                        </div>
+                        <div class="price-change ${changeClass}">
+                            ${changeIcon} ${product.change > 0 ? '+' : ''}${product.changePercent}%
+                        </div>
+                    </div>
+                    
+                    <div class="price-info">
+                        <div class="current-price">
+                            ${formatPrice(product.currentPrice)} ${product.unit}
+                        </div>
+                        <div class="price-range">
+                            <span>منخفض: ${formatPrice(product.minPrice)}</span>
+                            <span>مرتفع: ${formatPrice(product.maxPrice)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="market-actions">
+                        <button class="market-btn btn-sell" onclick="sellProduct(${product.id})">
+                            <i class="fas fa-store"></i> عرض للبيع
+                        </button>
+                        <button class="market-btn btn-buy" onclick="buyProduct(${product.id})">
+                            <i class="fas fa-shopping-cart"></i> طلب شراء
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+        
+        // تحميل عروض البيع
+        function loadSellOffers() {
+            const offersGrid = document.getElementById('sellOffers');
+            offersGrid.innerHTML = '';
+            
+            const sellOffers = marketData.offers.filter(offer => offer.type === 'sell');
+            
+            if (sellOffers.length === 0) {
+                offersGrid.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        <i class="fas fa-store" style="font-size: 3rem; margin-bottom: 1rem; color: #ddd;"></i>
+                        <p>لا توجد عروض بيع حالياً</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            sellOffers.forEach(offer => {
+                const card = document.createElement('div');
+                card.className = 'offer-card';
+                card.innerHTML = `
+                    <div style="font-weight: 600; color: var(--primary-color);">
+                        ${getProductIcon(offer.product)} ${offer.product}
+                    </div>
+                    <div style="margin: 0.5rem 0;">
+                        <div>الكمية: ${offer.quantity}</div>
+                        <div>السعر: ${offer.price}</div>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <div><i class="fas fa-map-marker-alt"></i> ${offer.location}</div>
+                        <div><i class="fas fa-phone"></i> ${offer.contact}</div>
+                        <div><i class="far fa-clock"></i> ${offer.date}</div>
+                    </div>
+                `;
+                offersGrid.appendChild(card);
+            });
+        }
+        
+        // تحميل طلبات الشراء
+        function loadBuyRequests() {
+            const requestsGrid = document.getElementById('buyRequests');
+            requestsGrid.innerHTML = '';
+            
+            const buyRequests = marketData.offers.filter(offer => offer.type === 'buy');
+            
+            if (buyRequests.length === 0) {
+                requestsGrid.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem; color: #ddd;"></i>
+                        <p>لا توجد طلبات شراء حالياً</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            buyRequests.forEach(request => {
+                const card = document.createElement('div');
+                card.className = 'offer-card';
+                card.innerHTML = `
+                    <div style="font-weight: 600; color: var(--primary-color);">
+                        <i class="fas fa-search"></i> ${request.product}
+                    </div>
+                    <div style="margin: 0.5rem 0;">
+                        <div>الكمية: ${request.quantity}</div>
+                        <div>الميزانية: ${request.budget}</div>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <div><i class="fas fa-building"></i> ${request.contact}</div>
+                        <div><i class="far fa-clock"></i> ${request.date}</div>
+                    </div>
+                `;
+                requestsGrid.appendChild(card);
+            });
+        }
+        
+        // تنسيق السعر
+        function formatPrice(price) {
+            if (price >= 1000) {
+                return price.toLocaleString('ar-SA');
+            }
+            return price.toFixed(2);
+        }
+        
+        // الحصول على أيقونة المنتج
+        function getProductIcon(productName) {
+            const icons = {
+                "الطماطم": "🍅",
+                "البطاطس": "🥔",
+                "الخيار": "🥒",
+                "القمح": "🌾",
+                "البصل": "🧅",
+                "الفلفل": "🌶️",
+                "الليمون": "🍋",
+                "التمر": "🌴"
+            };
+            return icons[productName] || "📦";
+        }
+        
+        // بيع منتج
+        function sellProduct(productId) {
+            const product = marketData.prices.find(p => p.id === productId);
+            if (product) {
+                showTab('sell');
+                document.getElementById('productSelect').value = getProductKey(product.name);
+                alert(`بدأت عملية بيع ${product.name}\n\n` +
+                      `السعر المقترح: ${product.currentPrice} ${product.unit}\n` +
+                      `املأ النموذج أدناه لمتابعة عملية البيع`);
+            }
+        }
+        
+        // شراء منتج
+        function buyProduct(productId) {
+            const product = marketData.prices.find(p => p.id === productId);
+            if (product) {
+                showTab('buy');
+                document.getElementById('productRequest').value = product.name;
+                alert(`بدأت عملية شراء ${product.name}\n\n` +
+                      `السعر الحالي: ${product.currentPrice} ${product.unit}\n` +
+                      `املأ النموذج أدناه لمتابعة عملية الشراء`);
+            }
+        }
+        
+        // إضافة عرض بيع
+        function addSellOffer() {
+            const product = document.getElementById('productSelect').value;
+            const quantity = document.getElementById('quantity').value;
+            const unit = document.getElementById('unit').value;
+            const price = document.getElementById('price').value;
+            const location = document.getElementById('location').value;
+            const description = document.getElementById('description').value;
+            
+            if (!product || !quantity || !price || !location) {
+                alert('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            // الحصول على اسم المنتج
+            const productNames = {
+                tomato: "الطماطم",
+                potato: "البطاطس",
+                cucumber: "الخيار",
+                wheat: "القمح",
+                onion: "البصل"
+            };
+            
+            const productName = productNames[product] || product;
+            
+            // إضافة العرض للبيانات
+            const newOffer = {
+                id: marketData.offers.length + 1,
+                type: "sell",
+                product: productName,
+                quantity: `${quantity} ${unit}`,
+                price: `${price} ريال/${unit === 'ton' ? 'طن' : 'كجم'}`,
+                location: location,
+                contact: "مستخدم جديد",
+                date: "الآن"
+            };
+            
+            marketData.offers.unshift(newOffer);
+            
+            // تحديث العرض
+            loadSellOffers();
+            
+            // مسح النموذج
+            document.getElementById('productSelect').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('price').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('description').value = '';
+            
+            alert('✅ تم نشر عرض البيع بنجاح!\n\n' +
+                  'سيتصل بك المشترين المحتملون قريباً.');
+        }
+        
+        // إضافة طلب شراء
+        function addBuyRequest() {
+            const product = document.getElementById('productRequest').value;
+            const quantity = document.getElementById('requiredQuantity').value;
+            const budget = document.getElementById('budget').value;
+            const contact = document.getElementById('contact').value;
+            
+            if (!product || !quantity || !budget || !contact) {
+                alert('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            // إضافة الطلب للبيانات
+            const newRequest = {
+                id: marketData.offers.length + 1,
+                type: "buy",
+                product: product,
+                quantity: quantity,
+                budget: `${budget} ريال`,
+                contact: contact,
+                date: "الآن"
+            };
+            
+            marketData.offers.unshift(newRequest);
+            
+            // تحديث الطلبات
+            loadBuyRequests();
+            
+            // مسح النموذج
+            document.getElementById('productRequest').value = '';
+            document.getElementById('requiredQuantity').value = '';
+            document.getElementById('budget').value = '';
+            document.getElementById('contact').value = '';
+            
+            alert('✅ تم نشر طلب الشراء بنجاح!\n\n' +
+                  'سيتصل بك البائعون المحتملون قريباً.');
+        }
+        
+        // الحصول على مفتاح المنتج
+        function getProductKey(productName) {
+            const keys = {
+                "الطماطم": "tomato",
+                "البطاطس": "potato",
+                "الخيار": "cucumber",
+                "القمح": "wheat",
+                "البصل": "onion"
+            };
+            return keys[productName] || "";
+        }
+        
+        // تحديث الأسعار
+        function refreshMarket() {
+            // محاكاة تحديث الأسعار
+            marketData.prices.forEach(product => {
+                // تغيير عشوائي طفيف في الأسعار
+                const change = (Math.random() - 0.5) * 0.2;
+                product.currentPrice = Math.max(product.minPrice, 
+                    Math.min(product.maxPrice, product.currentPrice + change));
+                
+                // تحديث اتجاه التغير
+                if (change > 0.05) {
+                    product.trend = "up";
+                    product.changePercent = Math.abs(change * 10).toFixed(1);
+                } else if (change < -0.05) {
+                    product.trend = "down";
+                    product.changePercent = Math.abs(change * 10).toFixed(1);
+                } else {
+                    product.trend = "stable";
+                    product.changePercent = 0;
+                }
+            });
+            
+            // تحديث العرض
+            loadPrices();
+            
+            // تحديث التاريخ
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('ar-SA', options);
+            
+            alert('🔄 تم تحديث أسعار السوق بنجاح!');
+        }
+        
+        // تحديث الإحصائيات
+        function updateStats() {
+            document.getElementById('totalProducts').textContent = marketData.prices.length;
+            document.getElementById('activeOffers').textContent = marketData.offers.length;
+            
+            // حساب متوسط التغير
+            const avgChange = marketData.prices.reduce((sum, product) => 
+                sum + parseFloat(product.changePercent), 0) / marketData.prices.length;
+            document.getElementById('avgPrice').textContent = `+${avgChange.toFixed(1)}%`;
+        }
+        
+        // التحميل الأولي
+        document.addEventListener('DOMContentLoaded', () => {
+            // تعيين التاريخ الحالي
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('ar-SA', options);
+            
+            // تحميل الأسعار
+            loadPrices();
+            
+            // تحديث الإحصائيات
+            updateStats();
+            
+            // تحديث كل 30 ثانية (محاكاة)
+            setInterval(refreshMarket, 30000);
+        });
+    </script>
+</body>
+</html>

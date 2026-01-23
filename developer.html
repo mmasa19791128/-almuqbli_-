@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حول المطور - المرشد الزراعي الذكي</title>
+    
+    <!-- نفس مكتبات التطبيق الرئيسي -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+          crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap&subset=arabic" 
+          rel="stylesheet" crossorigin="anonymous">
+    
+    <!-- ملفات التطبيق الرئيسية -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- إعدادات PWA -->
+    <meta name="theme-color" content="#2e7d32">
+    <meta name="description" content="حول المطور - المرشد الزراعي الذكي">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- أيقونات من هيكل مشروعك الصحيح -->
+    <link rel="icon" href="assets/icons/icon-72.png" type="image/x-icon" sizes="72x72">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="assets/icons/icon-512.png" sizes="512x512">
+    
+    <style>
+        /* إعادة استخدام متغيرات التطبيق الرئيسي */
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+            --accent-color: #FF9800;
+            --text-color: #333;
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+        }
+        
+        /* أنماط عامة متوافقة مع التطبيق */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        /* شريط العنوان */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .page-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .page-header i {
+            font-size: 2rem;
+        }
+        
+        /* الحاوية الرئيسية */
+        .developer-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* بطاقة المطور */
+        .developer-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .developer-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
+        }
+        
+        .developer-name {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .developer-title {
+            color: var(--accent-color);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* قسم المعلومات */
+        .info-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+        }
+        
+        .section-title i {
+            color: var(--accent-color);
+        }
+        
+        /* قائمة معلومات المطور */
+        .developer-info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .developer-info-list li {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: #F9F9F9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .developer-info-list li:hover {
+            transform: translateX(-5px);
+            background: #F1F8E9;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .info-content {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .info-value {
+            color: #555;
+        }
+        
+        /* قسم التطبيق */
+        .app-section {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .app-icon-large {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
+        }
+        
+        /* أزرار الإجراءات */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            min-width: 200px;
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.3);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(46, 125, 50, 0.4);
+            background: linear-gradient(135deg, #1B5E20, #2E7D32);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, #666, #888);
+        }
+        
+        .action-btn.secondary:hover {
+            background: linear-gradient(135deg, #555, #777);
+        }
+        
+        /* مميزات التطبيق */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* تذييل الصفحة */
+        .page-footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            color: #666;
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            .developer-container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+            
+            .developer-card,
+            .info-section,
+            .app-section {
+                padding: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .developer-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
+            
+            .developer-name {
+                font-size: 1.5rem;
+            }
+            
+            .action-btn {
+                padding: 0.9rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+        
+        /* تأثيرات متحركة */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .developer-card,
+        .info-section,
+        .app-section {
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        .developer-card { animation-delay: 0.1s; }
+        .info-section { animation-delay: 0.2s; }
+        .app-section { animation-delay: 0.3s; }
+        
+        /* تنسيق النصوص العربية */
+        h1, h2, h3, p, li, span, a {
+            text-align: right;
+            letter-spacing: normal;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط العنوان -->
+    <header class="page-header">
+        <h1>
+            <i class="fas fa-code"></i>
+            حول المطور
+        </h1>
+    </header>
+    
+    <!-- المحتوى الرئيسي -->
+    <div class="developer-container">
+        <!-- بطاقة المطور -->
+        <div class="developer-card">
+            <div class="developer-avatar">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <h2 class="developer-name">محمد مقبل عبدالله سيف</h2>
+            <div class="developer-title">مطور تطبيقات الويب والذكاء الاصطناعي</div>
+            <p>مطور ومبرمج متخصص في تطوير تطبيقات الويب المتقدمة وتطبيقات الذكاء الاصطناعي</p>
+        </div>
+        
+        <!-- أزرار الإجراءات -->
+        <div class="action-buttons">
+            <a href="index.html" class="action-btn">
+                <i class="fas fa-home"></i>
+                العودة للتطبيق الرئيسي
+            </a>
+            <button id="installButton" class="action-btn secondary" style="display: none;">
+                <i class="fas fa-download"></i>
+                تثبيت التطبيق
+            </button>
+            <a href="pages/about.html" class="action-btn secondary">
+                <i class="fas fa-info-circle"></i>
+                عن التطبيق
+            </a>
+        </div>
+        
+        <!-- معلومات المطور -->
+        <div class="info-section">
+            <h2 class="section-title">
+                <i class="fas fa-id-card"></i>
+                معلومات المطور الشخصية
+            </h2>
+            <ul class="developer-info-list">
+                <li>
+                    <div class="info-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <div class="info-content">
+                        <span class="info-label">الدولة:</span>
+                        <span class="info-value">الجمهورية اليمنية 🇾🇪</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="info-content">
+                        <span class="info-label">المحافظة:</span>
+                        <span class="info-value">تعز</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="info-icon">
+                        <i class="fas fa-map-pin"></i>
+                    </div>
+                    <div class="info-content">
+                        <span class="info-label">المديرية:</span>
+                        <span class="info-value">ماويه</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="info-icon">
+                        <i class="fas fa-location-dot"></i>
+                    </div>
+                    <div class="info-content">
+                        <span class="info-label">المنطقة:</span>
+                        <span class="info-value">ذراح</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="info-content">
+                        <span class="info-label">رقم الهاتف:</span>
+                        <span class="info-value">+967 734 750 438</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="info-content">
+                        <span class="info-label">البريد الإلكتروني:</span>
+                        <span class="info-value">mmasa197911282017@gmail.com</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="info-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="info-content">
+                        <span class="info-label">واتساب:</span>
+                        <span class="info-value">+967 734 750 438</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- معلومات التطبيق -->
+        <div class="app-section">
+            <div class="app-icon-large">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <h2 class="section-title">
+                <i class="fas fa-mobile-alt"></i>
+                عن التطبيق
+            </h2>
+            <p>
+                <strong>المرشد الزراعي الذكي</strong> هو تطبيق متكامل يساعد المزارعين والمهتمين بالزراعة 
+                من خلال توفير أدوات ذكية تعتمد على أحدث تقنيات الذكاء الاصطناعي.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">تشخيص الأمراض</h3>
+                    <p>تشخيص أمراض النباتات باستخدام الذكاء الاصطناعي</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3 class="feature-title">تحليل التربة</h3>
+                    <p>تحليل التربة وتقديم توصيات دقيقة للتسميد</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="feature-title">مكتبة علمية</h3>
+                    <p>أكبر مكتبة زراعية عربية شاملة</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p>
+                    يمكن تثبيت هذا التطبيق على هاتفك واستخدامه بدون اتصال بالإنترنت،
+                    مع مزامنة تلقائية للبيانات عند الاتصال.
+                </p>
+            </div>
+        </div>
+        
+        <!-- تذييل الصفحة -->
+        <footer class="page-footer">
+            <div class="copyright">
+                <p>© 2026 المرشد الزراعي الذكي - جميع الحقوق محفوظة</p>
+                <p>تم التطوير بواسطة: محمد مقبل عبدالله سيف</p>
+                <p>إصدار التطبيق: 6.0.0</p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- جافاسكريبت للتثبيت -->
+    <script>
+        // ✅ تسجيل Service Worker مع المسار الصحيح
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(function(registration) {
+                    console.log('✅ Service Worker مسجل بنجاح:', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('❌ فشل تسجيل Service Worker:', error);
+                });
+        }
+        
+        // ✅ زر تثبيت PWA
+        let deferredPrompt;
+        const installButton = document.getElementById('installButton');
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // منع المتصفح من عرض رسالة التثبيت التلقائية
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // إظهار زر التثبيت
+            installButton.style.display = 'flex';
+            
+            // إضافة حدث النقر على زر التثبيت
+            installButton.addEventListener('click', async () => {
+                // إخفاء زر التثبيت
+                installButton.style.display = 'none';
+                
+                // عرض رسالة التثبيت
+                deferredPrompt.prompt();
+                
+                // انتظار اختيار المستخدم
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    console.log('✅ تم قبول تثبيت التطبيق');
+                    showToast('🎉 تم تثبيت التطبيق بنجاح!');
+                } else {
+                    console.log('❌ تم رفض تثبيت التطبيق');
+                }
+                
+                // تنظيف المتغير
+                deferredPrompt = null;
+            });
+        });
+        
+        // ✅ إخفاء زر التثبيت إذا كان التطبيق مثبت بالفعل
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('📱 تم تثبيت التطبيق بالفعل');
+            installButton.style.display = 'none';
+        });
+        
+        // ✅ التحقق مما إذا كان التطبيق مثبت بالفعل
+        if (window.matchMedia('(display-mode: standalone)').matches || 
+            window.navigator.standalone === true) {
+            installButton.style.display = 'none';
+        }
+        
+        // ✅ دالة لعرض رسائل Toast
+        function showToast(message, type = 'success') {
+            // إنصراف عنصر Toast إذا لم يكن موجوداً
+            let toast = document.getElementById('customToast');
+            
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'customToast';
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: #2E7D32;
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    z-index: 9999;
+                    font-family: 'Tajawal', sans-serif;
+                    display: none;
+                `;
+                document.body.appendChild(toast);
+            }
+            
+            toast.textContent = message;
+            toast.style.display = 'block';
+            
+            // إخفاء بعد 3 ثواني
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+        
+        // ✅ إضافة تأثيرات النقر على الأزرار
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.action-btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // تأثير النقر
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

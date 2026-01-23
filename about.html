@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن - المرشد الزراعي الذكي</title>
+    
+    <!-- تحميل نفس مكتبات التطبيق الرئيسي -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+          crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap&subset=arabic" 
+          rel="stylesheet" crossorigin="anonymous">
+    
+    <!-- تحميل أنماط التطبيق الرئيسي -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- أنماط خاصة بصفحة من نحن -->
+    <style>
+        /* أنماط مشتركة مع التطبيق الرئيسي */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* رأس الصفحة بنفس تنسيق التطبيق */
+        .about-header {
+            text-align: center;
+            margin: 2rem 0 3rem;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, var(--primary-color, #2E7D32), var(--secondary-color, #4CAF50));
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.2);
+        }
+        
+        .about-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .about-header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* أقسام الصفحة */
+        .about-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .about-section:hover {
+            transform: translateY(-3px);
+        }
+        
+        .section-title {
+            color: var(--primary-color, #2E7D32);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--secondary-color, #4CAF50);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+        }
+        
+        .section-title i {
+            color: var(--accent-color, #FF9800);
+        }
+        
+        /* شبكة المميزات */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        
+        .feature-card {
+            background: var(--card-bg, #F9F9F9);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            border-color: var(--primary-color, #2E7D32);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color, #2E7D32);
+            margin-bottom: 1.5rem;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .feature-card h3 {
+            color: var(--primary-color, #2E7D32);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* فريق العمل */
+        .team-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+        
+        .team-member {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color, #2E7D32), var(--secondary-color, #4CAF50));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .member-name {
+            font-weight: bold;
+            color: var(--primary-color, #2E7D32);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .member-role {
+            color: var(--accent-color, #FF9800);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        .team-member p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            border-radius: 12px;
+            transition: transform 0.3s;
+        }
+        
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color, #2E7D32);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-label {
+            color: #555;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        /* الجدول الزمني */
+        .timeline {
+            padding: 1.5rem;
+            background: #F9F9F9;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+        
+        .timeline p {
+            padding: 0.8rem 1rem;
+            margin: 0.5rem 0;
+            border-right: 4px solid var(--primary-color, #2E7D32);
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timeline strong {
+            color: var(--primary-color, #2E7D32);
+            min-width: 80px;
+            margin-left: 1rem;
+        }
+        
+        /* معلومات الاتصال */
+        .contact-info {
+            padding: 1.5rem;
+            background: #F9F9F9;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+        
+        .contact-info p {
+            padding: 0.8rem 1rem;
+            margin: 0.5rem 0;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .contact-info i {
+            color: var(--primary-color, #2E7D32);
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* أزرار التنقل */
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary-color, #2E7D32), var(--secondary-color, #4CAF50));
+            color: white;
+            padding: 0.9rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+            background: linear-gradient(135deg, #1B5E20, #2E7D32);
+        }
+        
+        .back-button.secondary {
+            background: linear-gradient(135deg, #666, #888);
+        }
+        
+        .back-button.secondary:hover {
+            background: linear-gradient(135deg, #555, #777);
+        }
+        
+        .back-button i {
+            font-size: 1.2rem;
+        }
+        
+        /* شعار التطبيق في الهيدر */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+            background: white;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-container i {
+            font-size: 2.5rem;
+            color: var(--primary-color, #2E7D32);
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color, #2E7D32);
+        }
+        
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            .about-container {
+                padding: 10px;
+            }
+            
+            .about-header {
+                padding: 2rem 1rem;
+                margin: 1rem 0 2rem;
+            }
+            
+            .about-header h1 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .about-header p {
+                font-size: 1rem;
+            }
+            
+            .features-grid,
+            .team-members,
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .about-section {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .back-button {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .about-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .feature-card,
+            .team-member,
+            .stat-item {
+                padding: 1.5rem;
+            }
+            
+            .member-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+        }
+        
+        /* إضافة تأثيرات متحركة */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .about-section,
+        .feature-card,
+        .team-member,
+        .stat-item {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .about-section:nth-child(2) { animation-delay: 0.1s; }
+        .about-section:nth-child(3) { animation-delay: 0.2s; }
+        .about-section:nth-child(4) { animation-delay: 0.3s; }
+        .about-section:nth-child(5) { animation-delay: 0.4s; }
+        .about-section:nth-child(6) { animation-delay: 0.5s; }
+        .about-section:nth-child(7) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <!-- هيدر الصفحة -->
+    <div class="page-header">
+        <div class="logo-container">
+            <i class="fas fa-seedling"></i>
+            <span class="logo-text">المرشد الزراعي الذكي</span>
+        </div>
+        <div class="page-subtitle">
+            <i class="fas fa-info-circle"></i> صفحة من نحن
+        </div>
+    </div>
+    
+    <div class="about-container">
+        <!-- رأس الصفحة -->
+        <div class="about-header">
+            <h1><i class="fas fa-seedling"></i> المرشد الزراعي الذكي</h1>
+            <p>تطبيق زراعي ذكي متكامل يساعد المزارعين في تحسين إنتاجيتهم وحماية محاصيلهم باستخدام أحدث تقنيات الذكاء الاصطناعي</p>
+        </div>
+        
+        <!-- قسم المهمة -->
+        <div class="about-section">
+            <h2 class="section-title"><i class="fas fa-bullseye"></i> مهمتنا</h2>
+            <p>نسعى لجعل الزراعة أسهل وأكثر كفاءة من خلال توفير أدوات ذكية تساعد المزارعين في:</p>
+            <ul style="list-style: none; padding-right: 0;">
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                    تشخيص أمراض النباتات بدقة باستخدام الذكاء الاصطناعي
+                </li>
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                    تحليل التربة وتقديم توصيات دقيقة للتسميد والري
+                </li>
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                    الوصول إلى معلومات زراعية موثوقة وحديثة
+                </li>
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                    زيادة الإنتاجية وتقليل الخسائر وحماية البيئة
+                </li>
+            </ul>
+        </div>
+        
+        <!-- قسم المميزات -->
+        <div class="about-section">
+            <h2 class="section-title"><i class="fas fa-star"></i> مميزات التطبيق</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>ذكاء اصطناعي متقدم</h3>
+                    <p>تشخيص أمراض النباتات باستخدام الذكاء الاصطناعي المتقدم والتعلم الآلي</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3>تحليل التربة الذكي</h3>
+                    <p>تحليل شامل للتربة وتقديم توصيات تسميد دقيقة حسب نوع التربة والمحصول</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>بحث عالمي</h3>
+                    <p>البحث في قواعد بيانات زراعية عالمية ومصادر علمية موثوقة</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>مكتبة علمية شاملة</h3>
+                    <p>أكبر مكتبة زراعية عربية تحتوي على آلاف المراجع والأبحاث</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>عمل بدون اتصال</h3>
+                    <p>استخدام التطبيق بدون الحاجة للإنترنت مع مزامنة تلقائية عند الاتصال</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>خصوصية وأمان كامل</h3>
+                    <p>نظام تشفير متقدم لحماية بياناتك وضمان خصوصيتك التامة</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- قسم الإحصائيات -->
+        <div class="about-section">
+            <h2 class="section-title"><i class="fas fa-chart-line"></i> إحصائيات التطبيق</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">محصول زراعي</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">مرض نباتي</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">مستخدم نشط</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">99%</div>
+                    <div class="stat-label">دقة التشخيص</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- قسم فريق العمل -->
+        <div class="about-section">
+            <h2 class="section-title"><i class="fas fa-users"></i> فريق العمل</h2>
+            
+            <div class="team-members">
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="member-name">محمد مقبل عبدالله سيف</div>
+                    <div class="member-role">المبرمج الرئيسي</div>
+                    <p>مطور تطبيقات ويب وخبير في الذكاء الاصطناعي والتعلّم الآلي</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="member-name">د. أحمد الزراعي</div>
+                    <div class="member-role">خبير زراعي</div>
+                    <p>خبير زراعي معتمد بخبرة 15 عاماً في مجال الزراعة المستدامة</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <div class="member-name">د. سارة العطوي</div>
+                    <div class="member-role">خبيرة تربة</div>
+                    <p>دكتورة في علوم التربة والنبات ومتخصصة في تحليل التربة</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="member-name">فريق التطوير</div>
+                    <div class="member-role">مطورون ومصممون</div>
+                    <p>فريق متخصص في تطوير التطبيقات الذكية وتجربة المستخدم</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- قسم تاريخ التطبيق -->
+        <div class="about-section">
+            <h2 class="section-title"><i class="fas fa-history"></i> تاريخ التطبيق</h2>
+            <div class="timeline">
+                <p><strong>2024:</strong> بداية المشروع والبحث العلمي وجمع البيانات</p>
+                <p><strong>2025:</strong> تطوير النموذج الأولي واختبارات الذكاء الاصطناعي</p>
+                <p><strong>2026:</strong> إطلاق الإصدار 6.0 مع جميع المميزات المتقدمة</p>
+                <p><strong>المستقبل:</strong> التوسع ليشمل المزيد من المحاصيل واللغات والدول</p>
+            </div>
+        </div>
+        
+        <!-- قسم الاتصال -->
+        <div class="about-section">
+            <h2 class="section-title"><i class="fas fa-envelope"></i> اتصل بنا</h2>
+            <div class="contact-info">
+                <p><i class="fas fa-envelope"></i> البريد الإلكتروني: mmasa197911282017@gmail.com</p>
+                <p><i class="fas fa-phone"></i> الهاتف: +967 734 750 438</p>
+                <p><i class="fab fa-whatsapp"></i> واتساب: +967 734 750 438</p>
+                <p><i class="fas fa-clock"></i> ساعات الدعم: الأحد - الخميس (8 صباحاً - 10 مساءً)</p>
+            </div>
+        </div>
+        
+        <!-- أزرار التنقل -->
+        <div class="navigation-buttons">
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-right"></i> العودة للتطبيق الرئيسي
+            </a>
+            <a href="#" onclick="window.history.back()" class="back-button secondary">
+                <i class="fas fa-undo"></i> العودة للخلف
+            </a>
+        </div>
+    </div>
+    
+    <!-- جافاسكريبت للتأثيرات -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // إضافة تأثيرات التمرير
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                    }
+                });
+            }, observerOptions);
+            
+            // مراقبة جميع العناصر المهمة
+            document.querySelectorAll('.feature-card, .team-member, .stat-item').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // إضافة تأثير النقر على الأزرار
+            document.querySelectorAll('.back-button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // تأثير النقر
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
