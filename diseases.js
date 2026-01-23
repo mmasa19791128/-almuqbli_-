@@ -1,836 +1,1123 @@
-/**
- * Diseases API - API لتشخيص وعلاج أمراض النباتات
- * الإصدار 6.0 - متكامل مع الذكاء الاصطناعي والصور
- */
+// ====== نظام تفاصيل الأمراض الزراعية ======
+// 🦠 الإصدار 2.1 | يناير 2026 | معدل ومتكامل
 
-class DiseasesAPI {
+class DiseasesDetails {
     constructor() {
-        this.baseURL = 'https://api.plant-disease.com/v1';
-        this.localData = window.agricultureData || {};
-        this.apiKey = this.getAPIKey();
-        this.cacheDuration = 12 * 60 * 60 * 1000; // 12 ساعة
-        this.aiModel = 'plant_disease_v3';
+        this.currentDisease = null;
+        this.diseaseHistory = [];
+        this.bookmarkedDiseases = [];
+        this.treatmentHistory = [];
+        this.isInitialized = false;
+        
         this.init();
     }
-
-    /**
-     * تهيئة النظام
-     */
-    init() {
-        this.setupCache();
-        this.setupImageRecognition();
-        console.log('🩺 Diseases API جاهز للاستخدام');
-    }
-
-    /**
-     * الحصول على مفتاح API
-     */
-    getAPIKey() {
-        // مفتاح API حقيقي مشفر
-        const encryptedKey = 'UExBTlRfRElTRUFTRV9BUElfS0VZXzIwMjY=';
-        return atob(encryptedKey);
-    }
-
-    /**
-     * إعداد نظام الكاش
-     */
-    setupCache() {
-        this.cache = {
-            diseases: {},
-            diagnoses: {},
-            treatments: {},
-            images: {}
-        };
+    
+    async init() {
+        // الانتظار حتى تحميل البيانات الرئيسية
+        await this.waitForGlobalData();
         
-        this.loadCache();
-    }
-
-    /**
-     * تحميل الكاش
-     */
-    loadCache() {
-        try {
-            const savedCache = localStorage.getItem('diseasesAPICache');
-            if (savedCache) {
-                this.cache = JSON.parse(savedCache);
-            }
-        } catch (error) {
-            console.error('❌ خطأ في تحميل كاش الأمراض:', error);
-        }
-    }
-
-    /**
-     * حفظ الكاش
-     */
-    saveCache() {
-        try {
-            localStorage.setItem('diseasesAPICache', JSON.stringify(this.cache));
-        } catch (error) {
-            console.error('❌ خطأ في حفظ كاش الأمراض:', error);
-        }
-    }
-
-    /**
-     * إعداد التعرف على الصور
-     */
-    setupImageRecognition() {
-        // استخدام TensorFlow.js للتعرف على الأمراض
-        if (typeof tf !== 'undefined') {
-            this.tf = tf;
-            console.log('🤖 TensorFlow.js جاهز للتعرف على الصور');
-        }
-    }
-
-    /**
-     * تشخيص المرض من الصورة
-     */
-    async diagnoseFromImage(imageData, cropType = null) {
-        const imageHash = this.hashImage(imageData);
-        const cacheKey = `diagnosis_${imageHash}_${cropType}`;
+        // تحميل البيانات المحلية
+        this.loadBookmarks();
+        this.loadHistory();
+        this.loadTreatmentHistory();
         
-        // التحقق من الكاش أولاً
-        if (this.cache.diagnoses[cacheKey] && 
-            Date.now() - this.cache.diagnoses[cacheKey].timestamp < this.cacheDuration) {
-            console.log('📦 استخدام التشخيص من الكاش');
-            return this.cache.diagnoses[cacheKey].data;
-        }
-
-        try {
-            let diagnosis = null;
-            
-            if (navigator.onLine) {
-                // استخدام API الذكاء الاصطناعي
-                diagnosis = await this.fetchFromAPI('diagnose/image', {
-                    image: imageData,
-                    crop_type: cropType,
-                    model: this.aiModel
-                });
-            }
-            
-            if (!diagnosis || diagnosis.confidence < 0.6) {
-                // استخدام التعرف المحلي
-                diagnosis = await this.localImageDiagnosis(imageData, cropType);
-            }
-            
-            // حفظ في الكاش
-            if (diagnosis) {
-                this.cache.diagnoses[cacheKey] = {
-                    data: diagnosis,
-                    timestamp: Date.now()
-                };
-                this.saveCache();
-                
-                // منح نقاط للتشخيص
-                this.awardPoints(5, `تشخيص مرض: ${diagnosis.disease || 'غير معروف'}`);
-            }
-            
-            return diagnosis;
-            
-        } catch (error) {
-            console.error('❌ خطأ في تشخيص الصورة:', error);
-            return this.localImageDiagnosis(imageData, cropType);
-        }
+        this.isInitialized = true;
+        console.log('✅ نظام تفاصيل الأمراض جاهز');
     }
-
-    /**
-     * تشخيص محلي للصورة
-     */
-    async localImageDiagnosis(imageData, cropType) {
-        // محاكاة تشخيص محلي
-        const diseases = this.getCropDiseases(cropType);
-        
-        if (diseases.length === 0) {
-            return {
-                disease: 'غير معروف',
-                confidence: 0.3,
-                possible_diseases: [],
-                message: 'لم نتمكن من تحديد المرض بدقة',
-                suggestions: ['التقط صورة أوضح', 'تحقق من أعراض أخرى']
+    
+    // الانتظار حتى تحميل البيانات
+    waitForGlobalData() {
+        return new Promise((resolve) => {
+            const checkData = () => {
+                if (window.agricultureData && window.agricultureData.isReady) {
+                    resolve();
+                } else {
+                    setTimeout(checkData, 100);
+                }
             };
-        }
-        
-        // اختيار مرض عشوائي (محاكاة)
-        const randomDisease = diseases[Math.floor(Math.random() * diseases.length)];
-        
-        return {
-            disease: randomDisease.name,
-            confidence: 0.65 + Math.random() * 0.3, // 65-95%
-            possible_diseases: diseases.slice(0, 3).map(d => ({
-                name: d.name,
-                probability: Math.random() * 0.3 + 0.4
-            })),
-            symptoms: randomDisease.symptoms,
-            treatment: randomDisease.treatment,
-            prevention: randomDisease.prevention,
-            severity: randomDisease.severity || 'medium',
-            urgency: this.calculateUrgency(randomDisease)
-        };
+            checkData();
+        });
     }
-
-    /**
-     * تشخيص المرض من الأعراض
-     */
-    async diagnoseFromSymptoms(symptoms, cropType) {
-        const symptomsKey = symptoms.join('_');
-        const cacheKey = `symptoms_${symptomsKey}_${cropType}`;
-        
-        if (this.cache.diagnoses[cacheKey] && 
-            Date.now() - this.cache.diagnoses[cacheKey].timestamp < this.cacheDuration) {
-            return this.cache.diagnoses[cacheKey].data;
+    
+    // عرض تفاصيل المرض
+    showDiseaseDetail(diseaseId) {
+        // إذا لم يكن التطبيق جاهزاً، قم بتحميل الصفحة المناسبة
+        if (!this.isInitialized) {
+            this.redirectToDiseasePage(diseaseId);
+            return;
         }
-
-        try {
-            let diagnosis = null;
+        
+        const disease = this.getDiseaseById(diseaseId);
+        if (!disease) {
+            this.showError('المرض غير موجود في قاعدة البيانات');
+            return;
+        }
+        
+        this.currentDisease = disease;
+        this.addToHistory(disease);
+        
+        // التحقق من الصفحة الحالية
+        if (this.isOnDiseasesPage()) {
+            this.createDiseaseDetailView(disease);
+        } else {
+            this.redirectToDiseasePage(diseaseId);
+        }
+    }
+    
+    // الحصول على المرض بالمعرف
+    getDiseaseById(diseaseId) {
+        // محاولة من البيانات المحلية أولاً
+        if (window.agricultureData && window.agricultureData.getDiseaseById) {
+            return window.agricultureData.getDiseaseById(diseaseId);
+        }
+        
+        // البحث في البيانات المحفوظة
+        const diseases = this.getAllDiseases();
+        return diseases.find(d => d.id == diseaseId);
+    }
+    
+    // الحصول على جميع الأمراض
+    getAllDiseases() {
+        if (window.agricultureData && window.agricultureData.diseases) {
+            return window.agricultureData.diseases;
+        }
+        
+        // بيانات افتراضية احتياطية
+        return this.getFallbackDiseases();
+    }
+    
+    // إنشاء واجهة التفاصيل
+    createDiseaseDetailView(disease) {
+        const container = document.createElement('div');
+        container.className = 'disease-detail-container';
+        container.innerHTML = this.generateDiseaseDetailHTML(disease);
+        
+        // البحث عن حاوية العرض
+        const displayContainer = this.getDisplayContainer();
+        if (displayContainer) {
+            displayContainer.innerHTML = '';
+            displayContainer.appendChild(container);
             
-            if (navigator.onLine) {
-                diagnosis = await this.fetchFromAPI('diagnose/symptoms', {
-                    symptoms: symptoms,
-                    crop_type: cropType
-                });
-            }
-            
-            if (!diagnosis) {
-                diagnosis = this.localSymptomDiagnosis(symptoms, cropType);
-            }
-            
-            // حفظ في الكاش
-            if (diagnosis) {
-                this.cache.diagnoses[cacheKey] = {
-                    data: diagnosis,
-                    timestamp: Date.now()
-                };
-                this.saveCache();
+            // إضافة الأحداث
+            this.attachDiseaseEvents(disease);
+        } else {
+            console.error('❌ لم يتم العثور على حاوية العرض');
+        }
+    }
+    
+    // الحصول على حاوية العرض
+    getDisplayContainer() {
+        // محاولة إيجاد الحاوية المناسبة
+        const containers = [
+            document.getElementById('mainContent'),
+            document.getElementById('diseaseDetailContainer'),
+            document.querySelector('.page.active .page-content'),
+            document.querySelector('main')
+        ];
+        
+        return containers.find(container => container !== null);
+    }
+    
+    // توليد HTML للتفاصيل
+    generateDiseaseDetailHTML(disease) {
+        const affectedCrops = this.getAffectedCrops(disease.affectedCrops || []);
+        const severityColor = this.getSeverityColor(disease.severity);
+        
+        // التأكد من وجود بيانات العلاج
+        const treatments = Array.isArray(disease.treatment) ? disease.treatment : 
+                          disease.treatment ? [disease.treatment] : ['لم يتم تحديد علاج'];
+        
+        // التأكد من وجود بيانات الأعراض
+        const symptoms = Array.isArray(disease.symptoms) ? disease.symptoms : 
+                        disease.symptoms ? [disease.symptoms] : ['لم يتم تحديد أعراض'];
+        
+        // التأكد من وجود بيانات الأسباب
+        const causes = Array.isArray(disease.causes) ? disease.causes : 
+                      disease.causes ? [disease.causes] : ['لم يتم تحديد أسباب'];
+        
+        // التأكد من وجود بيانات الوقاية
+        const prevention = Array.isArray(disease.prevention) ? disease.prevention : 
+                          disease.prevention ? [disease.prevention] : ['لم يتم تحديد طرق وقائية'];
+        
+        return `
+            <div class="disease-detail-header" style="
+                background: linear-gradient(135deg, ${severityColor}, #D32F2F);
+                color: white;
+                padding: 2rem;
+                border-radius: 15px 15px 0 0;
+            ">
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">
+                        ${this.getDiseaseIcon(disease.severity)}
+                    </div>
+                    <h2 style="margin-bottom: 0.5rem;">${disease.name || 'مرض غير معروف'}</h2>
+                    <p style="opacity: 0.9; font-style: italic;">${disease.scientificName || ''}</p>
+                </div>
                 
-                // منح نقاط للتشخيص
-                this.awardPoints(3, `تشخيص من أعراض: ${cropType}`);
-            }
+                <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                    <button class="btn-bookmark" data-disease-id="${disease.id}" style="
+                        background: rgba(255,255,255,0.2);
+                        border: 2px solid white;
+                        color: white;
+                        padding: 0.5rem 1.5rem;
+                        border-radius: 25px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        transition: all 0.3s;
+                    ">
+                        <i class="fas fa-bookmark"></i>
+                        <span>حفظ</span>
+                    </button>
+                    
+                    <button class="btn-share-disease" style="
+                        background: rgba(255,255,255,0.2);
+                        border: 2px solid white;
+                        color: white;
+                        padding: 0.5rem 1.5rem;
+                        border-radius: 25px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        transition: all 0.3s;
+                    ">
+                        <i class="fas fa-share-alt"></i>
+                        <span>مشاركة</span>
+                    </button>
+                    
+                    <div class="severity-badge" style="
+                        background: rgba(255,255,255,0.3);
+                        padding: 0.5rem 1.5rem;
+                        border-radius: 25px;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    ">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>خطورة: ${disease.severity || 'غير محددة'}</span>
+                    </div>
+                </div>
+            </div>
             
-            return diagnosis;
-            
-        } catch (error) {
-            console.error('❌ خطأ في تشخيص الأعراض:', error);
-            return this.localSymptomDiagnosis(symptoms, cropType);
-        }
+            <div class="disease-detail-content" style="padding: 2rem;">
+                <!-- المحاصيل المصابة -->
+                ${affectedCrops.length > 0 ? `
+                <div class="affected-crops-section" style="margin-bottom: 2rem;">
+                    <h3 style="color: #D32F2F; margin-bottom: 1rem;">
+                        <i class="fas fa-leaf"></i> المحاصيل المصابة
+                    </h3>
+                    <div class="crops-grid" style="
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                        gap: 1rem;
+                    ">
+                        ${affectedCrops.map(crop => `
+                            <div class="crop-item" style="
+                                background: #FFEBEE;
+                                padding: 1rem;
+                                border-radius: 8px;
+                                border-left: 4px solid #D32F2F;
+                                cursor: pointer;
+                                transition: all 0.3s;
+                            " onclick="window.diseasesDetails.showCropDetail(${crop.id})">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">${crop.icon || '🌱'}</div>
+                                    <div style="font-weight: bold; color: #C62828;">${crop.name}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <!-- الوصف -->
+                ${disease.description ? `
+                <div class="description-section" style="margin-bottom: 2rem;">
+                    <h3 style="color: #D32F2F; margin-bottom: 1rem;">
+                        <i class="fas fa-info-circle"></i> الوصف
+                    </h3>
+                    <div style="
+                        background: #F5F5F5;
+                        padding: 1.5rem;
+                        border-radius: 10px;
+                        border-right: 4px solid #D32F2F;
+                    ">
+                        <p style="line-height: 1.6; color: #555; margin: 0;">${disease.description}</p>
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <!-- الأعراض -->
+                    <div class="symptoms-section">
+                        <h3 style="color: #F44336; margin-bottom: 1rem;">
+                            <i class="fas fa-exclamation-triangle"></i> الأعراض
+                        </h3>
+                        <div style="
+                            background: #FFEBEE;
+                            padding: 1.5rem;
+                            border-radius: 10px;
+                            height: 100%;
+                        ">
+                            <ul style="padding-right: 1.5rem; margin: 0;">
+                                ${symptoms.map(symptom => `
+                                    <li style="margin-bottom: 0.75rem; color: #555; display: flex; align-items: flex-start; gap: 0.5rem;">
+                                        <i class="fas fa-circle" style="color: #F44336; font-size: 0.6rem; margin-top: 0.5rem;"></i>
+                                        <span>${symptom}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- الأسباب -->
+                    <div class="causes-section">
+                        <h3 style="color: #FF9800; margin-bottom: 1rem;">
+                            <i class="fas fa-search"></i> الأسباب
+                        </h3>
+                        <div style="
+                            background: #FFF3E0;
+                            padding: 1.5rem;
+                            border-radius: 10px;
+                            height: 100%;
+                        ">
+                            <ul style="padding-right: 1.5rem; margin: 0;">
+                                ${causes.map(cause => `
+                                    <li style="margin-bottom: 0.75rem; color: #555; display: flex; align-items: flex-start; gap: 0.5rem;">
+                                        <i class="fas fa-circle" style="color: #FF9800; font-size: 0.6rem; margin-top: 0.5rem;"></i>
+                                        <span>${cause}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- العلاج -->
+                <div class="treatment-section" style="margin: 2rem 0;">
+                    <h3 style="color: #4CAF50; margin-bottom: 1rem;">
+                        <i class="fas fa-medkit"></i> العلاج
+                    </h3>
+                    
+                    <div style="
+                        background: #E8F5E9;
+                        padding: 1.5rem;
+                        border-radius: 10px;
+                        border-right: 4px solid #4CAF50;
+                    ">
+                        <h4 style="color: #2E7D32; margin-bottom: 1rem;">العلاج:</h4>
+                        <ul style="padding-right: 1.5rem; margin-bottom: 1.5rem;">
+                            ${treatments.map(t => `
+                                <li style="margin-bottom: 0.75rem; color: #555;">${t}</li>
+                            `).join('')}
+                        </ul>
+                        
+                        ${disease.organicTreatment ? `
+                            <h4 style="color: #2E7D32; margin-bottom: 1rem;">العلاج العضوي:</h4>
+                            <ul style="padding-right: 1.5rem;">
+                                ${(Array.isArray(disease.organicTreatment) ? disease.organicTreatment : [disease.organicTreatment])
+                                  .map(ot => `
+                                    <li style="margin-bottom: 0.75rem; color: #555;">${ot}</li>
+                                `).join('')}
+                            </ul>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                <!-- الوقاية -->
+                <div class="prevention-section" style="margin-bottom: 2rem;">
+                    <h3 style="color: #2196F3; margin-bottom: 1rem;">
+                        <i class="fas fa-shield-alt"></i> الوقاية
+                    </h3>
+                    
+                    <div style="
+                        background: #E3F2FD;
+                        padding: 1.5rem;
+                        border-radius: 10px;
+                        border-right: 4px solid #2196F3;
+                    ">
+                        <div class="prevention-grid" style="
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                            gap: 1rem;
+                        ">
+                            ${prevention.map((prevention, index) => `
+                                <div class="prevention-item" style="
+                                    background: white;
+                                    padding: 1rem;
+                                    border-radius: 8px;
+                                    border-top: 3px solid #2196F3;
+                                ">
+                                    <div style="
+                                        width: 30px;
+                                        height: 30px;
+                                        background: #2196F3;
+                                        color: white;
+                                        border-radius: 50%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        margin-bottom: 0.5rem;
+                                        font-weight: bold;
+                                    ">
+                                        ${index + 1}
+                                    </div>
+                                    <p style="margin: 0; color: #555;">${prevention}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- معلومات إضافية -->
+                <div class="additional-info" style="
+                    background: #F5F5F5;
+                    padding: 1.5rem;
+                    border-radius: 10px;
+                    margin-bottom: 2rem;
+                ">
+                    <h3 style="color: #9C27B0; margin-bottom: 1rem;">
+                        <i class="fas fa-chart-line"></i> معلومات إضافية
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        ${disease.season ? `
+                        <div class="info-item">
+                            <div style="color: #666; margin-bottom: 0.5rem;">الموسم</div>
+                            <div style="font-weight: bold; color: #9C27B0;">${disease.season}</div>
+                        </div>
+                        ` : ''}
+                        
+                        ${disease.temperatureRange ? `
+                        <div class="info-item">
+                            <div style="color: #666; margin-bottom: 0.5rem;">درجة الحرارة</div>
+                            <div style="font-weight: bold; color: #9C27B0;">${disease.temperatureRange}</div>
+                        </div>
+                        ` : ''}
+                        
+                        ${disease.humidity ? `
+                        <div class="info-item">
+                            <div style="color: #666; margin-bottom: 0.5rem;">الرطوبة</div>
+                            <div style="font-weight: bold; color: #9C27B0;">${disease.humidity}</div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="info-item">
+                            <div style="color: #666; margin-bottom: 0.5rem;">نوع المسبب</div>
+                            <div style="font-weight: bold; color: #9C27B0;">${disease.scientificName ? this.getPathogenType(disease.scientificName) : 'غير معروف'}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- زر العودة -->
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn-back-diseases" style="
+                        background: #2E7D32;
+                        color: white;
+                        border: none;
+                        padding: 1rem 3rem;
+                        border-radius: 25px;
+                        font-size: 1.1rem;
+                        cursor: pointer;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        transition: all 0.3s;
+                    ">
+                        <i class="fas fa-arrow-right"></i>
+                        العودة للأمراض
+                    </button>
+                </div>
+            </div>
+        `;
     }
-
-    /**
-     * تشخيص محلي من الأعراض
-     */
-    localSymptomDiagnosis(symptoms, cropType) {
-        const diseases = this.getCropDiseases(cropType);
-        
-        // مطابقة الأعراض
-        const matchedDiseases = diseases.filter(disease => {
-            if (!disease.symptoms) return false;
-            
-            const diseaseSymptoms = Array.isArray(disease.symptoms) ? 
-                disease.symptoms : [disease.symptoms];
-            
-            // حساب نسبة التطابق
-            const matchCount = symptoms.filter(symptom => 
-                diseaseSymptoms.some(ds => 
-                    ds.toLowerCase().includes(symptom.toLowerCase()) ||
-                    symptom.toLowerCase().includes(ds.toLowerCase())
-                )
-            ).length;
-            
-            return matchCount > 0;
-        });
-        
-        if (matchedDiseases.length === 0) {
-            return {
-                disease: 'غير معروف',
-                confidence: 0.4,
-                possible_diseases: diseases.slice(0, 3).map(d => ({
-                    name: d.name,
-                    match_score: Math.random() * 0.5
-                })),
-                message: 'لا توجد أمراض مطابقة تماماً',
-                suggestions: ['تحقق من الأعراض بدقة', 'استشر خبيراً زراعياً']
-            };
+    
+    // الحصول على المحاصيل المصابة
+    getAffectedCrops(cropIds) {
+        if (!cropIds || !Array.isArray(cropIds) || cropIds.length === 0) {
+            return [];
         }
         
-        // ترتيب حسب عدد الأعراض المطابقة
-        matchedDiseases.sort((a, b) => {
-            const aSymptoms = Array.isArray(a.symptoms) ? a.symptoms.length : 1;
-            const bSymptoms = Array.isArray(b.symptoms) ? b.symptoms.length : 1;
-            return bSymptoms - aSymptoms;
-        });
+        if (!window.agricultureData) {
+            return cropIds.map(id => ({ id: id, name: `محصول ${id}`, icon: '🌱' }));
+        }
         
-        const topDisease = matchedDiseases[0];
-        
-        return {
-            disease: topDisease.name,
-            confidence: 0.7,
-            possible_diseases: matchedDiseases.slice(0, 3).map(d => ({
-                name: d.name,
-                match_score: 0.6 + Math.random() * 0.3
-            })),
-            symptoms: topDisease.symptoms,
-            treatment: topDisease.treatment,
-            prevention: topDisease.prevention,
-            severity: topDisease.severity || 'medium',
-            matched_symptoms: symptoms.filter(s => 
-                Array.isArray(topDisease.symptoms) ? 
-                topDisease.symptoms.some(ds => ds.includes(s)) : 
-                topDisease.symptoms.includes(s)
-            )
+        return cropIds
+            .map(id => {
+                const crop = window.agricultureData.getCropById ? 
+                    window.agricultureData.getCropById(id) : 
+                    null;
+                
+                if (crop) {
+                    return crop;
+                } else {
+                    return { id: id, name: `محصول ${id}`, icon: '🌱' };
+                }
+            })
+            .filter(crop => crop !== undefined && crop !== null);
+    }
+    
+    // الحصول على لون الخطورة
+    getSeverityColor(severity) {
+        const colors = {
+            'مرتفع جداً': '#D32F2F',
+            'مرتفع': '#F44336',
+            'متوسط': '#FF9800',
+            'منخفض': '#4CAF50',
+            'قليل': '#2196F3',
+            'عالية': '#D32F2F',
+            'متوسطة': '#FF9800',
+            'منخفضة': '#4CAF50'
         };
-    }
-
-    /**
-     * الحصول على أمراض المحصول
-     */
-    getCropDiseases(cropType) {
-        if (!this.localData.diseases) return [];
         
-        return this.localData.diseases.filter(disease => 
-            !cropType || disease.plant === cropType || disease.plant === 'عام'
+        return colors[severity] || '#757575';
+    }
+    
+    // الحصول على أيقونة المرض
+    getDiseaseIcon(severity) {
+        const icons = {
+            'مرتفع جداً': '🦠',
+            'مرتفع': '💀',
+            'متوسط': '⚠️',
+            'منخفض': '🤒',
+            'قليل': '🤧',
+            'عالية': '🦠',
+            'متوسطة': '⚠️',
+            'منخفضة': '🤒'
+        };
+        
+        return icons[severity] || '🦠';
+    }
+    
+    // الحصول على نوع المسبب
+    getPathogenType(scientificName) {
+        if (!scientificName) return 'غير معروف';
+        
+        const types = {
+            'Puccinia': 'فطر',
+            'Xanthomonas': 'بكتيريا',
+            'Fusarium': 'فطر',
+            'Phytophthora': 'فطر مائي',
+            'Spodoptera': 'حشرة',
+            'fungus': 'فطر',
+            'bacteria': 'بكتيريا',
+            'virus': 'فيروس',
+            'insect': 'حشرة'
+        };
+        
+        const lowerName = scientificName.toLowerCase();
+        for (const [key, type] of Object.entries(types)) {
+            if (lowerName.includes(key.toLowerCase())) {
+                return type;
+            }
+        }
+        
+        return 'ممرض نباتي';
+    }
+    
+    // إرفاق الأحداث
+    attachDiseaseEvents(disease) {
+        // زر الحفظ
+        const bookmarkBtn = document.querySelector('.btn-bookmark');
+        if (bookmarkBtn) {
+            bookmarkBtn.addEventListener('click', () => this.toggleBookmark(disease.id));
+            this.updateBookmarkButton(disease.id, bookmarkBtn);
+        }
+        
+        // زر المشاركة
+        const shareBtn = document.querySelector('.btn-share-disease');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => this.shareDisease(disease));
+        }
+        
+        // زر العودة
+        const backBtn = document.querySelector('.btn-back-diseases');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => this.goBackToDiseases());
+        }
+        
+        // زر تسجيل العلاج (يتم إضافته فقط إذا كان هناك محاصيل مصابة)
+        if (disease.affectedCrops && disease.affectedCrops.length > 0) {
+            const recordBtn = document.createElement('button');
+            recordBtn.innerHTML = '<i class="fas fa-plus"></i> تسجيل حالة علاج';
+            recordBtn.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                left: 20px;
+                background: #4CAF50;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 25px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 999;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-family: 'Tajawal', sans-serif;
+                transition: all 0.3s;
+            `;
+            
+            recordBtn.addEventListener('mouseenter', () => {
+                recordBtn.style.transform = 'translateY(-2px)';
+                recordBtn.style.boxShadow = '0 6px 16px rgba(0,0,0,0.3)';
+            });
+            
+            recordBtn.addEventListener('mouseleave', () => {
+                recordBtn.style.transform = 'translateY(0)';
+                recordBtn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+            });
+            
+            recordBtn.addEventListener('click', () => this.showTreatmentForm(disease));
+            document.body.appendChild(recordBtn);
+        }
+    }
+    
+    // التبديل بين المحفوظات
+    toggleBookmark(diseaseId) {
+        const index = this.bookmarkedDiseases.indexOf(diseaseId);
+        
+        if (index === -1) {
+            // إضافة للمحفوظات
+            this.bookmarkedDiseases.push(diseaseId);
+            this.showToast('تم إضافة المرض للمحفوظات', 'success');
+        } else {
+            // إزالة من المحفوظات
+            this.bookmarkedDiseases.splice(index, 1);
+            this.showToast('تم إزالة المرض من المحفوظات', 'info');
+        }
+        
+        // حفظ المحفوظات
+        this.saveBookmarks();
+        
+        // تحديث الزر
+        const bookmarkBtn = document.querySelector('.btn-bookmark');
+        if (bookmarkBtn) {
+            this.updateBookmarkButton(diseaseId, bookmarkBtn);
+        }
+    }
+    
+    // تحديث زر الحفظ
+    updateBookmarkButton(diseaseId, button) {
+        const isBookmarked = this.bookmarkedDiseases.includes(diseaseId);
+        
+        const icon = button.querySelector('i');
+        const text = button.querySelector('span');
+        
+        if (isBookmarked) {
+            icon.className = 'fas fa-bookmark';
+            icon.style.color = '#FFD700';
+            text.textContent = 'محفوظ';
+            button.style.background = 'rgba(255, 215, 0, 0.2)';
+            button.style.borderColor = '#FFD700';
+        } else {
+            icon.className = 'far fa-bookmark';
+            icon.style.color = 'white';
+            text.textContent = 'حفظ';
+            button.style.background = 'rgba(255,255,255,0.2)';
+            button.style.borderColor = 'white';
+        }
+    }
+    
+    // مشاركة المرض
+    shareDisease(disease) {
+        const shareData = {
+            title: `مرض ${disease.name}`,
+            text: `تعرف على مرض ${disease.name} وأعراضه وعلاجه - ${disease.description ? disease.description.substring(0, 100) + '...' : 'مرض نباتي'}`,
+            url: `${window.location.origin}${window.location.pathname}#disease=${disease.id}`
+        };
+        
+        if (navigator.share && navigator.share instanceof Function) {
+            navigator.share(shareData)
+                .then(() => console.log('تمت مشاركة المرض بنجاح'))
+                .catch(error => {
+                    console.log('فشلت المشاركة:', error);
+                    this.copyToClipboard(shareData.url);
+                });
+        } else {
+            this.copyToClipboard(shareData.url);
+        }
+    }
+    
+    // نسخ للنص للحافظة
+    copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => this.showToast('تم نسخ الرابط للحافظة', 'info'))
+            .catch(() => {
+                // طريقة بديلة للنسخ
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                this.showToast('تم نسخ الرابط للحافظة', 'info');
+            });
+    }
+    
+    // عرض تفاصيل المحصول
+    showCropDetail(cropId) {
+        if (window.mainBridge && window.mainBridge.showCropDetail) {
+            window.mainBridge.showCropDetail(cropId);
+        } else if (window.cropsDetails && window.cropsDetails.show) {
+            window.cropsDetails.show(cropId);
+        } else {
+            window.location.href = `index.html#crops&crop=${cropId}`;
+        }
+    }
+    
+    // العودة للأمراض
+    goBackToDiseases() {
+        if (window.mainBridge && window.mainBridge.showPage) {
+            window.mainBridge.showPage('diseases');
+        } else {
+            window.history.back();
+        }
+    }
+    
+    // التحقق من وجودنا في صفحة الأمراض
+    isOnDiseasesPage() {
+        const currentPage = document.querySelector('.page.active');
+        return currentPage && (
+            currentPage.id === 'diseasesPage' || 
+            currentPage.dataset.page === 'diseases' ||
+            window.location.hash.includes('diseases')
         );
     }
-
-    /**
-     * حساب درجة الاستعجال
-     */
-    calculateUrgency(disease) {
-        const severity = disease.severity || 'medium';
-        const spreadRate = disease.spread_rate || 'medium';
-        
-        if (severity === 'high' || spreadRate === 'fast') {
-            return 'high'; // عاجل
-        } else if (severity === 'medium' && spreadRate === 'medium') {
-            return 'medium'; // متوسط
+    
+    // توجيه لصفحة المرض
+    redirectToDiseasePage(diseaseId) {
+        if (window.mainBridge && window.mainBridge.showDiseaseDetail) {
+            window.mainBridge.showDiseaseDetail(diseaseId);
         } else {
-            return 'low'; // غير عاجل
+            window.location.href = `index.html#diseases&disease=${diseaseId}`;
         }
     }
-
-    /**
-     * الحصول على علاج المرض
-     */
-    async getDiseaseTreatment(diseaseName, cropType, severity = 'medium') {
-        const cacheKey = `treatment_${diseaseName}_${cropType}_${severity}`;
+    
+    // حفظ العلاج
+    saveTreatment(diseaseId) {
+        const cropSelect = document.getElementById('treatedCrop');
+        const treatmentText = document.getElementById('treatmentUsed');
+        const resultRadio = document.querySelector('input[name="result"]:checked');
+        const notesText = document.getElementById('treatmentNotes');
         
-        if (this.cache.treatments[cacheKey] && 
-            Date.now() - this.cache.treatments[cacheKey].timestamp < this.cacheDuration) {
-            return this.cache.treatments[cacheKey].data;
-        }
-
-        try {
-            let treatment = null;
-            
-            if (navigator.onLine) {
-                treatment = await this.fetchFromAPI('diseases/treatment', {
-                    disease: diseaseName,
-                    crop: cropType,
-                    severity: severity
-                });
-            }
-            
-            if (!treatment) {
-                treatment = this.getLocalTreatment(diseaseName, cropType, severity);
-            }
-            
-            // حفظ في الكاش
-            if (treatment) {
-                this.cache.treatments[cacheKey] = {
-                    data: treatment,
-                    timestamp: Date.now()
-                };
-                this.saveCache();
-                
-                // منح نقاط للحصول على العلاج
-                this.awardPoints(2, `علاج مرض: ${diseaseName}`);
-            }
-            
-            return treatment;
-            
-        } catch (error) {
-            console.error('❌ خطأ في الحصول على العلاج:', error);
-            return this.getLocalTreatment(diseaseName, cropType, severity);
-        }
-    }
-
-    /**
-     * الحصول على علاج محلي
-     */
-    getLocalTreatment(diseaseName, cropType, severity) {
-        const diseases = this.getCropDiseases(cropType);
-        const disease = diseases.find(d => d.name === diseaseName);
-        
-        if (!disease) {
-            return this.generateGenericTreatment(diseaseName, severity);
+        if (!cropSelect || !treatmentText || !resultRadio) {
+            this.showToast('يرجى ملء جميع الحقول المطلوبة', 'error');
+            return;
         }
         
-        return {
-            disease: disease.name,
-            crop: cropType,
-            severity: disease.severity || severity,
-            treatments: disease.treatment || this.generateTreatments(disease, severity),
-            organic_options: this.generateOrganicTreatments(disease),
-            chemical_options: this.generateChemicalTreatments(disease, severity),
-            application_instructions: this.generateApplicationInstructions(disease),
-            safety_precautions: this.generateSafetyPrecautions(disease),
-            follow_up: this.generateFollowUpPlan(disease),
-            cost_estimate: this.calculateTreatmentCost(disease, severity)
-        };
-    }
-
-    /**
-     * توليد علاج عام
-     */
-    generateGenericTreatment(diseaseName, severity) {
-        const baseTreatments = {
-            low: [
-                'إزالة الأجزاء المصابة',
-                'تحسين التهوية',
-                'تقليل الرطوبة'
-            ],
-            medium: [
-                'رش بمبيد فطري واسع الطيف',
-                'تسميد متوازن',
-                'الري المعتدل'
-            ],
-            high: [
-                'رش بمبيد قوي',
-                'عزل النبات المصاب',
-                'استشارة خبير زراعي'
-            ]
+        const cropId = cropSelect.value;
+        const treatment = treatmentText.value;
+        const result = resultRadio.value;
+        const notes = notesText ? notesText.value : '';
+        
+        if (!cropId || !treatment.trim() || !result) {
+            this.showToast('يرجى ملء جميع الحقول المطلوبة', 'error');
+            return;
+        }
+        
+        const treatmentRecord = {
+            id: Date.now(),
+            diseaseId: diseaseId,
+            cropId: parseInt(cropId),
+            treatment: treatment.trim(),
+            result: result,
+            notes: notes.trim(),
+            date: new Date().toISOString(),
+            location: localStorage.getItem('user_location') || 'غير محدد'
         };
         
-        return {
-            disease: diseaseName,
-            severity: severity,
-            treatments: baseTreatments[severity] || baseTreatments.medium,
-            organic_options: ['مستخلص النيم', 'صودا الخبز', 'خل التفاح'],
-            chemical_options: ['مبيد فطري جهازي', 'مبيد حشري ملامس'],
-            application_instructions: 'اتبع تعليمات الشركة المصنعة',
-            safety_precautions: 'ارتدِ قفازات وقناع',
-            follow_up: 'راقب لمدة أسبوعين',
-            cost_estimate: severity === 'high' ? '100-200 ريال' : '50-100 ريال'
-        };
+        this.treatmentHistory.unshift(treatmentRecord);
+        this.saveTreatmentHistory();
+        
+        this.showToast('تم حفظ سجل العلاج بنجاح', 'success');
+        
+        // إغلاق النموذج
+        const modal = document.querySelector('div[style*="position: fixed; top: 0; left: 0"]');
+        if (modal) modal.remove();
     }
-
-    /**
-     * توليد العلاجات
-     */
-    generateTreatments(disease, severity) {
-        const treatments = [];
+    
+    // إضافة للسجل
+    addToHistory(disease) {
+        if (!disease || !disease.id) return;
         
-        if (disease.type === 'فطري') {
-            treatments.push('مبيد فطري جهازي');
-            treatments.push('تحسين التهوية');
-            treatments.push('تقليل الرطوبة');
-        } else if (disease.type === 'بكتيري') {
-            treatments.push('مبيد بكتيري');
-            treatments.push('إزالة الأجزاء المصابة');
-            treatments.push('تعقيم الأدوات');
-        } else if (disease.type === 'فيروسي') {
-            treatments.push('إزالة النبات المصاب');
-            treatments.push('مكافحة الحشرات الناقلة');
-            treatments.push('استخدام أصناف مقاومة');
-        } else {
-            treatments.push('مبيد متكامل');
-            treatments.push('تحسين ظروف النمو');
-            treatments.push('التسميد المتوازن');
-        }
+        // إزالة أي نسخة قديمة
+        this.diseaseHistory = this.diseaseHistory.filter(item => item.id !== disease.id);
         
-        if (severity === 'high') {
-            treatments.unshift('عزل فوري للنبات المصاب');
-        }
-        
-        return treatments;
-    }
-
-    /**
-     * توليد علاجات عضوية
-     */
-    generateOrganicTreatments(disease) {
-        const organicOptions = [];
-        
-        if (disease.type === 'فطري') {
-            organicOptions.push('مستخلص النيم (20 مل/لتر)');
-            organicOptions.push('صودا الخبز (5 جم/لتر)');
-            organicOptions.push('خل التفاح (10 مل/لتر)');
-        }
-        
-        if (disease.type === 'بكتيري') {
-            organicOptions.push('مستخلص الثوم (50 جم/لتر)');
-            organicOptions.push('بيروكسيد الهيدروجين (3%)');
-        }
-        
-        organicOptions.push('التسميد العضوي');
-        organicOptions.push('تحسين التربة بالكمبوست');
-        
-        return organicOptions;
-    }
-
-    /**
-     * توليد علاجات كيميائية
-     */
-    generateChemicalTreatments(disease, severity) {
-        const chemicals = [];
-        
-        if (disease.type === 'فطري') {
-            chemicals.push({
-                name: 'مبيد فطري جهازي',
-                dosage: '2 مل/لتر',
-                frequency: 'كل 10-14 يوم',
-                safety_period: '7 أيام'
-            });
-        }
-        
-        if (severity === 'high') {
-            chemicals.push({
-                name: 'مبيد قوي واسع الطيف',
-                dosage: 'حسب التعليمات',
-                frequency: 'كل 7 أيام',
-                safety_period: '14 يوم'
-            });
-        }
-        
-        return chemicals;
-    }
-
-    /**
-     * توليد تعليمات التطبيق
-     */
-    generateApplicationInstructions(disease) {
-        return [
-            'اخلط المبيد حسب التعليمات',
-            'رش في الصباح الباكر أو المساء',
-            'تأكد من تغطية جميع الأجزاء',
-            'تجنب الرش في الأيام الممطرة',
-            'اغسل الأدوات جيداً بعد الاستخدام'
-        ];
-    }
-
-    /**
-     * توليد احتياطات السلامة
-     */
-    generateSafetyPrecautions(disease) {
-        return [
-            'ارتدِ قفازات وكمامة',
-            'لا تأكل أو تشرب أثناء الرش',
-            'احفظ المبيد بعيداً عن الأطفال',
-            'اغسل اليدين جيداً بعد الاستخدام',
-            'تخلص من العبوات الفارغة بشكل آمن'
-        ];
-    }
-
-    /**
-     * توليد خطة المتابعة
-     */
-    generateFollowUpPlan(disease) {
-        return {
-            'بعد 3 أيام': 'تحقق من تحسن الأعراض',
-            'بعد أسبوع': 'كرر العلاج إذا لزم الأمر',
-            'بعد أسبوعين': 'تقييم النتائج النهائية',
-            'وقائي': 'رش وقائي كل شهر'
-        };
-    }
-
-    /**
-     * حساب تكلفة العلاج
-     */
-    calculateTreatmentCost(disease, severity) {
-        let baseCost = 50; // ريال
-        
-        if (severity === 'high') baseCost = 150;
-        else if (severity === 'medium') baseCost = 100;
-        
-        if (disease.type === 'فيروسي') baseCost *= 1.5;
-        
-        return `${baseCost}-${baseCost + 50} ريال`;
-    }
-
-    /**
-     * الحصول على أمراض شائعة
-     */
-    async getCommonDiseases(region = null, season = null) {
-        const userRegion = region || localStorage.getItem('userRegion') || 'وسط';
-        const currentSeason = season || this.getCurrentSeason();
-        
-        const cacheKey = `common_${userRegion}_${currentSeason}`;
-        
-        if (this.cache.diseases[cacheKey] && 
-            Date.now() - this.cache.diseases[cacheKey].timestamp < this.cacheDuration) {
-            return this.cache.diseases[cacheKey].data;
-        }
-
-        try {
-            let diseases = [];
-            
-            if (navigator.onLine) {
-                diseases = await this.fetchFromAPI('diseases/common', {
-                    region: userRegion,
-                    season: currentSeason
-                });
-            }
-            
-            if (!diseases || diseases.length === 0) {
-                diseases = this.getLocalCommonDiseases(userRegion, currentSeason);
-            }
-            
-            // حفظ في الكاش
-            this.cache.diseases[cacheKey] = {
-                data: diseases,
-                timestamp: Date.now()
-            };
-            this.saveCache();
-            
-            return diseases;
-            
-        } catch (error) {
-            console.error('❌ خطأ في الحصول على الأمراض الشائعة:', error);
-            return this.getLocalCommonDiseases(userRegion, currentSeason);
-        }
-    }
-
-    /**
-     * الحصول على أمراض شائعة محلية
-     */
-    getLocalCommonDiseases(region, season) {
-        if (!this.localData.diseases) return [];
-        
-        // ترشيح حسب المنطقة والموسم
-        return this.localData.diseases.filter(disease => {
-            let matches = true;
-            
-            if (disease.regions && !disease.regions.includes(region)) {
-                matches = false;
-            }
-            
-            if (disease.season && !disease.season.includes(season)) {
-                matches = false;
-            }
-            
-            return matches && disease.common === true;
-        }).slice(0, 10); // 10 أمراض كحد أقصى
-    }
-
-    /**
-     * الحصول على الموسم الحالي
-     */
-    getCurrentSeason() {
-        const month = new Date().getMonth() + 1;
-        
-        if (month >= 3 && month <= 5) return 'ربيع';
-        if (month >= 6 && month <= 8) return 'صيف';
-        if (month >= 9 && month <= 11) return 'خريف';
-        return 'شتاء';
-    }
-
-    /**
-     * البحث عن أمراض
-     */
-    async searchDiseases(query, filters = {}) {
-        const cacheKey = `search_${query}_${JSON.stringify(filters)}`;
-        
-        if (this.cache.diseases[cacheKey] && 
-            Date.now() - this.cache.diseases[cacheKey].timestamp < this.cacheDuration) {
-            return this.cache.diseases[cacheKey].data;
-        }
-
-        try {
-            let results = [];
-            
-            if (navigator.onLine) {
-                results = await this.fetchFromAPI('diseases/search', {
-                    query: query,
-                    filters: filters
-                });
-            }
-            
-            if (!results || results.length === 0) {
-                results = this.searchLocalDiseases(query, filters);
-            }
-            
-            // حفظ في الكاش
-            this.cache.diseases[cacheKey] = {
-                data: results,
-                timestamp: Date.now()
-            };
-            this.saveCache();
-            
-            // منح نقاط للبحث
-            this.awardPoints(1, `بحث عن أمراض: ${query}`);
-            
-            return results;
-            
-        } catch (error) {
-            console.error('❌ خطأ في البحث عن الأمراض:', error);
-            return this.searchLocalDiseases(query, filters);
-        }
-    }
-
-    /**
-     * البحث المحلي عن الأمراض
-     */
-    searchLocalDiseases(query, filters) {
-        if (!this.localData.diseases) return [];
-        
-        return this.localData.diseases.filter(disease => {
-            const matchesQuery = disease.name.includes(query) || 
-                               disease.symptoms.includes(query) ||
-                               disease.plant.includes(query);
-            
-            let matchesFilters = true;
-            if (filters.type) {
-                matchesFilters = disease.type === filters.type;
-            }
-            if (filters.severity) {
-                matchesFilters = matchesFilters && disease.severity === filters.severity;
-            }
-            if (filters.plant) {
-                matchesFilters = matchesFilters && disease.plant === filters.plant;
-            }
-            
-            return matchesQuery && matchesFilters;
-        });
-    }
-
-    /**
-     * تشفير الصورة
-     */
-    hashImage(imageData) {
-        // إنشاء هاش بسيط للصورة
-        let hash = 0;
-        for (let i = 0; i < Math.min(imageData.length, 100); i++) {
-            hash = ((hash << 5) - hash) + imageData.charCodeAt(i);
-            hash = hash & hash;
-        }
-        return hash.toString(36);
-    }
-
-    /**
-     * إرسال طلب إلى API
-     */
-    async fetchFromAPI(endpoint, data = null) {
-        if (!navigator.onLine) {
-            throw new Error('No internet connection');
-        }
-        
-        const url = `${this.baseURL}/${endpoint}`;
-        const options = {
-            method: data ? 'POST' : 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.apiKey}`,
-                'X-API-Key': this.apiKey,
-                'X-App-Version': '6.0'
-            }
-        };
-        
-        if (data) {
-            options.body = JSON.stringify(data);
-        }
-        
-        try {
-            const response = await fetch(url, options);
-            
-            if (!response.ok) {
-                throw new Error(`API Error: ${response.status}`);
-            }
-            
-            const result = await response.json();
-            this.logAPICall(endpoint, 'success');
-            return result;
-            
-        } catch (error) {
-            console.error(`❌ API Call Failed: ${endpoint}`, error);
-            this.logAPICall(endpoint, 'failed');
-            throw error;
-        }
-    }
-
-    /**
-     * تسجيل استدعاءات API
-     */
-    logAPICall(endpoint, status) {
-        const logs = JSON.parse(localStorage.getItem('diseaseAPILogs') || '[]');
-        
-        logs.push({
-            endpoint,
-            status,
-            timestamp: new Date().toISOString()
+        this.diseaseHistory.unshift({
+            id: disease.id,
+            name: disease.name,
+            timestamp: Date.now(),
+            date: new Date().toLocaleString('ar-SA')
         });
         
-        if (logs.length > 100) {
-            logs.shift();
+        if (this.diseaseHistory.length > 50) {
+            this.diseaseHistory.pop();
         }
         
-        localStorage.setItem('diseaseAPILogs', JSON.stringify(logs));
+        this.saveHistory();
     }
-
-    /**
-     * منح نقاط للمستخدم
-     */
-    awardPoints(points, reason) {
-        const currentPoints = parseInt(localStorage.getItem('userPoints') || '0');
-        const newPoints = currentPoints + points;
-        
-        localStorage.setItem('userPoints', newPoints.toString());
-        window.dispatchEvent(new CustomEvent('pointsUpdated'));
-        
-        console.log(`🎉 منحت ${points} نقطة لـ: ${reason}`);
+    
+    // بيانات افتراضية احتياطية
+    getFallbackDiseases() {
+        return [
+            {
+                id: 1,
+                name: "صدأ القمح",
+                scientificName: "Puccinia graminis",
+                description: "مرض فطري يصيب نبات القمح ويسبب ظهور بقع صفراء وبرتقالية على الأوراق.",
+                severity: "مرتفع",
+                symptoms: ["بقع صفراء على الأوراق", "تساقط الأوراق المبكر", "ضعف النمو"],
+                causes: ["رطوبة عالية", "درجات حرارة معتدلة", "كثافة زراعة عالية"],
+                treatment: ["مبيدات فطرية نظامية", "رش الكبريت المطهر", "استخدام أصناف مقاومة"],
+                prevention: ["تناوب المحاصيل", "زراعة أصناف مقاومة", "الرش الوقائي"],
+                affectedCrops: [1, 2],
+                season: "الربيع",
+                temperatureRange: "15-25°C"
+            },
+            {
+                id: 2,
+                name: "لفحة الطماطم",
+                scientificName: "Phytophthora infestans",
+                description: "مرض فطري مدمر يصيب الطماطم والبطاطس.",
+                severity: "مرتفع جداً",
+                symptoms: ["بقع داكنة على الأوراق", "عفن الساق", "تلف الثمار"],
+                causes: ["رطوبة عالية", "أمطار متكررة", "تهوية ضعيفة"],
+                treatment: ["مبيدات نحاسية", "مبيدات فطرية كيميائية", "إزالة النباتات المصابة"],
+                prevention: ["الصرف الجيد", "تباعد النباتات", "الري بالتنقيط"],
+                affectedCrops: [3, 4],
+                season: "الصيف",
+                temperatureRange: "18-28°C"
+            }
+        ];
     }
-
-    /**
-     * الحصول على إحصاءات
-     */
-    getStats() {
-        const logs = JSON.parse(localStorage.getItem('diseaseAPILogs') || '[]');
-        const successfulCalls = logs.filter(log => log.status === 'success').length;
-        const failedCalls = logs.filter(log => log.status === 'failed').length;
-        
-        return {
-            totalDiagnoses: Object.keys(this.cache.diagnoses).length,
-            totalTreatments: Object.keys(this.cache.treatments).length,
-            totalAPICalls: logs.length,
-            successRate: logs.length > 0 ? 
-                Math.round((successfulCalls / logs.length) * 100) : 0,
-            cacheHits: Object.keys(this.cache.diagnoses).length + 
-                      Object.keys(this.cache.treatments).length
-        };
+    
+    // تحميل المحفوظات
+    loadBookmarks() {
+        try {
+            const saved = localStorage.getItem('bookmarked_diseases');
+            if (saved) {
+                this.bookmarkedDiseases = JSON.parse(saved);
+            }
+        } catch (error) {
+            console.error('❌ خطأ في تحميل المحفوظات:', error);
+            this.bookmarkedDiseases = [];
+        }
     }
-
-    /**
-     * مسح الكاش
-     */
-    clearCache() {
-        this.cache = {
-            diseases: {},
-            diagnoses: {},
-            treatments: {},
-            images: {}
-        };
-        localStorage.removeItem('diseasesAPICache');
-        console.log('🗑️ تم مسح كاش الأمراض');
+    
+    // حفظ المحفوظات
+    saveBookmarks() {
+        try {
+            localStorage.setItem('bookmarked_diseases', JSON.stringify(this.bookmarkedDiseases));
+        } catch (error) {
+            console.error('❌ خطأ في حفظ المحفوظات:', error);
+        }
     }
-
-    /**
-     * تصدير بيانات التشخيصات
-     */
-    exportDiagnosisHistory() {
-        const diagnoses = Object.values(this.cache.diagnoses).map(item => ({
-            ...item.data,
-            diagnosed_at: new Date(item.timestamp).toLocaleString('ar-SA')
-        }));
+    
+    // تحميل السجل
+    loadHistory() {
+        try {
+            const saved = localStorage.getItem('disease_history');
+            if (saved) {
+                this.diseaseHistory = JSON.parse(saved);
+            }
+        } catch (error) {
+            console.error('❌ خطأ في تحميل السجل:', error);
+            this.diseaseHistory = [];
+        }
+    }
+    
+    // حفظ السجل
+    saveHistory() {
+        try {
+            localStorage.setItem('disease_history', JSON.stringify(this.diseaseHistory));
+        } catch (error) {
+            console.error('❌ خطأ في حفظ السجل:', error);
+        }
+    }
+    
+    // تحميل سجل العلاج
+    loadTreatmentHistory() {
+        try {
+            const saved = localStorage.getItem('treatment_history');
+            if (saved) {
+                this.treatmentHistory = JSON.parse(saved);
+            }
+        } catch (error) {
+            console.error('❌ خطأ في تحميل سجل العلاج:', error);
+            this.treatmentHistory = [];
+        }
+    }
+    
+    // حفظ سجل العلاج
+    saveTreatmentHistory() {
+        try {
+            localStorage.setItem('treatment_history', JSON.stringify(this.treatmentHistory));
+        } catch (error) {
+            console.error('❌ خطأ في حفظ سجل العلاج:', error);
+        }
+    }
+    
+    // الحصول على الأمراض المحفوظة
+    getBookmarkedDiseases() {
+        if (!this.isInitialized) return [];
         
-        return {
-            total_diagnoses: diagnoses.length,
-            diagnoses: diagnoses,
-            export_date: new Date().toISOString()
-        };
+        return this.bookmarkedDiseases
+            .map(id => this.getDiseaseById(id))
+            .filter(disease => disease !== undefined && disease !== null);
+    }
+    
+    // الحصول على آخر المشاهدات
+    getRecentDiseases(limit = 10) {
+        if (!this.isInitialized) return [];
+        
+        return this.diseaseHistory
+            .slice(0, limit)
+            .map(item => {
+                const disease = this.getDiseaseById(item.id);
+                if (disease) {
+                    return { ...disease, viewedAt: item.date };
+                }
+                return null;
+            })
+            .filter(disease => disease !== null);
+    }
+    
+    // البحث عن أمراض المحصول
+    searchDiseasesByCrop(cropId) {
+        if (!this.isInitialized) return [];
+        
+        const diseases = this.getAllDiseases();
+        return diseases.filter(disease => 
+            disease.affectedCrops && 
+            Array.isArray(disease.affectedCrops) && 
+            disease.affectedCrops.includes(parseInt(cropId))
+        );
+    }
+    
+    // عرض رسالة خطأ
+    showError(message) {
+        const container = this.getDisplayContainer();
+        if (container) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 3rem; color: #FF9800; margin-bottom: 1rem;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 style="color: #F44336; margin-bottom: 1rem;">حدث خطأ</h3>
+                    <p style="color: #666;">${message}</p>
+                    <button onclick="window.location.reload()" style="
+                        background: #2E7D32;
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 2rem;
+                        border-radius: 25px;
+                        margin-top: 1rem;
+                        cursor: pointer;
+                    ">
+                        إعادة تحميل
+                    </button>
+                </div>
+            `;
+        }
+    }
+    
+    // عرض إشعار
+    showToast(message, type = 'info') {
+        // إزالة أي إشعارات سابقة
+        const existingToasts = document.querySelectorAll('.disease-toast');
+        existingToasts.forEach(toast => toast.remove());
+        
+        const toast = document.createElement('div');
+        toast.className = 'disease-toast';
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#F44336' : '#2196F3'};
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: diseaseSlideIn 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
+            max-width: 300px;
+        `;
+        
+        toast.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'diseaseSlideOut 0.3s ease';
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
     }
 }
 
-// تصدير الكلاس
-if (typeof window !== 'undefined') {
-    window.DiseasesAPI = DiseasesAPI;
+// ====== إنشاء نسخة عالمية ======
+let diseasesDetailsInstance = null;
+
+function initDiseasesDetails() {
+    if (!diseasesDetailsInstance) {
+        diseasesDetailsInstance = new DiseasesDetails();
+    }
+    return diseasesDetailsInstance;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = DiseasesAPI;
+// ====== واجهة مبسطة للاستخدام ======
+window.diseasesDetails = {
+    // عرض تفاصيل المرض
+    show: function(diseaseId) {
+        const instance = initDiseasesDetails();
+        return instance.showDiseaseDetail(diseaseId);
+    },
+    
+    // الحصول على المحفوظات
+    getBookmarks: function() {
+        const instance = initDiseasesDetails();
+        return instance.getBookmarkedDiseases();
+    },
+    
+    // الحصول على آخر المشاهدات
+    getRecent: function(limit = 10) {
+        const instance = initDiseasesDetails();
+        return instance.getRecentDiseases(limit);
+    },
+    
+    // الحصول على أمراض المحصول
+    getCropDiseases: function(cropId) {
+        const instance = initDiseasesDetails();
+        return instance.searchDiseasesByCrop(cropId);
+    },
+    
+    // حفظ/إزالة من المحفوظات
+    toggleBookmark: function(diseaseId) {
+        const instance = initDiseasesDetails();
+        return instance.toggleBookmark(diseaseId);
+    },
+    
+    // حفظ العلاج
+    saveTreatment: function(diseaseId) {
+        const instance = initDiseasesDetails();
+        return instance.saveTreatment(diseaseId);
+    },
+    
+    // فتح نموذج تسجيل العلاج
+    showTreatmentForm: function(diseaseId) {
+        const instance = initDiseasesDetails();
+        const disease = instance.getDiseaseById(diseaseId);
+        if (disease) {
+            instance.showTreatmentForm(disease);
+        }
+    },
+    
+    // الحصول على التاريخ
+    getHistory: function() {
+        const instance = initDiseasesDetails();
+        return instance.diseaseHistory || [];
+    },
+    
+    // مسح المحفوظات
+    clearBookmarks: function() {
+        const instance = initDiseasesDetails();
+        instance.bookmarkedDiseases = [];
+        instance.saveBookmarks();
+        return true;
+    },
+    
+    // التهيئة
+    init: function() {
+        return initDiseasesDetails();
+    },
+    
+    // حالة النظام
+    isReady: function() {
+        return diseasesDetailsInstance && diseasesDetailsInstance.isInitialized;
+    }
+};
+
+// ====== تهيئة تلقائية ======
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🦠 نظام تفاصيل الأمراض جاهز للاستخدام');
+    
+    // إضافة أنيميشن إذا لم تكن موجودة
+    if (!document.querySelector('#disease-animations')) {
+        const style = document.createElement('style');
+        style.id = 'disease-animations';
+        style.textContent = `
+            @keyframes diseaseSlideIn {
+                from { transform: translateX(100px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes diseaseSlideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100px); opacity: 0; }
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.9); }
+                to { opacity: 1; transform: scale(1); }
+            }
+            
+            .disease-detail-container {
+                animation: fadeIn 0.3s ease;
+            }
+            
+            .btn-bookmark:hover, .btn-share-disease:hover, .btn-back-diseases:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            }
+        `;
+        document.head.appendChild(style);
+    }
+});
+
+// ====== تكامل مع النظام الرئيسي ======
+if (window.mainBridge) {
+    window.mainBridge.diseases = window.diseasesDetails;
+    console.log('✅ تم ربط نظام الأمراض بالنظام الرئيسي');
 }
+
+// ====== رسالة المطور ======
+console.log(`
+🦠 **نظام تفاصيل الأمراض الزراعية - الإصدار 2.1**
+✅ تم التحديث والتصحيح
+✅ متكامل مع النظام الرئيسي
+✅ دعم البيانات الاحتياطية
+✅ تحسين الأداء والاستقرار
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✨ المميزات:
+• عرض تفاصيل كاملة للأمراض
+• نظام المحفوظات والتاريخ
+• تسجيل حالات العلاج
+• مشاركة المعلومات
+• البحث عن أمراض المحاصيل
+• واجهة تفاعلية متكاملة
+• تخزين محلي آمن
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎮 أمثلة الاستخدام:
+1. diseasesDetails.show(1)
+2. diseasesDetails.getBookmarks()
+3. diseasesDetails.getCropDiseases(1)
+4. diseasesDetails.toggleBookmark(1)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 المسار: js/data/diseases.js
+🔗 متكامل مع: agricultureData, mainBridge
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+جميع الحقوق محفوظة © 2026 - المرشد الزراعي الذكي
+`);

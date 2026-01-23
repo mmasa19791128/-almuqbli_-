@@ -1,715 +1,1372 @@
-/**
- * Crop API - API لمعلومات المحاصيل الزراعية
- * الإصدار 6.0 - متكامل مع نظام النقاط والإعلانات
- */
+// ====== نظام تفاصيل المحاصيل ======
+// 🌾 الإصدار 2.1 | يناير 2026 | معدل ومتكامل
 
-class CropAPI {
+class CropsDetails {
     constructor() {
-        this.baseURL = 'https://api.agriculture-smart.com/v1';
-        this.localData = window.agricultureData || {};
-        this.apiKey = this.getAPIKey();
-        this.cacheDuration = 24 * 60 * 60 * 1000; // 24 ساعة
+        this.currentCrop = null;
+        this.cropHistory = [];
+        this.favorites = [];
+        this.isInitialized = false;
+        this.isLoading = false;
+        
         this.init();
     }
-
-    /**
-     * تهيئة النظام
-     */
-    init() {
-        this.setupCache();
-        this.setupOfflineMode();
-        console.log('🌱 Crop API جاهز للاستخدام');
-    }
-
-    /**
-     * الحصول على مفتاح API
-     */
-    getAPIKey() {
-        // استخدام مفتاح API حقيقي مع التشفير
-        const encryptedKey = 'QUl6YVN5QnZ1R2stN0ZucGtVdk44VzJkSXR2V19OcWJNSWtZUlNJ';
-        return atob(encryptedKey);
-    }
-
-    /**
-     * إعداد نظام الكاش
-     */
-    setupCache() {
-        this.cache = {
-            crops: {},
-            search: {},
-            details: {}
-        };
+    
+    async init() {
+        // الانتظار حتى تحميل البيانات الرئيسية
+        await this.waitForGlobalData();
         
-        // تحميل الكاش من localStorage
-        this.loadCache();
-    }
-
-    /**
-     * تحميل الكاش
-     */
-    loadCache() {
-        try {
-            const savedCache = localStorage.getItem('cropAPICache');
-            if (savedCache) {
-                const parsed = JSON.parse(savedCache);
-                this.cache = { ...this.cache, ...parsed };
-            }
-        } catch (error) {
-            console.error('❌ خطأ في تحميل الكاش:', error);
-        }
-    }
-
-    /**
-     * حفظ الكاش
-     */
-    saveCache() {
-        try {
-            localStorage.setItem('cropAPICache', JSON.stringify(this.cache));
-        } catch (error) {
-            console.error('❌ خطأ في حفظ الكاش:', error);
-        }
-    }
-
-    /**
-     * إعداد وضع عدم الاتصال
-     */
-    setupOfflineMode() {
-        // استخدام بيانات محلية عندما لا يكون هناك اتصال
-        if (!navigator.onLine) {
-            console.log('📴 العمل في وضع عدم الاتصال');
-            this.useLocalDataOnly = true;
-        }
-    }
-
-    /**
-     * البحث عن محاصيل
-     */
-    async searchCrops(query, filters = {}) {
-        const cacheKey = `search_${query}_${JSON.stringify(filters)}`;
+        // تحميل البيانات المحلية
+        this.loadFavorites();
+        this.loadHistory();
         
-        // التحقق من الكاش أولاً
-        if (this.cache.search[cacheKey] && 
-            Date.now() - this.cache.search[cacheKey].timestamp < this.cacheDuration) {
-            console.log('📦 استخدام البيانات من الكاش');
-            return this.cache.search[cacheKey].data;
-        }
-
-        try {
-            let results = [];
-            
-            if (this.useLocalDataOnly || !navigator.onLine) {
-                // استخدام البيانات المحلية
-                results = this.searchLocalCrops(query, filters);
-            } else {
-                // استخدام API الخارجي
-                const apiResults = await this.fetchFromAPI('crops/search', {
-                    query: query,
-                    filters: filters
-                });
-                
-                results = apiResults.crops || [];
-                
-                // دمج مع البيانات المحلية
-                const localResults = this.searchLocalCrops(query, filters);
-                results = this.mergeResults(results, localResults);
-            }
-            
-            // حفظ في الكاش
-            this.cache.search[cacheKey] = {
-                data: results,
-                timestamp: Date.now()
+        this.isInitialized = true;
+        console.log('✅ نظام تفاصيل المحاصيل جاهز');
+    }
+    
+    // الانتظار حتى تحميل البيانات
+    waitForGlobalData() {
+        return new Promise((resolve) => {
+            const checkData = () => {
+                if (window.agricultureData && window.agricultureData.isReady) {
+                    resolve();
+                } else {
+                    setTimeout(checkData, 100);
+                }
             };
-            this.saveCache();
-            
-            // منح نقاط للبحث
-            this.awardPoints(1, `بحث عن: ${query}`);
-            
-            return results;
-            
-        } catch (error) {
-            console.error('❌ خطأ في البحث:', error);
-            
-            // استخدام البيانات المحلية كحل بديل
-            return this.searchLocalCrops(query, filters);
-        }
-    }
-
-    /**
-     * البحث في البيانات المحلية
-     */
-    searchLocalCrops(query, filters) {
-        if (!this.localData.crops) return [];
-        
-        let results = this.localData.crops.filter(crop => {
-            const matchesQuery = crop.name.includes(query) || 
-                                crop.type.includes(query) ||
-                                (crop.description && crop.description.includes(query));
-            
-            let matchesFilters = true;
-            if (filters.type) {
-                matchesFilters = crop.type === filters.type;
-            }
-            if (filters.season) {
-                matchesFilters = matchesFilters && 
-                                crop.season && 
-                                crop.season.includes(filters.season);
-            }
-            
-            return matchesQuery && matchesFilters;
+            checkData();
         });
-        
-        return results.slice(0, 50); // حد أقصى 50 نتيجة
     }
-
-    /**
-     * دمج النتائج
-     */
-    mergeResults(apiResults, localResults) {
-        const merged = [...apiResults];
-        const apiIds = new Set(apiResults.map(r => r.id));
-        
-        localResults.forEach(local => {
-            if (!apiIds.has(local.id)) {
-                merged.push(local);
-            }
-        });
-        
-        // إزالة التكرارات
-        return merged.filter((crop, index, self) =>
-            index === self.findIndex(c => c.id === crop.id)
-        );
-    }
-
-    /**
-     * الحصول على تفاصيل المحصول
-     */
-    async getCropDetails(cropId) {
-        const cacheKey = `details_${cropId}`;
-        
-        // التحقق من الكاش أولاً
-        if (this.cache.details[cacheKey] && 
-            Date.now() - this.cache.details[cacheKey].timestamp < this.cacheDuration) {
-            return this.cache.details[cacheKey].data;
+    
+    // عرض تفاصيل المحصول
+    async showCropDetail(cropId) {
+        // إذا كان النظام مشغولاً
+        if (this.isLoading) {
+            this.showToast('جاري تحميل البيانات...', 'info');
+            return;
         }
-
+        
+        this.isLoading = true;
+        
         try {
-            let details = null;
+            // إذا لم يكن التطبيق جاهزاً، تحويل للصفحة المناسبة
+            if (!this.isInitialized) {
+                this.redirectToCropPage(cropId);
+                return;
+            }
             
-            if (this.useLocalDataOnly || !navigator.onLine) {
-                // استخدام البيانات المحلية
-                details = this.getLocalCropDetails(cropId);
+            const crop = this.getCropById(cropId);
+            if (!crop) {
+                this.showError('المحصول غير موجود في قاعدة البيانات');
+                return;
+            }
+            
+            this.currentCrop = crop;
+            this.addToHistory(crop);
+            
+            // التحقق من الصفحة الحالية
+            if (this.isOnCropsPage()) {
+                this.createDetailView(crop);
             } else {
-                // استخدام API الخارجي
-                details = await this.fetchFromAPI(`crops/${cropId}`);
+                this.redirectToCropPage(cropId);
+            }
+        } catch (error) {
+            console.error('❌ خطأ في عرض تفاصيل المحصول:', error);
+            this.showError('حدث خطأ في تحميل بيانات المحصول');
+        } finally {
+            this.isLoading = false;
+        }
+    }
+    
+    // الحصول على المحصول بالمعرف
+    getCropById(cropId) {
+        // محاولة من البيانات المحلية أولاً
+        if (window.agricultureData && window.agricultureData.getCropById) {
+            return window.agricultureData.getCropById(cropId);
+        }
+        
+        // البحث في البيانات المحفوظة
+        const crops = this.getAllCrops();
+        return crops.find(c => c.id == cropId);
+    }
+    
+    // الحصول على جميع المحاصيل
+    getAllCrops() {
+        if (window.agricultureData && window.agricultureData.crops) {
+            return window.agricultureData.crops;
+        }
+        
+        // بيانات افتراضية احتياطية
+        return this.getFallbackCrops();
+    }
+    
+    // إنشاء واجهة التفاصيل
+    createDetailView(crop) {
+        const container = document.createElement('div');
+        container.className = 'crop-detail-container';
+        container.innerHTML = this.generateDetailHTML(crop);
+        
+        // البحث عن حاوية العرض
+        const displayContainer = this.getDisplayContainer();
+        if (displayContainer) {
+            this.showLoading();
+            
+            setTimeout(() => {
+                displayContainer.innerHTML = '';
+                displayContainer.appendChild(container);
                 
-                if (!details) {
-                    details = this.getLocalCropDetails(cropId);
-                }
-            }
-            
-            if (details) {
-                // حفظ في الكاش
-                this.cache.details[cacheKey] = {
-                    data: details,
-                    timestamp: Date.now()
-                };
-                this.saveCache();
-                
-                // منح نقاط لعرض التفاصيل
-                this.awardPoints(2, `عرض تفاصيل: ${details.name}`);
-            }
-            
-            return details;
-            
-        } catch (error) {
-            console.error('❌ خطأ في الحصول على التفاصيل:', error);
-            return this.getLocalCropDetails(cropId);
-        }
-    }
-
-    /**
-     * الحصول على تفاصيل المحصول من البيانات المحلية
-     */
-    getLocalCropDetails(cropId) {
-        if (!this.localData.crops) return null;
-        
-        const crop = this.localData.crops.find(c => c.id === cropId);
-        if (!crop) return null;
-        
-        // تحسين البيانات المحلية
-        return {
-            ...crop,
-            images: crop.images || [
-                'https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=' + encodeURIComponent(crop.name)
-            ],
-            diseases: crop.diseases || [],
-            pesticides: crop.pesticides || [],
-            fertilizers: crop.fertilizers || []
-        };
-    }
-
-    /**
-     * الحصول على محاصيل الموسم
-     */
-    async getSeasonalCrops(season = null, region = null) {
-        const currentSeason = season || this.getCurrentSeason();
-        const userRegion = region || localStorage.getItem('userRegion') || 'وسط';
-        
-        const cacheKey = `seasonal_${currentSeason}_${userRegion}`;
-        
-        if (this.cache.crops[cacheKey] && 
-            Date.now() - this.cache.crops[cacheKey].timestamp < this.cacheDuration) {
-            return this.cache.crops[cacheKey].data;
-        }
-
-        try {
-            let crops = [];
-            
-            if (this.useLocalDataOnly || !navigator.onLine) {
-                crops = this.getLocalSeasonalCrops(currentSeason);
-            } else {
-                const response = await this.fetchFromAPI('crops/seasonal', {
-                    season: currentSeason,
-                    region: userRegion
-                });
-                
-                crops = response.crops || [];
-                
-                if (crops.length === 0) {
-                    crops = this.getLocalSeasonalCrops(currentSeason);
-                }
-            }
-            
-            // ترشيح حسب المنطقة
-            crops = crops.filter(crop => 
-                !crop.regions || 
-                crop.regions.includes(userRegion) || 
-                crop.regions.includes('all')
-            );
-            
-            // حفظ في الكاش
-            this.cache.crops[cacheKey] = {
-                data: crops,
-                timestamp: Date.now()
-            };
-            this.saveCache();
-            
-            return crops;
-            
-        } catch (error) {
-            console.error('❌ خطأ في الحصول على محاصيل الموسم:', error);
-            return this.getLocalSeasonalCrops(currentSeason);
-        }
-    }
-
-    /**
-     * الحصول على محاصيل الموسم من البيانات المحلية
-     */
-    getLocalSeasonalCrops(season) {
-        if (!this.localData.crops) return [];
-        
-        return this.localData.crops.filter(crop => 
-            crop.season && crop.season.includes(season)
-        );
-    }
-
-    /**
-     * الحصول على الموسم الحالي
-     */
-    getCurrentSeason() {
-        const month = new Date().getMonth() + 1;
-        
-        if (month >= 3 && month <= 5) return 'ربيع';
-        if (month >= 6 && month <= 8) return 'صيف';
-        if (month >= 9 && month <= 11) return 'خريف';
-        return 'شتاء';
-    }
-
-    /**
-     * الحصول على محاصيل مميزة
-     */
-    async getFeaturedCrops() {
-        try {
-            let crops = [];
-            
-            if (navigator.onLine && !this.useLocalDataOnly) {
-                crops = await this.fetchFromAPI('crops/featured');
-            }
-            
-            if (!crops || crops.length === 0) {
-                crops = this.getLocalFeaturedCrops();
-            }
-            
-            return crops.slice(0, 6); // 6 محاصيل مميزة فقط
-            
-        } catch (error) {
-            console.error('❌ خطأ في الحصول على المحاصيل المميزة:', error);
-            return this.getLocalFeaturedCrops();
-        }
-    }
-
-    /**
-     * الحصول على محاصيل مميزة من البيانات المحلية
-     */
-    getLocalFeaturedCrops() {
-        if (!this.localData.crops) return [];
-        
-        // اختيار عشوائي لبعض المحاصيل
-        const shuffled = [...this.localData.crops].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, 6);
-    }
-
-    /**
-     * الحصول على توصيات المحاصيل
-     */
-    async getCropRecommendations(soilType, waterAvailability, experienceLevel = 'beginner') {
-        const cacheKey = `recommendations_${soilType}_${waterAvailability}_${experienceLevel}`;
-        
-        if (this.cache.crops[cacheKey] && 
-            Date.now() - this.cache.crops[cacheKey].timestamp < this.cacheDuration) {
-            return this.cache.crops[cacheKey].data;
-        }
-
-        try {
-            let recommendations = [];
-            
-            if (navigator.onLine && !this.useLocalDataOnly) {
-                recommendations = await this.fetchFromAPI('crops/recommendations', {
-                    soil_type: soilType,
-                    water_availability: waterAvailability,
-                    experience_level: experienceLevel
-                });
-            }
-            
-            if (!recommendations || recommendations.length === 0) {
-                recommendations = this.getLocalRecommendations(soilType, waterAvailability, experienceLevel);
-            }
-            
-            // حفظ في الكاش
-            this.cache.crops[cacheKey] = {
-                data: recommendations,
-                timestamp: Date.now()
-            };
-            this.saveCache();
-            
-            return recommendations;
-            
-        } catch (error) {
-            console.error('❌ خطأ في الحصول على التوصيات:', error);
-            return this.getLocalRecommendations(soilType, waterAvailability, experienceLevel);
-        }
-    }
-
-    /**
-     * الحصول على توصيات من البيانات المحلية
-     */
-    getLocalRecommendations(soilType, waterAvailability, experienceLevel) {
-        if (!this.localData.crops) return [];
-        
-        return this.localData.crops.filter(crop => {
-            let suitable = true;
-            
-            if (crop.soilRequirements) {
-                suitable = crop.soilRequirements.includes(soilType);
-            }
-            
-            if (crop.waterNeeds) {
-                if (waterAvailability === 'low' && crop.waterNeeds === 'high') {
-                    suitable = false;
-                }
-                if (waterAvailability === 'high' && crop.waterNeeds === 'low') {
-                    suitable = true; // يمكن زراعته ولكن مع هدر مائي
-                }
-            }
-            
-            if (crop.difficulty) {
-                if (experienceLevel === 'beginner' && crop.difficulty === 'hard') {
-                    suitable = false;
-                }
-            }
-            
-            return suitable;
-        }).slice(0, 10); // 10 توصيات كحد أقصى
-    }
-
-    /**
-     * الحصول على جدول زراعة المحصول
-     */
-    async getPlantingSchedule(cropId, region = null) {
-        const userRegion = region || localStorage.getItem('userRegion') || 'وسط';
-        
-        try {
-            let schedule = null;
-            
-            if (navigator.onLine && !this.useLocalDataOnly) {
-                schedule = await this.fetchFromAPI(`crops/${cropId}/schedule`, {
-                    region: userRegion
-                });
-            }
-            
-            if (!schedule) {
-                schedule = this.generateLocalSchedule(cropId, userRegion);
-            }
-            
-            return schedule;
-            
-        } catch (error) {
-            console.error('❌ خطأ في الحصول على جدول الزراعة:', error);
-            return this.generateLocalSchedule(cropId, userRegion);
-        }
-    }
-
-    /**
-     * توليد جدول زراعة محلي
-     */
-    generateLocalSchedule(cropId, region) {
-        const crop = this.getLocalCropDetails(cropId);
-        if (!crop) return null;
-        
-        const today = new Date();
-        const plantingDate = new Date(today);
-        plantingDate.setDate(today.getDate() + 7); // الزراعة بعد أسبوع
-        
-        const harvestDate = new Date(plantingDate);
-        if (crop.growthPeriod) {
-            harvestDate.setDate(plantingDate.getDate() + crop.growthPeriod);
+                // إضافة الأحداث
+                this.attachDetailEvents(crop);
+                this.hideLoading();
+            }, 100);
         } else {
-            harvestDate.setDate(plantingDate.getDate() + 90); // 90 يوم افتراضي
+            console.error('❌ لم يتم العثور على حاوية العرض');
+            this.showError('حدث خطأ في عرض البيانات');
+        }
+    }
+    
+    // الحصول على حاوية العرض
+    getDisplayContainer() {
+        // محاولة إيجاد الحاوية المناسبة
+        const containers = [
+            document.getElementById('mainContent'),
+            document.getElementById('cropDetailContainer'),
+            document.querySelector('.page.active .page-content'),
+            document.querySelector('main'),
+            document.querySelector('.app-container')
+        ];
+        
+        return containers.find(container => container !== null);
+    }
+    
+    // عرض شاشة التحميل
+    showLoading() {
+        const container = this.getDisplayContainer();
+        if (!container) return;
+        
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'crop-loading';
+        loadingDiv.innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+                <div style="font-size: 3rem; color: #4CAF50; margin-bottom: 1rem; animation: spin 1s linear infinite;">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h3 style="color: #2E7D32; margin-bottom: 1rem;">جاري تحميل البيانات...</h3>
+                <p style="color: #666;">يرجى الانتظار</p>
+            </div>
+        `;
+        
+        // إضافة أنيميشن إذا لم تكن موجودة
+        if (!document.querySelector('#crop-animations')) {
+            const style = document.createElement('style');
+            style.id = 'crop-animations';
+            style.textContent = `
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
         }
         
-        return {
-            crop: crop.name,
-            region: region,
-            planting_date: plantingDate.toISOString().split('T')[0],
-            harvest_date: harvestDate.toISOString().split('T')[0],
-            watering_schedule: this.generateWateringSchedule(crop),
-            fertilization_schedule: this.generateFertilizationSchedule(crop),
-            pest_control_schedule: this.generatePestControlSchedule(crop),
-            tasks: this.generateTasks(crop, plantingDate)
+        container.innerHTML = '';
+        container.appendChild(loadingDiv);
+    }
+    
+    // إخفاء شاشة التحميل
+    hideLoading() {
+        const loadingDiv = document.querySelector('.crop-loading');
+        if (loadingDiv) {
+            loadingDiv.remove();
+        }
+    }
+    
+    // توليد HTML للتفاصيل
+    generateDetailHTML(crop) {
+        // التأكد من وجود جميع البيانات
+        const cropData = {
+            ...crop,
+            name: crop.name || 'محصول غير معروف',
+            scientificName: crop.scientificName || '',
+            category: crop.category || 'غير محدد',
+            season: crop.season || 'غير محدد',
+            growthPeriod: crop.growthPeriod || 'غير محدد',
+            yield: crop.yield || 'غير محدد',
+            description: crop.description || 'لا يوجد وصف مفصل.',
+            waterNeeds: crop.waterNeeds || 'غير محدد',
+            soilType: crop.soilType || 'غير محدد',
+            temperature: crop.temperature || 'غير محدد',
+            phRange: crop.phRange || 'غير محدد',
+            color: crop.color || '#4CAF50',
+            icon: crop.icon || '🌱',
+            plantingTime: Array.isArray(crop.plantingTime) ? crop.plantingTime : [],
+            harvestTime: Array.isArray(crop.harvestTime) ? crop.harvestTime : [],
+            commonDiseases: Array.isArray(crop.commonDiseases) ? crop.commonDiseases : [],
+            tips: Array.isArray(crop.tips) ? crop.tips : []
         };
-    }
-
-    /**
-     * توليد جدول الري
-     */
-    generateWateringSchedule(crop) {
-        const schedule = [];
         
-        for (let i = 0; i < 12; i++) { // 12 أسبوع
-            schedule.push({
-                week: i + 1,
-                frequency: crop.waterNeeds === 'high' ? 'يومياً' : 
-                          crop.waterNeeds === 'medium' ? 'كل يومين' : 'كل 3 أيام',
-                amount: crop.waterNeeds === 'high' ? '3-5 لتر/نبات' : 
-                       crop.waterNeeds === 'medium' ? '2-3 لتر/نبات' : '1-2 لتر/نبات',
-                notes: 'الري في الصباح الباكر'
-            });
+        return `
+            <div class="crop-detail-header" style="
+                background: linear-gradient(135deg, ${cropData.color}, #2E7D32);
+                color: white;
+                padding: 2rem;
+                border-radius: 15px 15px 0 0;
+                text-align: center;
+            ">
+                <div style="font-size: 4rem; margin-bottom: 1rem; animation: fadeIn 0.5s ease;">
+                    ${cropData.icon}
+                </div>
+                <h2 style="margin-bottom: 0.5rem;">${cropData.name}</h2>
+                ${cropData.scientificName ? `<p style="opacity: 0.9; font-style: italic;">${cropData.scientificName}</p>` : ''}
+                
+                <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                    <button class="btn-favorite" data-crop-id="${crop.id}" style="
+                        background: rgba(255,255,255,0.2);
+                        border: 2px solid white;
+                        color: white;
+                        padding: 0.5rem 1.5rem;
+                        border-radius: 25px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        transition: all 0.3s;
+                        font-family: 'Tajawal', sans-serif;
+                    ">
+                        <i class="fas fa-heart"></i>
+                        <span>مفضل</span>
+                    </button>
+                    
+                    <button class="btn-share" style="
+                        background: rgba(255,255,255,0.2);
+                        border: 2px solid white;
+                        color: white;
+                        padding: 0.5rem 1.5rem;
+                        border-radius: 25px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        transition: all 0.3s;
+                        font-family: 'Tajawal', sans-serif;
+                    ">
+                        <i class="fas fa-share-alt"></i>
+                        <span>مشاركة</span>
+                    </button>
+                    
+                    <button class="btn-diseases" style="
+                        background: rgba(255,255,255,0.2);
+                        border: 2px solid white;
+                        color: white;
+                        padding: 0.5rem 1.5rem;
+                        border-radius: 25px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        transition: all 0.3s;
+                        font-family: 'Tajawal', sans-serif;
+                    ">
+                        <i class="fas fa-stethoscope"></i>
+                        <span>الأمراض</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="crop-detail-content" style="padding: 2rem;">
+                <!-- معلومات أساسية -->
+                <div class="info-grid" style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 1rem;
+                    margin-bottom: 2rem;
+                ">
+                    <div class="info-card" style="
+                        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+                        padding: 1rem;
+                        border-radius: 10px;
+                        text-align: center;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    ">
+                        <div style="color: #666; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            <i class="fas fa-tag"></i> النوع
+                        </div>
+                        <div style="font-weight: bold; color: #2E7D32; font-size: 1.1rem;">
+                            ${cropData.category}
+                        </div>
+                    </div>
+                    
+                    <div class="info-card" style="
+                        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+                        padding: 1rem;
+                        border-radius: 10px;
+                        text-align: center;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    ">
+                        <div style="color: #666; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            <i class="fas fa-calendar-alt"></i> الموسم
+                        </div>
+                        <div style="font-weight: bold; color: #FF9800; font-size: 1.1rem;">
+                            ${cropData.season}
+                        </div>
+                    </div>
+                    
+                    <div class="info-card" style="
+                        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+                        padding: 1rem;
+                        border-radius: 10px;
+                        text-align: center;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    ">
+                        <div style="color: #666; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            <i class="fas fa-clock"></i> مدة النمو
+                        </div>
+                        <div style="font-weight: bold; color: #2196F3; font-size: 1.1rem;">
+                            ${cropData.growthPeriod}
+                        </div>
+                    </div>
+                    
+                    <div class="info-card" style="
+                        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+                        padding: 1rem;
+                        border-radius: 10px;
+                        text-align: center;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    ">
+                        <div style="color: #666; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            <i class="fas fa-chart-line"></i> الإنتاجية
+                        </div>
+                        <div style="font-weight: bold; color: #9C27B0; font-size: 1.1rem;">
+                            ${cropData.yield}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الوصف -->
+                <div class="description-section" style="margin-bottom: 2rem;">
+                    <h3 style="color: #2E7D32; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> الوصف
+                    </h3>
+                    <div style="
+                        background: #f9f9f9;
+                        padding: 1.5rem;
+                        border-radius: 10px;
+                        border-right: 4px solid #2E7D32;
+                        line-height: 1.8;
+                        color: #555;
+                    ">
+                        ${cropData.description}
+                    </div>
+                </div>
+                
+                <!-- مواعيد الزراعة والحصاد -->
+                ${(cropData.plantingTime.length > 0 || cropData.harvestTime.length > 0) ? `
+                <div class="timing-section" style="
+                    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+                    padding: 1.5rem;
+                    border-radius: 10px;
+                    margin-bottom: 2rem;
+                ">
+                    <h3 style="color: #2E7D32; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-calendar-alt"></i> المواعيد الزراعية
+                    </h3>
+                    
+                    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                        ${cropData.plantingTime.length > 0 ? `
+                        <div style="flex: 1; min-width: 200px;">
+                            <h4 style="color: #4CAF50; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-seedling"></i> مواعيد الزراعة
+                            </h4>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                ${this.generateMonthsList(cropData.plantingTime)}
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        ${cropData.harvestTime.length > 0 ? `
+                        <div style="flex: 1; min-width: 200px;">
+                            <h4 style="color: #FF9800; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-harvest"></i> مواعيد الحصاد
+                            </h4>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                ${this.generateMonthsList(cropData.harvestTime)}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <!-- متطلبات الزراعة -->
+                <div class="requirements-section" style="margin-bottom: 2rem;">
+                    <h3 style="color: #2E7D32; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-seedling"></i> متطلبات الزراعة
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        ${cropData.waterNeeds !== 'غير محدد' ? `
+                        <div class="requirement-card" style="
+                            background: white;
+                            padding: 1rem;
+                            border-radius: 8px;
+                            border-left: 4px solid #4CAF50;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                            transition: transform 0.3s;
+                        " onmouseenter="this.style.transform='translateY(-5px)'" onmouseleave="this.style.transform='translateY(0)'">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-tint" style="color: #2196F3;"></i>
+                                <strong>الري:</strong>
+                            </div>
+                            <span style="color: #555;">${cropData.waterNeeds}</span>
+                        </div>
+                        ` : ''}
+                        
+                        ${cropData.soilType !== 'غير محدد' ? `
+                        <div class="requirement-card" style="
+                            background: white;
+                            padding: 1rem;
+                            border-radius: 8px;
+                            border-left: 4px solid #2196F3;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                            transition: transform 0.3s;
+                        " onmouseenter="this.style.transform='translateY(-5px)'" onmouseleave="this.style.transform='translateY(0)'">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-mountain" style="color: #795548;"></i>
+                                <strong>نوع التربة:</strong>
+                            </div>
+                            <span style="color: #555;">${cropData.soilType}</span>
+                        </div>
+                        ` : ''}
+                        
+                        ${cropData.temperature !== 'غير محدد' ? `
+                        <div class="requirement-card" style="
+                            background: white;
+                            padding: 1rem;
+                            border-radius: 8px;
+                            border-left: 4px solid #FF9800;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                            transition: transform 0.3s;
+                        " onmouseenter="this.style.transform='translateY(-5px)'" onmouseleave="this.style.transform='translateY(0)'">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-thermometer-half" style="color: #F44336;"></i>
+                                <strong>درجة الحرارة:</strong>
+                            </div>
+                            <span style="color: #555;">${cropData.temperature}</span>
+                        </div>
+                        ` : ''}
+                        
+                        ${cropData.phRange !== 'غير محدد' ? `
+                        <div class="requirement-card" style="
+                            background: white;
+                            padding: 1rem;
+                            border-radius: 8px;
+                            border-left: 4px solid #9C27B0;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                            transition: transform 0.3s;
+                        " onmouseenter="this.style.transform='translateY(-5px)'" onmouseleave="this.style.transform='translateY(0)'">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-flask" style="color: #9C27B0;"></i>
+                                <strong>درجة الحموضة:</strong>
+                            </div>
+                            <span style="color: #555;">${cropData.phRange}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                <!-- الأمراض الشائعة -->
+                ${this.generateDiseasesSection(crop)}
+                
+                <!-- نصائح زراعية -->
+                ${this.generateTipsSection(crop)}
+                
+                <!-- زر العودة -->
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn-back" style="
+                        background: linear-gradient(135deg, #2E7D32, #4CAF50);
+                        color: white;
+                        border: none;
+                        padding: 1rem 3rem;
+                        border-radius: 25px;
+                        font-size: 1.1rem;
+                        cursor: pointer;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        transition: all 0.3s;
+                        font-family: 'Tajawal', sans-serif;
+                        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+                    " onmouseenter="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(46, 125, 50, 0.4)'" 
+                    onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(46, 125, 50, 0.3)'">
+                        <i class="fas fa-arrow-right"></i>
+                        العودة لقائمة المحاصيل
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    // توليد قائمة الأشهر
+    generateMonthsList(months) {
+        if (!Array.isArray(months) || months.length === 0) {
+            return '<span style="color: #999; padding: 0.5rem 1rem; background: white; border-radius: 20px;">غير محدد</span>';
         }
         
-        return schedule;
-    }
-
-    /**
-     * توليد جدول التسميد
-     */
-    generateFertilizationSchedule(crop) {
-        return [
-            {
-                stage: 'قبل الزراعة',
-                fertilizer: 'سماد عضوي',
-                amount: '10-20 طن/هكتار',
-                method: 'نثر وخلط مع التربة'
-            },
-            {
-                stage: 'بعد 3 أسابيع',
-                fertilizer: 'نيتروجين',
-                amount: '50 كجم/هكتار',
-                method: 'نثر حول النباتات'
-            },
-            {
-                stage: 'بعد 6 أسابيع',
-                fertilizer: 'فسفور وبوتاسيوم',
-                amount: '30 كجم/هكتار',
-                method: 'نثر مع الري'
-            }
-        ];
-    }
-
-    /**
-     * توليد جدول مكافحة الآفات
-     */
-    generatePestControlSchedule(crop) {
-        return [
-            {
-                stage: 'وقائي',
-                treatment: 'رش وقائي',
-                pesticide: 'مبيد حشري واسع الطيف',
-                frequency: 'كل أسبوعين'
-            },
-            {
-                stage: 'عند ظهور الآفات',
-                treatment: 'رش علاجي',
-                pesticide: 'مبيد متخصص',
-                frequency: 'حسب الحاجة'
-            }
-        ];
-    }
-
-    /**
-     * توليد المهام
-     */
-    generateTasks(crop, startDate) {
-        const tasks = [];
-        const taskTypes = ['تحضير الأرض', 'الزراعة', 'الري', 'التسميد', 'مكافحة الآفات', 'الحصاد'];
+        const allMonths = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
+                          'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
         
-        taskTypes.forEach((type, index) => {
-            const taskDate = new Date(startDate);
-            taskDate.setDate(startDate.getDate() + (index * 14)); // كل أسبوعين مهمة
-            
-            tasks.push({
-                id: `task_${index}`,
-                type: type,
-                date: taskDate.toISOString().split('T')[0],
-                description: `${type} ${crop.name}`,
-                completed: false
-            });
+        return months.map(month => `
+            <span style="
+                background: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-weight: bold;
+                color: #333;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                transition: all 0.3s;
+            " onmouseenter="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.2)'"
+             onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 5px rgba(0,0,0,0.1)'">
+                ${allMonths.includes(month) ? month : month}
+            </span>
+        `).join('');
+    }
+    
+    // توليد قسم الأمراض
+    generateDiseasesSection(crop) {
+        const diseases = this.getCropDiseases(crop.id);
+        if (diseases.length === 0) {
+            return '';
+        }
+        
+        let diseasesHTML = '<div class="diseases-section" style="margin-bottom: 2rem;">';
+        diseasesHTML += '<h3 style="color: #F44336; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">';
+        diseasesHTML += '<i class="fas fa-stethoscope"></i> الأمراض الشائعة';
+        diseasesHTML += ` <span style="background: #F44336; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem;">${diseases.length}</span>`;
+        diseasesHTML += '</h3>';
+        diseasesHTML += '<div style="display: flex; gap: 1rem; flex-wrap: wrap;">';
+        
+        diseases.forEach((disease, index) => {
+            diseasesHTML += `
+                <div style="
+                    background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+                    padding: 1rem;
+                    border-radius: 8px;
+                    border-left: 4px solid #F44336;
+                    flex: 1;
+                    min-width: 200px;
+                    transition: transform 0.3s;
+                    cursor: pointer;
+                " onmouseenter="this.style.transform='translateY(-5px)'" 
+                 onmouseleave="this.style.transform='translateY(0)'"
+                 onclick="window.cropsDetails.showDiseaseModal(${disease.id})">
+                    <div style="font-weight: bold; color: #C62828; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-virus"></i> ${disease.name}
+                    </div>
+                    <div style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        ${disease.description ? disease.description.substring(0, 80) + '...' : 'مرض يصيب المحصول'}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="background: #FF5722; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem;">
+                            ${disease.severity || 'متوسط'}
+                        </span>
+                        <span style="color: #666; font-size: 0.8rem;">
+                            <i class="fas fa-info-circle"></i> انقر للتفاصيل
+                        </span>
+                    </div>
+                </div>
+            `;
         });
         
-        return tasks;
+        diseasesHTML += '</div></div>';
+        return diseasesHTML;
     }
-
-    /**
-     * إرسال طلب إلى API
-     */
-    async fetchFromAPI(endpoint, data = null) {
-        if (!navigator.onLine || this.useLocalDataOnly) {
-            throw new Error('No internet connection');
+    
+    // توليد قسم النصائح
+    generateTipsSection(crop) {
+        if (!crop.tips || crop.tips.length === 0) {
+            return '';
         }
         
-        const url = `${this.baseURL}/${endpoint}`;
-        const options = {
-            method: data ? 'POST' : 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.apiKey}`,
-                'X-API-Key': this.apiKey,
-                'X-App-Version': '6.0',
-                'X-User-ID': localStorage.getItem('userId') || 'guest'
-            }
+        let tipsHTML = '<div class="tips-section" style="margin-bottom: 2rem;">';
+        tipsHTML += '<h3 style="color: #FF9800; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">';
+        tipsHTML += '<i class="fas fa-lightbulb"></i> نصائح زراعية';
+        tipsHTML += '</h3>';
+        tipsHTML += '<div style="background: linear-gradient(135deg, #FFF3E0, #FFE0B2); padding: 1.5rem; border-radius: 10px;">';
+        tipsHTML += '<ol style="padding-right: 1.5rem; margin: 0;">';
+        
+        crop.tips.forEach((tip, index) => {
+            tipsHTML += `
+                <li style="
+                    margin-bottom: 0.5rem; 
+                    color: #555; 
+                    padding: 0.5rem;
+                    border-radius: 5px;
+                    background: ${index % 2 === 0 ? 'rgba(255,255,255,0.5)' : 'transparent'};
+                ">
+                    ${tip}
+                </li>
+            `;
+        });
+        
+        tipsHTML += '</ol></div></div>';
+        return tipsHTML;
+    }
+    
+    // إرفاق الأحداث
+    attachDetailEvents(crop) {
+        // زر المفضلة
+        const favBtn = document.querySelector('.btn-favorite');
+        if (favBtn) {
+            favBtn.addEventListener('click', () => this.toggleFavorite(crop.id));
+            this.updateFavoriteButton(crop.id, favBtn);
+        }
+        
+        // زر المشاركة
+        const shareBtn = document.querySelector('.btn-share');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => this.shareCrop(crop));
+        }
+        
+        // زر الأمراض
+        const diseasesBtn = document.querySelector('.btn-diseases');
+        if (diseasesBtn) {
+            diseasesBtn.addEventListener('click', () => this.showAllDiseases(crop.id));
+        }
+        
+        // زر العودة
+        const backBtn = document.querySelector('.btn-back');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => this.goBack());
+        }
+    }
+    
+    // الحصول على أمراض المحصول
+    getCropDiseases(cropId) {
+        if (!this.isInitialized) return [];
+        
+        // محاولة من نظام الأمراض
+        if (window.diseasesDetails && window.diseasesDetails.getCropDiseases) {
+            return window.diseasesDetails.getCropDiseases(cropId);
+        }
+        
+        // البحث في البيانات المحلية
+        const allDiseases = window.agricultureData ? window.agricultureData.diseases || [] : [];
+        return allDiseases.filter(disease => 
+            disease.affectedCrops && 
+            Array.isArray(disease.affectedCrops) && 
+            disease.affectedCrops.includes(parseInt(cropId))
+        );
+    }
+    
+    // التبديل بين المفضلة
+    toggleFavorite(cropId) {
+        const index = this.favorites.indexOf(cropId);
+        
+        if (index === -1) {
+            // إضافة للمفضلة
+            this.favorites.push(cropId);
+            this.showToast('تم إضافة المحصول للمفضلة', 'success');
+        } else {
+            // إزالة من المفضلة
+            this.favorites.splice(index, 1);
+            this.showToast('تم إزالة المحصول من المفضلة', 'info');
+        }
+        
+        // حفظ التفضيلات
+        this.saveFavorites();
+        
+        // تحديث زر المفضلة
+        const favBtn = document.querySelector('.btn-favorite');
+        if (favBtn) {
+            this.updateFavoriteButton(cropId, favBtn);
+        }
+    }
+    
+    // تحديث زر المفضلة
+    updateFavoriteButton(cropId, button) {
+        const isFavorite = this.favorites.includes(cropId);
+        
+        const icon = button.querySelector('i');
+        const text = button.querySelector('span');
+        
+        if (isFavorite) {
+            icon.className = 'fas fa-heart';
+            icon.style.color = '#F44336';
+            text.textContent = 'مفضلة';
+            button.style.background = 'rgba(244, 67, 54, 0.2)';
+            button.style.borderColor = '#F44336';
+        } else {
+            icon.className = 'far fa-heart';
+            icon.style.color = 'white';
+            text.textContent = 'إضافة للمفضلة';
+            button.style.background = 'rgba(255,255,255,0.2)';
+            button.style.borderColor = 'white';
+        }
+    }
+    
+    // مشاركة المحصول
+    shareCrop(crop) {
+        const shareData = {
+            title: `محصول ${crop.name}`,
+            text: `تعرف على زراعة ${crop.name} - ${crop.description ? crop.description.substring(0, 100) : 'محصول زراعي مهم'}...`,
+            url: `${window.location.origin}${window.location.pathname}#crop=${crop.id}`
         };
         
-        if (data) {
-            options.body = JSON.stringify(data);
+        if (navigator.share && navigator.share instanceof Function) {
+            navigator.share(shareData)
+                .then(() => console.log('تمت المشاركة بنجاح'))
+                .catch(error => {
+                    console.log('فشلت المشاركة:', error);
+                    this.copyToClipboard(shareData.url);
+                });
+        } else {
+            this.copyToClipboard(shareData.url);
+        }
+    }
+    
+    // نسخ للنص للحافظة
+    copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => this.showToast('تم نسخ الرابط للحافظة', 'info'))
+            .catch(() => {
+                // طريقة بديلة للنسخ
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                this.showToast('تم نسخ الرابط للحافظة', 'info');
+            });
+    }
+    
+    // عرض نافذة المرض
+    showDiseaseModal(diseaseId) {
+        const disease = this.getDiseaseById(diseaseId);
+        if (!disease) {
+            this.showToast('المرض غير موجود', 'error');
+            return;
         }
         
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        `;
+        
+        modal.innerHTML = `
+            <div style="
+                background: white;
+                border-radius: 15px;
+                max-width: 500px;
+                width: 100%;
+                max-height: 80vh;
+                overflow-y: auto;
+                animation: fadeIn 0.3s ease;
+            ">
+                <div style="
+                    background: linear-gradient(135deg, #F44336, #D32F2F);
+                    color: white;
+                    padding: 1.5rem;
+                    border-radius: 15px 15px 0 0;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                ">
+                    <h3 style="margin: 0;">
+                        <i class="fas fa-virus"></i> ${disease.name}
+                    </h3>
+                    <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                            style="
+                                background: none;
+                                border: none;
+                                color: white;
+                                font-size: 1.5rem;
+                                cursor: pointer;
+                                padding: 5px;
+                                transition: transform 0.3s;
+                            " 
+                            onmouseenter="this.style.transform='rotate(90deg)'"
+                            onmouseleave="this.style.transform='rotate(0)'">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div style="padding: 1.5rem;">
+                    <p style="color: #666; line-height: 1.6; margin-bottom: 1.5rem;">
+                        ${disease.description || 'لا يوجد وصف للمرض'}
+                    </p>
+                    
+                    ${disease.symptoms && disease.symptoms.length > 0 ? `
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="color: #F44336; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-exclamation-triangle"></i> الأعراض
+                        </h4>
+                        <ul style="padding-right: 1.5rem; color: #555;">
+                            ${disease.symptoms.map(s => `<li style="margin-bottom: 0.5rem;">${s}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    ${disease.prevention && disease.prevention.length > 0 ? `
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="color: #4CAF50; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-shield-alt"></i> الوقاية
+                        </h4>
+                        <ul style="padding-right: 1.5rem; color: #555;">
+                            ${disease.prevention.map(p => `<li style="margin-bottom: 0.5rem;">${p}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    ${disease.treatment && disease.treatment.length > 0 ? `
+                    <div>
+                        <h4 style="color: #2196F3; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-medkit"></i> العلاج
+                        </h4>
+                        <ul style="padding-right: 1.5rem; color: #555;">
+                            ${disease.treatment.map(t => `<li style="margin-bottom: 0.5rem;">${t}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    ${(window.diseasesDetails && window.diseasesDetails.show) ? `
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button onclick="window.diseasesDetails.show(${disease.id}); this.parentElement.parentElement.parentElement.parentElement.remove()" 
+                                style="
+                                    background: #F44336;
+                                    color: white;
+                                    border: none;
+                                    padding: 0.75rem 1.5rem;
+                                    border-radius: 25px;
+                                    cursor: pointer;
+                                    font-family: 'Tajawal', sans-serif;
+                                ">
+                            <i class="fas fa-external-link-alt"></i> عرض التفاصيل الكاملة
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // إغلاق بالنقر خارج النافذة
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+    
+    // الحصول على المرض بالمعرف
+    getDiseaseById(diseaseId) {
+        if (window.agricultureData && window.agricultureData.getDiseaseById) {
+            return window.agricultureData.getDiseaseById(diseaseId);
+        }
+        
+        const diseases = window.agricultureData ? window.agricultureData.diseases || [] : [];
+        return diseases.find(d => d.id == diseaseId);
+    }
+    
+    // عرض جميع أمراض المحصول
+    showAllDiseases(cropId) {
+        const diseases = this.getCropDiseases(cropId);
+        if (diseases.length === 0) {
+            this.showToast('لا توجد أمراض مسجلة لهذا المحصول', 'info');
+            return;
+        }
+        
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        `;
+        
+        modal.innerHTML = `
+            <div style="
+                background: white;
+                border-radius: 15px;
+                max-width: 600px;
+                width: 100%;
+                max-height: 80vh;
+                overflow-y: auto;
+                animation: fadeIn 0.3s ease;
+            ">
+                <div style="
+                    background: linear-gradient(135deg, #F44336, #D32F2F);
+                    color: white;
+                    padding: 1.5rem;
+                    border-radius: 15px 15px 0 0;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                ">
+                    <h3 style="margin: 0;">
+                        <i class="fas fa-stethoscope"></i> أمراض المحصول
+                    </h3>
+                    <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                            style="
+                                background: none;
+                                border: none;
+                                color: white;
+                                font-size: 1.5rem;
+                                cursor: pointer;
+                                padding: 5px;
+                            ">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div style="padding: 1.5rem;">
+                    <div style="display: grid; gap: 1rem;">
+                        ${diseases.map(disease => `
+                            <div style="
+                                background: #FFEBEE;
+                                padding: 1rem;
+                                border-radius: 8px;
+                                border-left: 4px solid #F44336;
+                                cursor: pointer;
+                                transition: all 0.3s;
+                            " onmouseenter="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.1)'"
+                             onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+                             onclick="window.cropsDetails.showDiseaseModal(${disease.id}); this.parentElement.parentElement.parentElement.remove()">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <div style="font-weight: bold; color: #C62828;">${disease.name}</div>
+                                    <span style="background: #FF5722; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem;">
+                                        ${disease.severity || 'متوسط'}
+                                    </span>
+                                </div>
+                                <div style="color: #666; font-size: 0.9rem;">
+                                    ${disease.description ? disease.description.substring(0, 120) + '...' : 'مرض يصيب المحصول'}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+    
+    // العودة للقائمة
+    goBack() {
+        if (window.mainBridge && window.mainBridge.showPage) {
+            window.mainBridge.showPage('crops');
+        } else {
+            // طريقة بديلة
+            const cropsPage = document.getElementById('cropsPage');
+            if (cropsPage) {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                cropsPage.classList.add('active');
+                
+                // تحديث التنقل
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                const cropsNav = document.querySelector('.nav-item[onclick*="crops"]');
+                if (cropsNav) cropsNav.classList.add('active');
+            } else {
+                window.history.back();
+            }
+        }
+    }
+    
+    // التحقق من وجودنا في صفحة المحاصيل
+    isOnCropsPage() {
+        const currentPage = document.querySelector('.page.active');
+        return currentPage && (
+            currentPage.id === 'cropsPage' || 
+            currentPage.dataset.page === 'crops' ||
+            window.location.hash.includes('crops')
+        );
+    }
+    
+    // توجيه لصفحة المحصول
+    redirectToCropPage(cropId) {
+        if (window.mainBridge && window.mainBridge.showCropDetail) {
+            window.mainBridge.showCropDetail(cropId);
+        } else {
+            window.location.href = `index.html#crops&crop=${cropId}`;
+        }
+    }
+    
+    // بيانات افتراضية احتياطية
+    getFallbackCrops() {
+        return [
+            {
+                id: 1,
+                name: "القمح",
+                scientificName: "Triticum aestivum",
+                category: "حبوب",
+                season: "شتوي",
+                growthPeriod: "150-180 يوم",
+                yield: "3-5 طن/هكتار",
+                description: "القمح من أهم المحاصيل الغذائية في العالم، يستخدم في صناعة الخبز والمعكرونة.",
+                waterNeeds: "متوسطة إلى قليلة",
+                soilType: "طينية جيدة الصرف",
+                temperature: "15-25°C",
+                phRange: "6.0-7.5",
+                color: "#FFD700",
+                icon: "🌾",
+                plantingTime: ["نوفمبر", "ديسمبر"],
+                harvestTime: ["مايو", "يونيو"],
+                tips: [
+                    "زراعة البذور على عمق 3-5 سم",
+                    "التسميد بالنيتروجين في مراحل النمو الأولى",
+                    "مكافحة الحشائش مبكراً"
+                ]
+            },
+            {
+                id: 2,
+                name: "الطماطم",
+                scientificName: "Solanum lycopersicum",
+                category: "خضروات",
+                season: "صيفي",
+                growthPeriod: "90-120 يوم",
+                yield: "40-60 طن/هكتار",
+                description: "الطماطم من أكثر الخضروات استهلاكاً في العالم، غنية بالفيتامينات.",
+                waterNeeds: "مرتفعة",
+                soilType: "رملية طينية",
+                temperature: "20-30°C",
+                phRange: "6.0-6.8",
+                color: "#FF6347",
+                icon: "🍅",
+                plantingTime: ["فبراير", "مارس"],
+                harvestTime: ["يونيو", "يوليو"],
+                tips: [
+                    "تثبيت النباتات لدعم النمو",
+                    "الري المنتظم وتجنب الجفاف",
+                    "التسميد بالبوتاسيوم لتحسين الثمار"
+                ]
+            }
+        ];
+    }
+    
+    // إضافة للسجل
+    addToHistory(crop) {
+        if (!crop || !crop.id) return;
+        
+        // إزالة أي نسخة قديمة
+        this.cropHistory = this.cropHistory.filter(item => item.id !== crop.id);
+        
+        this.cropHistory.unshift({
+            id: crop.id,
+            name: crop.name,
+            timestamp: Date.now(),
+            date: new Date().toLocaleString('ar-SA')
+        });
+        
+        if (this.cropHistory.length > 20) {
+            this.cropHistory.pop();
+        }
+        
+        this.saveHistory();
+    }
+    
+    // تحميل المفضلة
+    loadFavorites() {
         try {
-            const response = await fetch(url, options);
-            
-            if (!response.ok) {
-                throw new Error(`API Error: ${response.status}`);
+            const saved = localStorage.getItem('favorite_crops');
+            if (saved) {
+                this.favorites = JSON.parse(saved);
+            }
+        } catch (error) {
+            console.error('❌ خطأ في تحميل المفضلة:', error);
+            this.favorites = [];
+        }
+    }
+    
+    // حفظ المفضلة
+    saveFavorites() {
+        try {
+            localStorage.setItem('favorite_crops', JSON.stringify(this.favorites));
+        } catch (error) {
+            console.error('❌ خطأ في حفظ المفضلة:', error);
+        }
+    }
+    
+    // تحميل السجل
+    loadHistory() {
+        try {
+            const saved = localStorage.getItem('crop_history');
+            if (saved) {
+                this.cropHistory = JSON.parse(saved);
+            }
+        } catch (error) {
+            console.error('❌ خطأ في تحميل السجل:', error);
+            this.cropHistory = [];
+        }
+    }
+    
+    // حفظ السجل
+    saveHistory() {
+        try {
+            localStorage.setItem('crop_history', JSON.stringify(this.cropHistory));
+        } catch (error) {
+            console.error('❌ خطأ في حفظ السجل:', error);
+        }
+    }
+    
+    // عرض رسالة خطأ
+    showError(message) {
+        const container = this.getDisplayContainer();
+        if (container) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 3rem; color: #FF9800; margin-bottom: 1rem;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 style="color: #F44336; margin-bottom: 1rem;">حدث خطأ</h3>
+                    <p style="color: #666;">${message}</p>
+                    <button onclick="window.location.reload()" style="
+                        background: #2E7D32;
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 2rem;
+                        border-radius: 25px;
+                        margin-top: 1rem;
+                        cursor: pointer;
+                        font-family: 'Tajawal', sans-serif;
+                    ">
+                        إعادة تحميل
+                    </button>
+                </div>
+            `;
+        }
+    }
+    
+    // عرض إشعار
+    showToast(message, type = 'info') {
+        // إزالة أي إشعارات سابقة
+        const existingToasts = document.querySelectorAll('.crop-toast');
+        existingToasts.forEach(toast => toast.remove());
+        
+        const toast = document.createElement('div');
+        toast.className = 'crop-toast';
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#F44336' : '#2196F3'};
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: cropSlideIn 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
+            max-width: 300px;
+        `;
+        
+        toast.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'cropSlideOut 0.3s ease';
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    // الحصول على المحاصيل المفضلة
+    getFavoriteCrops() {
+        if (!this.isInitialized) return [];
+        
+        return this.favorites
+            .map(id => this.getCropById(id))
+            .filter(crop => crop !== undefined && crop !== null);
+    }
+    
+    // الحصول على آخر المشاهدات
+    getRecentCrops(limit = 5) {
+        if (!this.isInitialized) return [];
+        
+        return this.cropHistory
+            .slice(0, limit)
+            .map(item => {
+                const crop = this.getCropById(item.id);
+                if (crop) {
+                    return { ...crop, viewedAt: item.date };
+                }
+                return null;
+            })
+            .filter(crop => crop !== null);
+    }
+}
+
+// ====== إنشاء نسخة عالمية ======
+let cropsDetailsInstance = null;
+
+function initCropsDetails() {
+    if (!cropsDetailsInstance) {
+        cropsDetailsInstance = new CropsDetails();
+    }
+    return cropsDetailsInstance;
+}
+
+// ====== واجهة مبسطة للاستخدام ======
+window.cropsDetails = {
+    // عرض تفاصيل المحصول
+    show: function(cropId) {
+        const instance = initCropsDetails();
+        return instance.showCropDetail(cropId);
+    },
+    
+    // الحصول على المفضلة
+    getFavorites: function() {
+        const instance = initCropsDetails();
+        return instance.getFavoriteCrops();
+    },
+    
+    // الحصول على آخر المشاهدات
+    getRecent: function(limit = 5) {
+        const instance = initCropsDetails();
+        return instance.getRecentCrops(limit);
+    },
+    
+    // حفظ/إزالة من المفضلة
+    toggleFavorite: function(cropId) {
+        const instance = initCropsDetails();
+        return instance.toggleFavorite(cropId);
+    },
+    
+    // الحصول على أمراض المحصول
+    getCropDiseases: function(cropId) {
+        const instance = initCropsDetails();
+        return instance.getCropDiseases(cropId);
+    },
+    
+    // عرض نافذة المرض
+    showDiseaseModal: function(diseaseId) {
+        const instance = initCropsDetails();
+        return instance.showDiseaseModal(diseaseId);
+    },
+    
+    // عرض جميع الأمراض
+    showAllDiseases: function(cropId) {
+        const instance = initCropsDetails();
+        return instance.showAllDiseases(cropId);
+    },
+    
+    // الحصول على السجل
+    getHistory: function() {
+        const instance = initCropsDetails();
+        return instance.cropHistory || [];
+    },
+    
+    // مسح المفضلة
+    clearFavorites: function() {
+        const instance = initCropsDetails();
+        instance.favorites = [];
+        instance.saveFavorites();
+        return true;
+    },
+    
+    // التهيئة
+    init: function() {
+        return initCropsDetails();
+    },
+    
+    // حالة النظام
+    isReady: function() {
+        return cropsDetailsInstance && cropsDetailsInstance.isInitialized;
+    }
+};
+
+// ====== تهيئة تلقائية ======
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🌱 نظام تفاصيل المحاصيل جاهز للاستخدام');
+    
+    // إضافة CSS للأنيميشن
+    if (!document.querySelector('#crop-animations-global')) {
+        const style = document.createElement('style');
+        style.id = 'crop-animations-global';
+        style.textContent = `
+            @keyframes cropSlideIn {
+                from { transform: translateX(100px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
             
-            const result = await response.json();
+            @keyframes cropSlideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100px); opacity: 0; }
+            }
             
-            // تسجيل استخدام API
-            this.logAPICall(endpoint, 'success');
+            @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.9); }
+                to { opacity: 1; transform: scale(1); }
+            }
             
-            return result;
-            
-        } catch (error) {
-            console.error(`❌ API Call Failed: ${endpoint}`, error);
-            this.logAPICall(endpoint, 'failed');
-            throw error;
-        }
+            .crop-detail-container {
+                animation: fadeIn 0.5s ease;
+            }
+        `;
+        document.head.appendChild(style);
     }
+});
 
-    /**
-     * تسجيل استدعاءات API
-     */
-    logAPICall(endpoint, status) {
-        const logs = JSON.parse(localStorage.getItem('apiLogs') || '[]');
-        
-        logs.push({
-            endpoint,
-            status,
-            timestamp: new Date().toISOString(),
-            online: navigator.onLine
-        });
-        
-        // حفظ آخر 100 سجل فقط
-        if (logs.length > 100) {
-            logs.shift();
-        }
-        
-        localStorage.setItem('apiLogs', JSON.stringify(logs));
-    }
-
-    /**
-     * منح نقاط للمستخدم
-     */
-    awardPoints(points, reason) {
-        const currentPoints = parseInt(localStorage.getItem('userPoints') || '0');
-        const newPoints = currentPoints + points;
-        
-        localStorage.setItem('userPoints', newPoints.toString());
-        
-        // إرسال حدث تحديث النقاط
-        window.dispatchEvent(new CustomEvent('pointsUpdated'));
-        
-        console.log(`🎉 منحت ${points} نقطة لـ: ${reason}`);
-    }
-
-    /**
-     * الحصول على إحصاءات API
-     */
-    getStats() {
-        const logs = JSON.parse(localStorage.getItem('apiLogs') || '[]');
-        const successfulCalls = logs.filter(log => log.status === 'success').length;
-        const failedCalls = logs.filter(log => log.status === 'failed').length;
-        
-        return {
-            totalCalls: logs.length,
-            successfulCalls,
-            failedCalls,
-            successRate: logs.length > 0 ? 
-                Math.round((successfulCalls / logs.length) * 100) : 0,
-            cacheHits: Object.keys(this.cache.search).length + 
-                      Object.keys(this.cache.details).length +
-                      Object.keys(this.cache.crops).length,
-            lastCall: logs[logs.length - 1] || null
-        };
-    }
-
-    /**
-     * مسح الكاش
-     */
-    clearCache() {
-        this.cache = {
-            crops: {},
-            search: {},
-            details: {}
-        };
-        localStorage.removeItem('cropAPICache');
-        console.log('🗑️ تم مسح كاش API');
-    }
-
-    /**
-     * تصدير بيانات API
-     */
-    exportData() {
-        return {
-            cache: this.cache,
-            stats: this.getStats(),
-            timestamp: new Date().toISOString()
-        };
-    }
+// ====== تكامل مع النظام الرئيسي ======
+if (window.mainBridge) {
+    window.mainBridge.crops = window.cropsDetails;
+    console.log('✅ تم ربط نظام المحاصيل بالنظام الرئيسي');
 }
 
-// تصدير الكلاس
-if (typeof window !== 'undefined') {
-    window.CropAPI = CropAPI;
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CropAPI;
-}
+// ====== رسالة المطور ======
+console.log(`
+🌱 **نظام تفاصيل المحاصيل - الإصدار 2.1**
+✅ تم التحديث والتصحيح
+✅ متكامل مع النظام الرئيسي
+✅ دعم البيانات الاحتياطية
+✅ تحسين الأداء والاستقرار
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✨ المميزات:
+• عرض تفاصيل كاملة للمحاصيل
+• نظام المفضلة والتاريخ
+• مشاركة المحاصيل بسهولة
+• عرض الأمراض والعلاجات
+• واجهة تفاعلية جميلة
+• عمل بدون اتصال
+• تكامل مع نظام الأمراض
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎮 أمثلة الاستخدام:
+1. cropsDetails.show(1)
+2. cropsDetails.getFavorites()
+3. cropsDetails.getRecent(5)
+4. cropsDetails.toggleFavorite(1)
+5. cropsDetails.getCropDiseases(1)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 المسار: js/data/crops.js
+🔗 متكامل مع: agricultureData, diseasesDetails, mainBridge
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+جميع الحقوق محفوظة © 2026 - المرشد الزراعي الذكي
+`);
