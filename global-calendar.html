@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقويم الزراعي العالمي - المرشد الزراعي الذكي</title>
+    
+    <!-- مكتبات التطبيق الرئيسي -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS الرئيسي -->
+    <link rel="stylesheet" href="../css/calendar-styles.css">
+    
+    <!-- خرائط جوجل -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=places" async defer></script>
+    
+    <!-- مكتبة Chart.js للرسوم البيانية -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- ====== شاشة التحميل ====== -->
+    <div id="loadingScreen" class="loading-screen" style="display: none;">
+        <div class="leaf-loader">
+            <i class="fas fa-globe-americas"></i>
+        </div>
+        <div class="loading-text">
+            <h2>جاري تحميل التقويم العالمي</h2>
+            <p id="loadingMessage">جاري التعرف على موقعك...</p>
+            <div class="loading-progress">
+                <div id="loadingProgressBar" class="progress-bar"></div>
+            </div>
+            <small id="loadingPercent">0%</small>
+        </div>
+    </div>
+
+    <!-- ====== رأس الصفحة ====== -->
+    <header class="global-header">
+        <div class="header-content">
+            <button class="back-btn" onclick="window.location.href='../index.html'">
+                <i class="fas fa-arrow-right"></i> الرئيسية
+            </button>
+            <h1>
+                <i class="fas fa-globe-asia"></i>
+                التقويم الزراعي العالمي
+            </h1>
+            <div class="user-location" id="userLocation">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>جاري التعرف على موقعك...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ====== لوحة التحكم الرئيسية ====== -->
+    <div class="control-panel">
+        <div class="panel-section">
+            <div class="section-header">
+                <i class="fas fa-map-marked-alt"></i>
+                <h3>اختر منطقتك</h3>
+            </div>
+            
+            <div class="region-selector">
+                <div class="region-tabs">
+                    <button class="region-tab active" data-region="middle-east">
+                        <i class="fas fa-mosque"></i> الشرق الأوسط
+                    </button>
+                    <button class="region-tab" data-region="north-africa">
+                        <i class="fas fa-desert"></i> شمال أفريقيا
+                    </button>
+                    <button class="region-tab" data-region="europe">
+                        <i class="fas fa-landmark"></i> أوروبا
+                    </button>
+                    <button class="region-tab" data-region="asia">
+                        <i class="fas fa-mountain"></i> آسيا
+                    </button>
+                    <button class="region-tab" data-region="americas">
+                        <i class="fas fa-globe-americas"></i> الأمريكتين
+                    </button>
+                    <button class="region-tab" data-region="australia">
+                        <i class="fas fa-kiwi-bird"></i> أستراليا
+                    </button>
+                </div>
+                
+                <div class="country-grid" id="countryGrid">
+                    <!-- سيتم ملؤها تلقائياً حسب المنطقة -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <div class="section-header">
+                <i class="fas fa-filter"></i>
+                <h3>تصفية حسب المحصول</h3>
+            </div>
+            
+            <div class="crop-filter">
+                <div class="filter-tags" id="cropTags">
+                    <!-- سيتم ملؤها تلقائياً -->
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" id="cropSearch" placeholder="ابحث عن محاصيل...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== التقويم الرئيسي ====== -->
+    <main class="calendar-container">
+        <!-- معلومات المنطقة المختارة -->
+        <div class="region-info" id="regionInfo">
+            <div class="info-header">
+                <div class="region-flag" id="regionFlag">🇸🇦</div>
+                <div class="region-details">
+                    <h2 id="regionName">المملكة العربية السعودية</h2>
+                    <div class="region-stats">
+                        <span class="stat">
+                            <i class="fas fa-thermometer-half"></i>
+                            المناخ: <span id="climateType">صحراوي حار</span>
+                        </span>
+                        <span class="stat">
+                            <i class="fas fa-tint"></i>
+                            معدل الأمطار: <span id="rainfall">100 ملم/سنة</span>
+                        </span>
+                        <span class="stat">
+                            <i class="fas fa-seedling"></i>
+                            المحاصيل الرئيسية: <span id="mainCrops">تمور، قمح، شعير</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="climate-chart">
+                <canvas id="climateChart"></canvas>
+            </div>
+        </div>
+
+        <!-- التقويم الشهري التفصيلي -->
+        <div class="detailed-calendar">
+            <div class="calendar-header">
+                <div class="month-selector">
+                    <button class="month-btn" onclick="changeMonth(-1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <h2 id="currentMonth">يناير 2024</h2>
+                    <button class="month-btn" onclick="changeMonth(1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+                
+                <div class="season-info">
+                    <div class="season-tag" id="seasonTag">
+                        <span>🌱 موسم الزراعة</span>
+                    </div>
+                    <div class="temperature" id="currentTemp">
+                        <i class="fas fa-thermometer-three-quarters"></i>
+                        ٤٥-٢٥°م
+                    </div>
+                </div>
+            </div>
+
+            <!-- شبكة التقويم -->
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- سيتم ملؤها تلقائياً -->
+            </div>
+
+            <!-- المهام الشهرية -->
+            <div class="monthly-tasks" id="monthlyTasks">
+                <h3><i class="fas fa-tasks"></i> المهام الزراعية لهذا الشهر</h3>
+                <div class="tasks-list">
+                    <!-- سيتم ملؤها تلقائياً -->
+                </div>
+            </div>
+        </div>
+
+        <!-- المحاصيل المتاحة هذا الشهر -->
+        <div class="crops-section">
+            <h3><i class="fas fa-leaf"></i> المحاصيل المناسبة هذا الشهر</h3>
+            <div class="crops-grid" id="currentCrops">
+                <!-- سيتم ملؤها تلقائياً -->
+            </div>
+        </div>
+
+        <!-- جدول الزراعة السنوي -->
+        <div class="annual-calendar">
+            <h3><i class="fas fa-calendar-alt"></i> جدول الزراعة السنوي</h3>
+            <div class="annual-grid" id="annualGrid">
+                <!-- سيتم ملؤها تلقائياً -->
+            </div>
+        </div>
+
+        <!-- النصائح الزراعية -->
+        <div class="agricultural-tips">
+            <h3><i class="fas fa-lightbulb"></i> نصائح زراعية لهذا الشهر</h3>
+            <div class="tips-list" id="agriculturalTips">
+                <!-- سيتم ملؤها تلقائياً -->
+            </div>
+        </div>
+    </main>
+
+    <!-- ====== الخريطة التفاعلية ====== -->
+    <div class="map-section">
+        <div class="section-header">
+            <i class="fas fa-map"></i>
+            <h3>خريطة المناطق الزراعية العالمية</h3>
+        </div>
+        <div class="world-map" id="worldMap">
+            <!-- سيتم إضافة الخريطة هنا -->
+        </div>
+        <div class="map-legend">
+            <div class="legend-item">
+                <span class="color-box" style="background: #4CAF50;"></span>
+                <span>مناطق زراعية رئيسية</span>
+            </div>
+            <div class="legend-item">
+                <span class="color-box" style="background: #FF9800;"></span>
+                <span>مناطق موسمية</span>
+            </div>
+            <div class="legend-item">
+                <span class="color-box" style="background: #2196F3;"></span>
+                <span>مناطق رعوية</span>
+            </div>
+            <div class="legend-item">
+                <span class="color-box" style="background: #9C27B0;"></span>
+                <span>مناطق بستانية</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== قائمة الأدوات ====== -->
+    <div class="tools-section">
+        <h3><i class="fas fa-tools"></i> أدوات مفيدة</h3>
+        <div class="tools-grid">
+            <div class="tool-card" onclick="downloadCalendar()">
+                <div class="tool-icon">
+                    <i class="fas fa-download"></i>
+                </div>
+                <h4>تحميل التقويم</h4>
+                <p>حفظ التقويم كملف PDF أو صورة</p>
+            </div>
+            
+            <div class="tool-card" onclick="setReminders()">
+                <div class="tool-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <h4>إضافة تذكيرات</h4>
+                <p>تذكير بالمهام الزراعية المهمة</p>
+            </div>
+            
+            <div class="tool-card" onclick="shareCalendar()">
+                <div class="tool-icon">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <h4>مشاركة التقويم</h4>
+                <p>مشاركة مع مزارعين آخرين</p>
+            </div>
+            
+            <div class="tool-card" onclick="printCalendar()">
+                <div class="tool-icon">
+                    <i class="fas fa-print"></i>
+                </div>
+                <h4>طباعة التقويم</h4>
+                <p>طباعة نسخة ورقية للتقويم</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== التذييل ====== -->
+    <footer class="calendar-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><i class="fas fa-info-circle"></i> معلومات عن التقويم</h4>
+                <p>هذا التقويم يعتمد على بيانات منظمة الأغذية والزراعة (FAO) والبيانات المناخية العالمية</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4><i class="fas fa-history"></i> آخر تحديث</h4>
+                <p>يناير 2024 - يتم التحديث شهرياً</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4><i class="fas fa-handshake"></i> الشركاء</h4>
+                <div class="partners">
+                    <span>🌾 FAO</span>
+                    <span>🌍 World Bank</span>
+                    <span>🌦️ NOAA</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2024 مرشد المزارع الذكي - جميع الحقوق محفوظة</p>
+            <p>تم تصميم هذا التقويم خصيصاً لمساعدة المزارعين حول العالم</p>
+        </div>
+    </footer>
+
+    <!-- ====== الأزرار العائمة ====== -->
+    <div class="floating-buttons">
+        <button class="fab" onclick="scrollToTop()" title="العودة للأعلى">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <button class="fab" onclick="window.location.href='../pages/chat.html'" title="اسأل الذكاء الاصطناعي">
+            <i class="fas fa-robot"></i>
+        </button>
+        <button class="fab" onclick="locateUser()" title="تحديد موقعي">
+            <i class="fas fa-location-arrow"></i>
+        </button>
+        <button class="fab" onclick="toggleDarkMode()" title="الوضع الليلي">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- ====== الأكواد الجافاسكريبت ====== -->
+    <script src="../js/modules/global-calendar.js"></script>
+    
+    <!-- تهيئة التقويم عند تحميل الصفحة -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // إظهار شاشة التحميل
+            document.getElementById('loadingScreen').style.display = 'flex';
+            
+            // تهيئة التقويم العالمي
+            setTimeout(() => {
+                if (window.globalCalendar) {
+                    window.globalCalendar.init();
+                } else {
+                    console.error('لم يتم تحميل التقويم العالمي');
+                    window.location.href = '../index.html';
+                }
+            }, 100);
+        });
+        
+        // دالة للانتقال للأعلى
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // دالة تحديد الموقع
+        function locateUser() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        alert(`تم تحديد موقعك: ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+                        // يمكن إضافة المزيد من الوظائف هنا
+                    },
+                    function(error) {
+                        alert('تعذر تحديد موقعك. يرجى السماح بالوصول للموقع.');
+                    }
+                );
+            } else {
+                alert('المتصفح لا يدعم تحديد الموقع');
+            }
+        }
+        
+        // دالة تبديل الوضع الليلي
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        // تحميل الوضع الليلي من التخزين المحلي
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+        
+        // دالة تحميل التقويم
+        function downloadCalendar() {
+            alert('سيتم تحميل التقويم كملف PDF');
+            // يمكن إضافة وظيفة التحميل الفعلية هنا
+        }
+        
+        // دالة إضافة تذكيرات
+        function setReminders() {
+            const task = prompt('أدخل المهمة التي تريد تذكيرك بها:');
+            if (task) {
+                const date = prompt('أدخل التاريخ (YYYY-MM-DD):');
+                if (date) {
+                    alert(`تم إضافة تذكير للمهمة: ${task}\nفي التاريخ: ${date}`);
+                }
+            }
+        }
+        
+        // دالة مشاركة التقويم
+        function shareCalendar() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'التقويم الزراعي العالمي',
+                    text: 'تفقد التقويم الزراعي العالمي المتكامل!',
+                    url: window.location.href
+                });
+            } else {
+                alert('شارك الرابط: ' + window.location.href);
+            }
+        }
+        
+        // دالة طباعة التقويم
+        function printCalendar() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

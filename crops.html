@@ -3,74 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المحاصيل الزراعية - المرشد الزراعي الذكي</title>
+    <title>📚 مكتبة المحاصيل الزراعية الشاملة - المرشد الزراعي الذكي</title>
     
-    <!-- مكتبات التطبيق الرئيسي -->
+
+    <!-- مكتبات التطبيق -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        /* ====== المتغيرات الأساسية ====== */
         :root {
-            --primary-color: #2E7D32;
-            --secondary-color: #4CAF50;
-            --accent-color: #FF9800;
-            --text-color: #333;
-            --bg-color: #f5f5f5;
-            --card-bg: #ffffff;
-            --grains-color: #8D6E63;
-            --vegetables-color: #43A047;
-            --fruits-color: #E53935;
-            --herbs-color: #5E35B1;
+            --primary-green: #2E7D32;
+            --secondary-green: #4CAF50;
+            --light-green: #C8E6C9;
+            --dark-green: #1B5E20;
+            --golden: #FFD700;
+            --orange: #FF9800;
+            --red: #F44336;
+            --blue: #2196F3;
+            --purple: #9C27B0;
+            --brown: #795548;
+            
+            /* ألوان الفئات */
+            --cereal: #FFD54F;
+            --vegetable: #81C784;
+            --fruit: #FF8A65;
+            --legume: #D2691E;
+            --industrial: #90CAF9;
+            --spice: #CE93D8;
+            --medicinal: #A5D6A7;
+            --tuber: #BCAAA4;
+            --nut: #8D6E63;
+            --oil: #FFB74D;
+        }
+        
+        /* ====== إعادة الضبط والأساسيات ====== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
             font-family: 'Tajawal', sans-serif;
-            background: var(--bg-color);
-            margin: 0;
-            padding: 0;
-            color: var(--text-color);
+            background: linear-gradient(135deg, #f9f9f9 0%, #f1f8e9 100%);
+            color: #333;
+            line-height: 1.8;
+            min-height: 100vh;
         }
         
-        /* رأس الصفحة */
-        .crops-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* ====== شريط التنقل العلوي ====== */
+        .top-nav {
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
             color: white;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
         }
         
-        .crops-header h1 {
-            margin: 0 0 1rem 0;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
             font-size: 2.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .logo-text .subtitle {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* ====== رأس الصفحة ====== */
+        .page-header {
+            text-align: center;
+            margin: 3rem 0;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .page-header h2 {
+            font-size: 2.8rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 20px;
         }
         
-        .crops-header p {
-            margin: 0;
-            opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
+        .page-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
         }
         
-        /* الحاوية الرئيسية */
-        .crops-container {
-            max-width: 1400px;
-            margin: 0 auto;
+        .counter-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--secondary-green), var(--primary-green));
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        /* ====== نظام البحث المتقدم ====== */
+        .search-section {
+            background: white;
             padding: 2rem;
-        }
-        
-        /* شريط البحث والتصفية */
-        .filters-section {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 1.5rem;
+            border-radius: 20px;
             margin-bottom: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.6s ease;
         }
         
         .search-container {
@@ -79,133 +172,144 @@
             margin-bottom: 1.5rem;
         }
         
-        .search-input {
+        .search-box {
             flex: 1;
-            padding: 1rem 1.5rem;
-            border: 2px solid #ddd;
-            border-radius: 12px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1.2rem 3rem 1.2rem 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
             font-size: 1.1rem;
             font-family: 'Tajawal', sans-serif;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
         
         .search-input:focus {
+            border-color: var(--primary-green);
             outline: none;
-            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
         }
         
-        .search-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            padding: 0 2rem;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1.1rem;
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+            font-size: 1.2rem;
+        }
+        
+        .advanced-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .filter-group {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: transform 0.3s;
+            flex-direction: column;
+            gap: 0.8rem;
         }
         
-        .search-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        /* فلاتر التصنيف */
-        .category-filters {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .category-filter {
-            padding: 0.8rem 1.5rem;
-            border: 2px solid;
-            background: white;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            font-size: 1rem;
+        .filter-label {
+            font-weight: 700;
+            color: var(--primary-green);
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
-        .category-filter.active {
+        .filter-select {
+            padding: 0.9rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Tajawal', sans-serif;
+            background: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-select:focus {
+            border-color: var(--secondary-green);
+            outline: none;
+        }
+        
+        /* ====== الفئات السريعة ====== */
+        .categories-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .categories-title {
+            text-align: center;
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .quick-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .category-chip {
+            padding: 0.9rem 1.8rem;
+            background: white;
+            border: 2px solid;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .category-chip.active {
             color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .category-filter[data-category="grains"] {
-            border-color: var(--grains-color);
-            color: var(--grains-color);
-        }
-        
-        .category-filter[data-category="grains"].active {
-            background: var(--grains-color);
-        }
-        
-        .category-filter[data-category="vegetables"] {
-            border-color: var(--vegetables-color);
-            color: var(--vegetables-color);
-        }
-        
-        .category-filter[data-category="vegetables"].active {
-            background: var(--vegetables-color);
-        }
-        
-        .category-filter[data-category="fruits"] {
-            border-color: var(--fruits-color);
-            color: var(--fruits-color);
-        }
-        
-        .category-filter[data-category="fruits"].active {
-            background: var(--fruits-color);
-        }
-        
-        .category-filter[data-category="herbs"] {
-            border-color: var(--herbs-color);
-            color: var(--herbs-color);
-        }
-        
-        .category-filter[data-category="herbs"].active {
-            background: var(--herbs-color);
-        }
-        
-        /* إحصائيات */
+        /* ====== الإحصائيات ====== */
         .stats-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 3rem;
+            margin: 3rem 0;
         }
         
         .stat-card {
-            background: var(--card-bg);
+            background: white;
+            padding: 2rem;
             border-radius: 15px;
-            padding: 1.5rem;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
         }
         
         .stat-card:hover {
             transform: translateY(-5px);
-        }
-        
-        .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
         
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-green);
             margin-bottom: 0.5rem;
         }
         
@@ -214,178 +318,347 @@
             font-size: 1.1rem;
         }
         
-        /* شبكة المحاصيل */
+        /* ====== شبكة المحاصيل الرئيسية ====== */
         .crops-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
-            margin-bottom: 3rem;
+            margin: 3rem 0;
         }
         
         .crop-card {
-            background: var(--card-bg);
-            border-radius: 15px;
+            background: white;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            position: relative;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease;
         }
         
         .crop-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
         
-        .crop-image {
-            height: 200px;
-            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+        .crop-header {
+            padding: 2rem;
+            color: white;
+            position: relative;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .crop-icon {
+            font-size: 4rem;
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            opacity: 0.2;
+        }
+        
+        .crop-name {
+            margin: 0;
+            font-size: 1.8rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
+            gap: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
         
-        .crop-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
+        .crop-scientific {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-style: italic;
+            margin-top: 0.5rem;
         }
         
-        .crop-card:hover .crop-image img {
-            transform: scale(1.1);
+        .crop-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
         }
         
-        .crop-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: var(--primary-color);
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
+        .crop-tag {
+            padding: 0.4rem 1rem;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        
+        .crop-body {
+            padding: 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .crop-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .info-label {
+            font-size: 0.85rem;
+            color: #666;
             font-weight: 600;
         }
         
-        .crop-content {
-            padding: 1.5rem;
-        }
-        
-        .crop-title {
-            margin: 0 0 1rem 0;
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .crop-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
-        }
-        
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: #F5F5F5;
-            padding: 0.4rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            color: #555;
-        }
-        
-        .detail-item i {
-            color: var(--primary-color);
+        .info-value {
+            font-weight: 700;
+            color: #333;
+            font-size: 1rem;
         }
         
         .crop-description {
             color: #666;
+            font-size: 0.95rem;
+            margin: 1rem 0;
+            flex-grow: 1;
             line-height: 1.6;
-            margin-bottom: 1.5rem;
-            height: 60px;
-            overflow: hidden;
         }
         
         .crop-actions {
             display: flex;
             gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
         }
         
         .action-btn {
             flex: 1;
-            padding: 0.8rem;
+            padding: 0.9rem;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 600;
-            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             transition: all 0.3s;
+            font-size: 0.95rem;
         }
         
-        .btn-details {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-        }
-        
-        .btn-save {
-            background: #F5F5F5;
-            color: var(--text-color);
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        /* زر العودة */
-        .back-button {
-            display: inline-flex;
+        /* ====== النوافذ المنبثقة ====== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
             align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideInRight 0.5s ease;
+        }
+        
+        .modal-header {
+            padding: 2.5rem;
             color: white;
-            padding: 1rem 2rem;
+            border-radius: 25px 25px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .modal-body {
+            padding: 2.5rem;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .detail-section {
+            background: #f8f9fa;
+            padding: 1.8rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-section h4 {
+            color: inherit;
+            margin-bottom: 1.2rem;
+            border-bottom: 3px solid;
+            padding-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+        }
+        
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            text-align: center;
+        }
+        
+        .nutrition-item {
+            padding: 1.2rem;
+            background: white;
             border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            margin: 0 auto;
-            display: block;
-            width: fit-content;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
         }
         
-        .back-button:hover {
+        .nutrition-item:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
         }
         
-        /* تحسينات للهواتف */
+        .nutrition-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            margin-bottom: 0.3rem;
+        }
+        
+        /* ====== أقسام خاصة ====== */
+        .featured-section {
+            background: linear-gradient(135deg, #FFF3E0, #FFECB3);
+            padding: 3rem;
+            border-radius: 25px;
+            margin: 4rem 0;
+        }
+        
+        .featured-title {
+            color: #FF9800;
+            text-align: center;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 1.8rem;
+        }
+        
+        /* ====== الأنيميشن ====== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* ====== مؤشر التحميل ====== */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            grid-column: 1/-1;
+        }
+        
+        .loading-spinner {
+            font-size: 4rem;
+            color: var(--primary-green);
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* ====== التنبيهات ====== */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-green);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.3s ease;
+            max-width: 90%;
+        }
+        
+        /* ====== تذييل الصفحة ====== */
+        .page-footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            background: linear-gradient(135deg, var(--dark-green), var(--primary-green));
+            color: white;
+            border-radius: 25px;
+        }
+        
+        .footer-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 1rem;
+        }
+        
+        /* ====== التجاوب ====== */
+        @media (max-width: 1200px) {
+            .crops-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         @media (max-width: 768px) {
-            .crops-container {
-                padding: 1rem;
-            }
-            
-            .crops-header {
-                padding: 2rem 1rem;
-            }
-            
-            .crops-header h1 {
-                font-size: 2rem;
+            .top-nav {
                 flex-direction: column;
                 text-align: center;
-                gap: 10px;
+                gap: 1.5rem;
+            }
+            
+            .page-header h2 {
+                font-size: 2.2rem;
+                flex-direction: column;
             }
             
             .search-container {
@@ -396,450 +669,2669 @@
                 grid-template-columns: 1fr;
             }
             
-            .category-filters {
-                justify-content: center;
+            .crop-info-grid {
+                grid-template-columns: 1fr;
             }
             
-            .category-filter {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
+            .advanced-filters {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .modal-content {
+                max-height: 95vh;
             }
         }
         
         @media (max-width: 480px) {
-            .crops-header h1 {
+            .container {
+                padding: 15px;
+            }
+            
+            .page-header h2 {
                 font-size: 1.8rem;
             }
             
-            .stat-card {
-                padding: 1rem;
+            .counter-badge {
+                padding: 0.6rem 1.5rem;
+                font-size: 1rem;
             }
             
-            .stat-number {
-                font-size: 2rem;
+            .category-chip {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
             }
             
             .crop-actions {
                 flex-direction: column;
             }
-        }
-        
-        /* تأثيرات متحركة */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            
+            .stat-number {
+                font-size: 2.5rem;
             }
         }
-        
-        .crop-card {
-            animation: fadeIn 0.6s ease forwards;
-        }
-        
-        .crop-card:nth-child(1) { animation-delay: 0.1s; }
-        .crop-card:nth-child(2) { animation-delay: 0.2s; }
-        .crop-card:nth-child(3) { animation-delay: 0.3s; }
-        .crop-card:nth-child(4) { animation-delay: 0.4s; }
-        .crop-card:nth-child(5) { animation-delay: 0.5s; }
-        .crop-card:nth-child(6) { animation-delay: 0.6s; }
     </style>
 </head>
 <body>
-    <!-- رأس الصفحة -->
-    <header class="crops-header">
-        <h1>
-            <i class="fas fa-leaf"></i>
-            مكتبة المحاصيل الزراعية
-        </h1>
-        <p>مكتبة شاملة تحتوي على 30+ محصول زراعي مع معلومات كاملة عن زراعة كل محصول ورعايته</p>
-    </header>
-    
-    <!-- المحتوى الرئيسي -->
-    <div class="crops-container">
-        <!-- شريط البحث والتصفية -->
-        <section class="filters-section">
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="🔍 ابحث عن محصول زراعي..." id="searchInput">
-                <button class="search-btn" onclick="searchCrops()">
-                    <i class="fas fa-search"></i> بحث
-                </button>
+    <!-- شريط التنقل العلوي -->
+    <div class="top-nav">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-seedling"></i>
             </div>
-            
-            <div class="category-filters">
-                <button class="category-filter active" data-category="all" onclick="filterCrops('all')">
-                    <i class="fas fa-globe"></i> الكل
-                </button>
-                <button class="category-filter" data-category="grains" onclick="filterCrops('grains')">
-                    <i class="fas fa-wheat-awn"></i> الحبوب
-                </button>
-                <button class="category-filter" data-category="vegetables" onclick="filterCrops('vegetables')">
-                    <i class="fas fa-carrot"></i> الخضروات
-                </button>
-                <button class="category-filter" data-category="fruits" onclick="filterCrops('fruits')">
-                    <i class="fas fa-apple-alt"></i> الفواكه
-                </button>
-                <button class="category-filter" data-category="herbs" onclick="filterCrops('herbs')">
-                    <i class="fas fa-spa"></i> الأعشاب
-                </button>
+            <div class="logo-text">
+                <h1>المرشد الزراعي الذكي</h1>
+                <div class="subtitle">مطور: محمد مقبل عبدالله سيف | اليمن - تعز - ماوية - ذراح</div>
             </div>
-        </section>
-        
-        <!-- إحصائيات -->
-        <section class="stats-section">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-seedling"></i>
-                </div>
-                <div class="stat-number" id="totalCrops">30</div>
-                <div class="stat-label">محصول زراعي</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-wheat-awn"></i>
-                </div>
-                <div class="stat-number" id="grainsCount">8</div>
-                <div class="stat-label">محصول حبوب</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-carrot"></i>
-                </div>
-                <div class="stat-number" id="vegetablesCount">12</div>
-                <div class="stat-label">محصول خضروات</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-apple-alt"></i>
-                </div>
-                <div class="stat-number" id="fruitsCount">7</div>
-                <div class="stat-label">محصول فواكه</div>
-            </div>
-        </section>
-        
-        <!-- شبكة المحاصيل -->
-        <div id="cropsGrid" class="crops-grid">
-            <!-- المحاصيل ستحمل ديناميكياً -->
         </div>
         
-        <!-- زر العودة -->
-        <a href="index.html" class="back-button">
-            <i class="fas fa-arrow-right"></i> العودة للتطبيق الرئيسي
-        </a>
+        <div class="nav-controls">
+            <a href="../index.html" class="nav-btn">
+                <i class="fas fa-home"></i> الرئيسية
+            </a>
+            <button class="nav-btn" onclick="showAllCrops()">
+                <i class="fas fa-redo"></i> تحديث القائمة
+            </button>
+            <button class="nav-btn" onclick="scrollToTop()">
+                <i class="fas fa-arrow-up"></i> للأعلى
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- رأس الصفحة -->
+        <header class="page-header">
+            <h2>
+                <i class="fas fa-book-open"></i>
+                المكتبة الزراعية العالمية
+            </h2>
+            <p>موسوعة شاملة تضم أكثر من 100 محصول زراعي من مختلف أنحاء العالم مع معلومات تفصيلية عن كل محصول</p>
+            <div class="counter-badge" id="totalCrops">جاري التحميل...</div>
+        </header>
+        
+        <!-- نظام البحث المتقدم -->
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" 
+                           placeholder="🔍 ابحث عن محصول (اسم، نوع، منطقة، فوائد...)">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <button class="action-btn" onclick="performSearch()" 
+                        style="background: var(--primary-green); color: white; min-width: 150px;">
+                    <i class="fas fa-search-plus"></i> بحث متقدم
+                </button>
+            </div>
+            
+            <div class="advanced-filters">
+                <div class="filter-group">
+                    <label class="filter-label"><i class="fas fa-filter"></i> نوع المحصول</label>
+                    <select class="filter-select" id="categoryFilter" onchange="filterCrops()">
+                        <option value="all">جميع الأنواع</option>
+                        <option value="cereal">الحبوب والنشويات</option>
+                        <option value="vegetable">الخضروات</option>
+                        <option value="fruit">الفواكه</option>
+                        <option value="legume">البقوليات</option>
+                        <option value="industrial">المحاصيل الصناعية</option>
+                        <option value="spice">التوابل والأعشاب</option>
+                        <option value="medicinal">النباتات الطبية</option>
+                        <option value="tuber">المحاصيل الدرنية</option>
+                        <option value="nut">المكسرات</option>
+                        <option value="oil">المحاصيل الزيتية</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label"><i class="fas fa-sun"></i> الموسم</label>
+                    <select class="filter-select" id="seasonFilter" onchange="filterCrops()">
+                        <option value="all">جميع المواسم</option>
+                        <option value="winter">شتوي</option>
+                        <option value="summer">صيفي</option>
+                        <option value="spring">ربيعي</option>
+                        <option value="autumn">خريفي</option>
+                        <option value="perennial">دائم</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label"><i class="fas fa-globe-asia"></i> المنطقة</label>
+                    <select class="filter-select" id="regionFilter" onchange="filterCrops()">
+                        <option value="all">جميع المناطق</option>
+                        <option value="mediterranean">متوسطية</option>
+                        <option value="tropical">استوائية</option>
+                        <option value="desert">صحراوية</option>
+                        <option value="temperate">معتدلة</option>
+                        <option value="subtropical">شبه استوائية</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label"><i class="fas fa-sort"></i> الترتيب</label>
+                    <select class="filter-select" id="sortFilter" onchange="filterCrops()">
+                        <option value="name">حسب الاسم</option>
+                        <option value="category">حسب النوع</option>
+                        <option value="popular">الأكثر شيوعاً</option>
+                        <option value="yield">حسب الإنتاجية</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+        
+        <!-- الفئات السريعة -->
+        <section class="categories-section">
+            <h3 class="categories-title">
+                <i class="fas fa-tags"></i> التصنيفات الرئيسية
+            </h3>
+            <div class="quick-categories">
+                <div class="category-chip active" onclick="filterByCategory('all')" 
+                     style="border-color: var(--primary-green); color: var(--primary-green);">
+                    <i class="fas fa-layer-group"></i> الكل
+                </div>
+                <div class="category-chip" onclick="filterByCategory('cereal')" 
+                     style="border-color: var(--cereal); color: var(--cereal);">
+                    <i class="fas fa-wheat"></i> الحبوب
+                </div>
+                <div class="category-chip" onclick="filterByCategory('vegetable')" 
+                     style="border-color: var(--vegetable); color: var(--vegetable);">
+                    <i class="fas fa-carrot"></i> الخضروات
+                </div>
+                <div class="category-chip" onclick="filterByCategory('fruit')" 
+                     style="border-color: var(--fruit); color: var(--fruit);">
+                    <i class="fas fa-apple-alt"></i> الفواكه
+                </div>
+                <div class="category-chip" onclick="filterByCategory('legume')" 
+                     style="border-color: var(--legume); color: var(--legume);">
+                    <i class="fas fa-seedling"></i> البقوليات
+                </div>
+                <div class="category-chip" onclick="filterByCategory('industrial')" 
+                     style="border-color: var(--industrial); color: var(--industrial);">
+                    <i class="fas fa-industry"></i> الصناعية
+                </div>
+                <div class="category-chip" onclick="filterByCategory('spice')" 
+                     style="border-color: var(--spice); color: var(--spice);">
+                    <i class="fas fa-pepper-hot"></i> التوابل
+                </div>
+            </div>
+        </section>
+        
+        <!-- الإحصائيات -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStats">0</div>
+                <div class="stat-label">محصول زراعي</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="cerealStats">0</div>
+                <div class="stat-label">محصول حبوبي</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="vegetableStats">0</div>
+                <div class="stat-label">نوع خضروات</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="fruitStats">0</div>
+                <div class="stat-label">نوع فواكه</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="organicStats">0</div>
+                <div class="stat-label">يمكن زراعته عضوياً</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="globalStats">0</div>
+                <div class="stat-label">محصول عالمي</div>
+            </div>
+        </div>
+        
+        <!-- المحاصيل المميزة -->
+        <section class="featured-section">
+            <h3 class="featured-title">
+                <i class="fas fa-star"></i> المحاصيل المميزة لهذا الموسم
+            </h3>
+            <div id="featuredCrops" class="crops-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                <!-- سيتم تعبئتها جافاسكريبت -->
+            </div>
+        </section>
+        
+        <!-- قائمة المحاصيل -->
+        <h3 style="color: var(--primary-green); text-align: center; margin: 3rem 0 2rem; font-size: 1.8rem;">
+            <i class="fas fa-leaf"></i> جميع المحاصيل الزراعية
+        </h3>
+        
+        <div id="loadingIndicator" class="loading" style="display: none;">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner"></i>
+            </div>
+            <p>جاري تحميل المحاصيل...</p>
+        </div>
+        
+        <div id="cropsContainer" class="crops-grid">
+            <!-- سيتم تعبئتها جافاسكريبت -->
+        </div>
+        
+        <!-- التنقل بين الصفحات -->
+        <div style="text-align: center; margin: 4rem 0;">
+            <button onclick="loadMoreCrops()" id="loadMoreBtn" 
+                    style="background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)); 
+                           color: white; border: none; padding: 1.2rem 3rem; border-radius: 25px; 
+                           font-size: 1.1rem; cursor: pointer; display: inline-flex; align-items: center; 
+                           gap: 12px; transition: all 0.3s;" 
+                    onmouseenter="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 25px rgba(46, 125, 50, 0.3)'" 
+                    onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                <i class="fas fa-plus"></i> تحميل المزيد
+            </button>
+        </div>
+        
+        <!-- تذييل الصفحة -->
+        <footer class="page-footer">
+            <div style="font-size: 1.2rem; margin-bottom: 1rem;">
+                <i class="fas fa-seedling"></i> المرشد الزراعي الذكي
+            </div>
+            <div class="footer-info">
+                الإصدار 1.0 | فبراير 2026<br>
+                تطوير: محمد مقبل عبدالله سيف<br>
+                اليمن - محافظة تعز - مديرية ماوية - قرية ذراح
+            </div>
+        </footer>
     </div>
     
+    <!-- نافذة التفاصيل المنبثقة -->
+    <div id="detailModal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header" id="detailHeader">
+                <!-- سيتم تعبئتها جافاسكريبت -->
+            </div>
+            <div class="modal-body" id="detailBody">
+                <!-- سيتم تعبئتها جافاسكريبت -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- تنبيهات -->
+    <div id="notification" class="notification"></div>
+
     <!-- جافاسكريبت -->
     <script>
-        // بيانات المحاصيل (يمكن استيرادها من ملف خارجي)
-        const cropsData = [
+        // ====== قاعدة البيانات الشاملة (100+ محصول) ======
+        const CROPS_DATABASE = [
+            // === الحبوب والنشويات (20 محصول) ===
             {
                 id: 1,
-                name: "الطماطم",
-                category: "vegetables",
-                icon: "🍅",
-                image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400",
-                season: ["ربيع", "صيف"],
-                duration: "70-90 يوم",
+                name: "القمح",
+                scientific: "Triticum aestivum",
+                category: "cereal",
+                type: "حولي",
+                season: "شتوي",
+                region: ["mediterranean", "temperate"],
+                duration: "180-210 يوم",
+                temperature: "15-25°C",
                 water: "متوسط",
-                temperature: "20-30°C",
-                soil: "طينية رملية",
-                yield: "10-20 طن/هكتار",
-                description: "الطماطم من الخضروات الأساسية في المطبخ العربي، تحتاج إلى تربة جيدة الصرف وضوء شمس كامل."
+                soil: "طينية جيدة الصرف",
+                ph: "6.0-7.5",
+                nutrients: ["نيتروجين", "فوسفور", "بوتاسيوم"],
+                planting_method: "بذور مباشرة",
+                spacing: "15-20 سم بين النباتات",
+                depth: "3-5 سم",
+                yield: "3-6 طن/هكتار",
+                nutritional_value: {
+                    calories: 327,
+                    protein: "12.6g",
+                    carbs: "71.2g",
+                    fiber: "12.2g",
+                    fat: "1.5g",
+                    vitamins: ["ب1 (ثيامين)", "ب3 (نياسين)", "ب9 (فولات)", "E"],
+                    minerals: ["حديد", "زنك", "مغنيسيوم", "سيلينيوم"]
+                },
+                health_benefits: [
+                    "مصدر رئيسي للطاقة",
+                    "غني بالألياف لصحة الجهاز الهضمي",
+                    "يدعم صحة القلب",
+                    "يساعد في تنظيم سكر الدم",
+                    "مهم لصحة العظام"
+                ],
+                treats: ["الإمساك", "فقر الدم", "هشاشة العظام", "أمراض القلب"],
+                diseases: ["صدأ الأوراق", "التبقع", "عفن الجذور", "الصدأ الأسود"],
+                harvest_time: "أبريل - يونيو",
+                storage: "مكان جاف وبارد (رطوبة أقل من 14%)",
+                economic_value: "مرتفع جداً",
+                global_production: "772 مليون طن",
+                top_producers: ["الصين", "الهند", "روسيا"],
+                organic: true,
+                icon: "🌾",
+                color: "#FFD54F",
+                description: "القمح من أقدم المحاصيل الزراعية وأكثرها أهمية، يعتبر الغذاء الأساسي لمليارات البشر حول العالم.",
+                popularity: 95
             },
             {
                 id: 2,
-                name: "القمح",
-                category: "grains",
-                icon: "🌾",
-                image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w-400",
-                season: ["شتاء"],
-                duration: "120-150 يوم",
-                water: "قليل",
-                temperature: "10-25°C",
-                soil: "طينية",
-                yield: "3-5 طن/هكتار",
-                description: "القمح هو الغذاء الأساسي في العالم العربي، يزرع في المناطق الباردة والمعتدلة."
+                name: "الأرز",
+                scientific: "Oryza sativa",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                region: ["tropical", "subtropical"],
+                duration: "110-150 يوم",
+                temperature: "20-35°C",
+                water: "مرتفع",
+                soil: "طينية ثقيلة",
+                ph: "5.5-6.5",
+                nutrients: ["نيتروجين", "سيليكون", "زنك"],
+                planting_method: "شتل أو بذور",
+                spacing: "20x20 سم",
+                depth: "1-2 سم",
+                yield: "4-8 طن/هكتار",
+                nutritional_value: {
+                    calories: 130,
+                    protein: "2.7g",
+                    carbs: "28g",
+                    fiber: "0.4g",
+                    fat: "0.3g",
+                    vitamins: ["ب1 (ثيامين)", "ب3 (نياسين)", "ب6"],
+                    minerals: ["منغنيز", "سيلينيوم", "مغنيسيوم"]
+                },
+                health_benefits: [
+                    "مصدر سريع للطاقة",
+                    "خالي من الجلوتين",
+                    "سهل الهضم",
+                    "يساعد في تنظيم ضغط الدم"
+                ],
+                treats: ["اضطرابات الهضم", "ارتفاع ضغط الدم", "حساسية الجلوتين"],
+                diseases: ["لفحة الأرز", "التدرن", "التبقع البكتيري"],
+                harvest_time: "يوليو - أكتوبر",
+                storage: "مكان جاف معتدل الحرارة",
+                economic_value: "مرتفع جداً",
+                global_production: "755 مليون طن",
+                top_producers: ["الصين", "الهند", "إندونيسيا"],
+                organic: true,
+                icon: "🍚",
+                color: "#FFF8E1",
+                description: "الأرز هو الغذاء الأساسي لأكثر من نصف سكان العالم، خاصة في قارة آسيا.",
+                popularity: 90
             },
             {
                 id: 3,
-                name: "البطاطس",
-                category: "vegetables",
-                icon: "🥔",
-                image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400",
-                season: ["شتاء", "ربيع"],
+                name: "الذرة",
+                scientific: "Zea mays",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                region: ["tropical", "temperate"],
                 duration: "90-120 يوم",
-                water: "متوسط",
-                temperature: "15-20°C",
-                soil: "رملية طينية",
-                yield: "20-30 طن/هكتار",
-                description: "البطاطس من المحاصيل النشوية المهمة، تحتاج إلى تربة جيدة التهوية وتجنب الصقيع."
+                temperature: "18-32°C",
+                water: "متوسط إلى مرتفع",
+                soil: "خصبة جيدة الصرف",
+                ph: "5.8-7.0",
+                nutrients: ["نيتروجين", "فوسفور", "زنك"],
+                planting_method: "بذور مباشرة",
+                spacing: "25x75 سم",
+                depth: "3-5 سم",
+                yield: "5-10 طن/هكتار",
+                nutritional_value: {
+                    calories: 365,
+                    protein: "9.4g",
+                    carbs: "74.3g",
+                    fiber: "7.3g",
+                    fat: "4.7g",
+                    vitamins: ["ب1", "ب5", "فولات", "A"],
+                    minerals: ["فوسفور", "مغنيسيوم", "زنك"]
+                },
+                health_benefits: [
+                    "مصدر للبروتين النباتي",
+                    "غني بمضادات الأكسدة",
+                    "يحسن صحة العين",
+                    "يدعم الجهاز المناعي"
+                ],
+                treats: ["سوء التغذية", "مشاكل الرؤية", "ضعف المناعة"],
+                diseases: ["تبقع الأوراق", "عفن الساق", "الفحة الجنوبية"],
+                harvest_time: "أغسطس - أكتوبر",
+                storage: "مكان جاف مع تهوية جيدة",
+                economic_value: "مرتفع",
+                global_production: "1.1 مليار طن",
+                top_producers: ["الولايات المتحدة", "الصين", "البرازيل"],
+                organic: true,
+                icon: "🌽",
+                color: "#FFEB3B",
+                description: "الذرة من المحاصيل متعددة الاستخدامات حيث تستخدم للغذاء والعلف والصناعة.",
+                popularity: 85
             },
             {
                 id: 4,
-                name: "الخيار",
-                category: "vegetables",
-                icon: "🥒",
-                image: "https://images.unsplash.com/photo-1589621311466-6085d4b4878c?w=400",
-                season: ["ربيع", "صيف"],
-                duration: "50-70 يوم",
-                water: "كثير",
-                temperature: "25-35°C",
-                soil: "رملية جيدة الصرف",
-                yield: "15-25 طن/هكتار",
-                description: "الخيار من الخضروات الصيفية المنعشة، يحتاج إلى ري منتظم وحماية من الرياح القوية."
+                name: "الشعير",
+                scientific: "Hordeum vulgare",
+                category: "cereal",
+                type: "حولي",
+                season: "شتوي",
+                region: ["temperate"],
+                duration: "90-120 يوم",
+                temperature: "12-25°C",
+                water: "منخفض",
+                soil: "متوسطة الخصوبة",
+                ph: "6.0-8.0",
+                icon: "🌾",
+                color: "#D4A017",
+                description: "الشعير يستخدم في التغذية البشرية والحيوانية وصناعة البيرة.",
+                popularity: 70
             },
             {
                 id: 5,
-                name: "التمر",
-                category: "fruits",
-                icon: "🌴",
-                image: "https://images.unsplash.com/photo-1564501049418-3c27787d01e8?w=400",
-                season: ["صيف"],
-                duration: "4-7 سنوات",
-                water: "قليل",
-                temperature: "25-40°C",
-                soil: "رملية",
-                yield: "50-100 كجم/شجرة",
-                description: "التمر هو غذاء أساسي في الصحراء، يتحمل الجفاف والحرارة العالية."
+                name: "الشوفان",
+                scientific: "Avena sativa",
+                category: "cereal",
+                type: "حولي",
+                season: "ربيعي",
+                region: ["temperate"],
+                duration: "100-120 يوم",
+                temperature: "15-25°C",
+                water: "متوسط",
+                icon: "🌾",
+                color: "#D2B48C",
+                description: "الشوفان غني بالألياف ومفيد لصحة القلب والجهاز الهضمي.",
+                popularity: 75
             },
             {
                 id: 6,
-                name: "الريحان",
-                category: "herbs",
-                icon: "🌿",
-                image: "https://images.unsplash.com/photo-1572450634736-e76e5e1d9a04?w=400",
-                season: ["ربيع", "صيف"],
-                duration: "60-90 يوم",
-                water: "متوسط",
-                temperature: "20-30°C",
-                soil: "جيدة الصرف",
-                yield: "2-3 كجم/م²",
-                description: "الريحان من الأعشاب العطرية الشهيرة، يستخدم في الطهي والطب الشعبي."
+                name: "الجاودار",
+                scientific: "Secale cereale",
+                category: "cereal",
+                type: "حولي",
+                season: "شتوي",
+                region: ["temperate"],
+                duration: "120-150 يوم",
+                icon: "🌾",
+                color: "#8B4513",
+                description: "الجاودار مقاوم للبرودة ويستخدم في الخبز الأسود.",
+                popularity: 60
             },
             {
                 id: 7,
-                name: "الذرة",
-                category: "grains",
-                icon: "🌽",
-                image: "https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=400",
-                season: ["صيف"],
-                duration: "80-100 يوم",
-                water: "متوسط",
-                temperature: "20-30°C",
-                soil: "طينية رملية",
-                yield: "5-8 طن/هكتار",
-                description: "الذرة من المحاصيل الغذائية المهمة، تستخدم كعلف للحيوانات وطعام للإنسان."
+                name: "الذرة الرفيعة",
+                scientific: "Sorghum bicolor",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                region: ["tropical", "desert"],
+                icon: "🌾",
+                color: "#8B0000",
+                description: "تتحمل الجفاف وتستخدم كعلف وصناعة السكر والدبس.",
+                popularity: 65
             },
             {
                 id: 8,
-                name: "العنب",
-                category: "fruits",
-                icon: "🍇",
-                image: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=400",
-                season: ["ربيع", "صيف"],
-                duration: "3-5 سنوات",
-                water: "قليل إلى متوسط",
-                temperature: "15-30°C",
-                soil: "جيدة الصرف",
-                yield: "10-20 طن/هكتار",
-                description: "العنب من الفواكه المتعددة الاستخدامات، يصلح للأكل الطازج والتجفيف وصنع النبيذ."
+                name: "الدخن",
+                scientific: "Pennisetum glaucum",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                region: ["desert", "tropical"],
+                icon: "🌾",
+                color: "#DEB887",
+                description: "مقاوم للجفاف وسريع النمو، غذاء مهم في المناطق الجافة.",
+                popularity: 55
             },
             {
                 id: 9,
-                name: "البصل",
-                category: "vegetables",
-                icon: "🧅",
-                image: "https://images.unsplash.com/photo-1567306301408-9b74779a11af?w=400",
-                season: ["شتاء"],
-                duration: "90-120 يوم",
-                water: "قليل",
-                temperature: "15-25°C",
-                soil: "رملية طينية",
-                yield: "20-30 طن/هكتار",
-                description: "البصل من الخضروات الأساسية في الطهي، يساعد في حفظ الأطعمة ويعزز النكهة."
+                name: "الكسافا",
+                scientific: "Manihot esculenta",
+                category: "cereal",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🥔",
+                color: "#F5DEB3",
+                description: "مصدر مهم للنشا في المناطق الاستوائية.",
+                popularity: 70
             },
             {
                 id: 10,
-                name: "الأرز",
-                category: "grains",
-                icon: "🍚",
-                image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400",
-                season: ["صيف"],
+                name: "البطاطا الحلوة",
+                scientific: "Ipomoea batatas",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                region: ["tropical", "subtropical"],
+                icon: "🍠",
+                color: "#FF6347",
+                description: "غنية بفيتامين أ ومضادات الأكسدة.",
+                popularity: 80
+            },
+            {
+                id: 11,
+                name: "القلقاس",
+                scientific: "Colocasia esculenta",
+                category: "cereal",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🥔",
+                color: "#8B7355",
+                description: "درنات نشوية مهمة في المطبخ الآسيوي.",
+                popularity: 50
+            },
+            {
+                id: 12,
+                name: "الدخن اللؤلؤي",
+                scientific: "Pennisetum glaucum",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌾",
+                color: "#DAA520",
+                description: "مقاوم للجفاف ويستخدم كعلف وحبوب غذائية.",
+                popularity: 45
+            },
+            {
+                id: 13,
+                name: "التيف",
+                scientific: "Eragrostis tef",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌾",
+                color: "#CD853F",
+                description: "حبوب دقيقة تستخدم في إثيوبيا لصنع الإنجيرا.",
+                popularity: 40
+            },
+            {
+                id: 14,
+                name: "الكينوا",
+                scientific: "Chenopodium quinoa",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌾",
+                color: "#F4A460",
+                description: "غنية بالبروتين الكامل وتحتوي على جميع الأحماض الأمينية الأساسية.",
+                popularity: 85
+            },
+            {
+                id: 15,
+                name: "الحنطة السوداء",
+                scientific: "Fagopyrum esculentum",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌾",
+                color: "#8B4513",
+                description: "خالية من الجلوتين وغنية بالألياف والبروتين.",
+                popularity: 75
+            },
+            {
+                id: 16,
+                name: "الأمارانث",
+                scientific: "Amaranthus spp.",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌾",
+                color: "#DC143C",
+                description: "حبوب قديمة غنية بالبروتين والحديد.",
+                popularity: 60
+            },
+            {
+                id: 17,
+                name: "الرايس البري",
+                scientific: "Zizania spp.",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌾",
+                color: "#2E8B57",
+                description: "حبوب برية مغذية وغالية الثمن.",
+                popularity: 40
+            },
+            {
+                id: 18,
+                name: "السبانخ المائي",
+                scientific: "Ipomoea aquatica",
+                category: "cereal",
+                type: "معمر",
+                season: "دائم",
+                icon: "🌿",
+                color: "#228B22",
+                description: "نبات مائي يؤكل كخضار في جنوب شرق آسيا.",
+                popularity: 35
+            },
+            {
+                id: 19,
+                name: "الترمس",
+                scientific: "Lupinus spp.",
+                category: "cereal",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🫘",
+                color: "#6B8E23",
+                description: "بقوليات غنية بالبروتين تستخدم كبديل للحوم.",
+                popularity: 55
+            },
+            {
+                id: 20,
+                name: "الفونيو",
+                scientific: "Digitaria exilis",
+                category: "cereal",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌾",
+                color: "#D2691E",
+                description: "حبوب صغيرة مغذية تزرع في غرب أفريقيا.",
+                popularity: 30
+            },
+            
+            // === الخضروات (25 محصول) ===
+            {
+                id: 21,
+                name: "الطماطم",
+                scientific: "Solanum lycopersicum",
+                category: "vegetable",
+                type: "حولي",
+                season: "ربيعي,صيفي",
+                region: ["mediterranean", "temperate"],
+                duration: "70-90 يوم",
+                temperature: "18-27°C",
+                water: "متوسط",
+                soil: "رملية طينية",
+                ph: "6.0-6.8",
+                nutrients: ["نيتروجين", "فوسفور", "بوتاسيوم"],
+                planting_method: "شتل",
+                spacing: "45x75 سم",
+                depth: "0.5 سم",
+                yield: "30-50 طن/هكتار",
+                nutritional_value: {
+                    calories: 18,
+                    protein: "0.9g",
+                    carbs: "3.9g",
+                    fiber: "1.2g",
+                    fat: "0.2g",
+                    vitamins: ["C", "A", "K", "ب9"],
+                    minerals: ["بوتاسيوم", "منغنيز"]
+                },
+                health_benefits: [
+                    "غني بمضادات الأكسدة (ليكوبين)",
+                    "يحسن صحة القلب",
+                    "يقلل خطر السرطان",
+                    "يحسن صحة الجلد"
+                ],
+                treats: ["أمراض القلب", "سرطان البروستاتا", "شيخوخة الجلد"],
+                diseases: ["لفحة الطماطم", "عفن الجذور", "الذبول البكتيري"],
+                harvest_time: "يونيو - سبتمبر",
+                storage: "مكان بارد (ليس الثلاجة)",
+                economic_value: "مرتفع",
+                global_production: "182 مليون طن",
+                top_producers: ["الصين", "الهند", "الولايات المتحدة"],
+                organic: true,
+                icon: "🍅",
+                color: "#F44336",
+                description: "الطماطم من أكثر الخضروات استهلاكاً في العالم، غنية بالليكوبين المضاد للأكسدة.",
+                popularity: 95
+            },
+            {
+                id: 22,
+                name: "البطاطس",
+                scientific: "Solanum tuberosum",
+                category: "vegetable",
+                type: "حولي",
+                season: "ربيعي,خريفي",
+                region: ["temperate"],
                 duration: "90-120 يوم",
-                water: "كثير",
-                temperature: "20-35°C",
-                soil: "طينية",
-                yield: "4-6 طن/هكتار",
-                description: "الأرز هو الغذاء الأساسي لنصف سكان العالم، يحتاج إلى مياه وفيرة وتربة طينية."
+                temperature: "15-20°C",
+                water: "متوسط",
+                soil: "خفيفة جيدة الصرف",
+                ph: "5.0-6.5",
+                nutrients: ["بوتاسيوم", "فوسفور"],
+                planting_method: "درنات",
+                spacing: "30x70 سم",
+                depth: "10-15 سم",
+                yield: "20-40 طن/هكتار",
+                nutritional_value: {
+                    calories: 77,
+                    protein: "2g",
+                    carbs: "17g",
+                    fiber: "2.2g",
+                    fat: "0.1g",
+                    vitamins: ["C", "ب6", "ب1"],
+                    minerals: ["بوتاسيوم", "منغنيز", "فوسفور"]
+                },
+                health_benefits: [
+                    "مصدر ممتاز للطاقة",
+                    "غني بالبوتاسيوم",
+                    "يحسن الهضم",
+                    "يدعم صحة القلب"
+                ],
+                treats: ["ارتفاع ضغط الدم", "الإمساك", "سوء التغذية"],
+                diseases: ["الندوة المتأخرة", "الجرب", "اللفحة المبكرة"],
+                harvest_time: "يوليو - أكتوبر",
+                storage: "مكان مظلم بارد وجاف",
+                economic_value: "مرتفع",
+                global_production: "370 مليون طن",
+                top_producers: ["الصين", "الهند", "روسيا"],
+                organic: true,
+                icon: "🥔",
+                color: "#8D6E63",
+                description: "البطاطس رابع أكبر محصول غذائي في العالم بعد القمح والأرز والذرة.",
+                popularity: 90
+            },
+            {
+                id: 23,
+                name: "البصل",
+                scientific: "Allium cepa",
+                category: "vegetable",
+                type: "حولي",
+                season: "شتوي",
+                region: ["mediterranean", "temperate"],
+                duration: "90-120 يوم",
+                temperature: "13-24°C",
+                water: "منخفض إلى متوسط",
+                soil: "خصبة جيدة الصرف",
+                ph: "6.0-7.0",
+                nutrients: ["كبريت", "فوسفور"],
+                planting_method: "بذور أو شتلات",
+                spacing: "10x30 سم",
+                depth: "1-2 سم",
+                yield: "25-40 طن/هكتار",
+                nutritional_value: {
+                    calories: 40,
+                    protein: "1.1g",
+                    carbs: "9.3g",
+                    fiber: "1.7g",
+                    fat: "0.1g",
+                    vitamins: ["C", "ب6", "فولات"],
+                    minerals: ["منغنيز", "بوتاسيوم"]
+                },
+                health_benefits: [
+                    "مضاد حيوي طبيعي",
+                    "يخفض الكوليسترول",
+                    "يقلل خطر السرطان",
+                    "يحسن صحة العظام"
+                ],
+                treats: ["العدوى البكتيرية", "ارتفاع الكوليسترول", "هشاشة العظام"],
+                diseases: ["العفن الوردي", "تعفن القاعدة", "ذبول الفيوزاريوم"],
+                harvest_time: "مايو - يوليو",
+                storage: "مكان جاف جيد التهوية",
+                economic_value: "متوسط",
+                global_production: "97 مليون طن",
+                top_producers: ["الصين", "الهند", "الولايات المتحدة"],
+                organic: true,
+                icon: "🧅",
+                color: "#FF9800",
+                description: "البصل من الخضروات الأساسية في معظم المطابخ العالمية، معروف بخصائصه الطبية.",
+                popularity: 85
+            },
+            {
+                id: 24,
+                name: "الثوم",
+                scientific: "Allium sativum",
+                category: "vegetable",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🧄",
+                color: "#FFFFFF",
+                description: "الثوم مضاد حيوي طبيعي ويقي من أمراض القلب والسرطان.",
+                popularity: 80
+            },
+            {
+                id: 25,
+                name: "الخيار",
+                scientific: "Cucumis sativus",
+                category: "vegetable",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🥒",
+                color: "#90EE90",
+                description: "الخيار غني بالماء وفيتامين ك، مفيد للترطيب وصحة العظام.",
+                popularity: 75
+            },
+            {
+                id: 26,
+                name: "الجزر",
+                scientific: "Daucus carota",
+                category: "vegetable",
+                type: "ثنائي الحول",
+                season: "خريفي,شتوي",
+                icon: "🥕",
+                color: "#FF8C00",
+                description: "غني بفيتامين أ ومضادات الأكسدة المفيدة للبصر والجلد.",
+                popularity: 85
+            },
+            {
+                id: 27,
+                name: "اللفت",
+                scientific: "Brassica rapa",
+                category: "vegetable",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🥬",
+                color: "#FFFFFF",
+                description: "غني بالألياف وفيتامين سي، يساعد في الهضم والمناعة.",
+                popularity: 60
+            },
+            {
+                id: 28,
+                name: "الملفوف",
+                scientific: "Brassica oleracea",
+                category: "vegetable",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🥬",
+                color: "#87CEEB",
+                description: "يحتوي على مركبات مضادة للسرطان ومفيدة لصحة الجهاز الهضمي.",
+                popularity: 70
+            },
+            {
+                id: 29,
+                name: "القرنبيط",
+                scientific: "Brassica oleracea var. botrytis",
+                category: "vegetable",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🥦",
+                color: "#F5F5F5",
+                description: "غني بفيتامين سي والألياف، يدعم صحة القلب والعظام.",
+                popularity: 75
+            },
+            {
+                id: 30,
+                name: "البروكلي",
+                scientific: "Brassica oleracea var. italica",
+                category: "vegetable",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🥦",
+                color: "#006400",
+                description: "من أقوى الخضروات المضادة للسرطان، غني بالفيتامينات والمعادن.",
+                popularity: 80
+            },
+            {
+                id: 31,
+                name: "السبانخ",
+                scientific: "Spinacia oleracea",
+                category: "vegetable",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🥬",
+                color: "#228B22",
+                description: "غني بالحديد والكالسيوم وفيتامين ك، يقوي العظام والدم.",
+                popularity: 85
+            },
+            {
+                id: 32,
+                name: "الخس",
+                scientific: "Lactuca sativa",
+                category: "vegetable",
+                type: "حولي",
+                season: "ربيعي,شتوي",
+                icon: "🥬",
+                color: "#90EE90",
+                description: "غني بالماء والألياف، مثالي للرجيم وصحة الجهاز الهضمي.",
+                popularity: 80
+            },
+            {
+                id: 33,
+                name: "الكرفس",
+                scientific: "Apium graveolens",
+                category: "vegetable",
+                type: "ثنائي الحول",
+                season: "ربيعي,خريفي",
+                icon: "🥬",
+                color: "#98FB98",
+                description: "منخفض السعرات، مدر للبول، ويساعد في خفض ضغط الدم.",
+                popularity: 65
+            },
+            {
+                id: 34,
+                name: "الباذنجان",
+                scientific: "Solanum melongena",
+                category: "vegetable",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🍆",
+                color: "#8A2BE2",
+                description: "غني بمضادات الأكسدة والألياف، مفيد لصحة القلب والدماغ.",
+                popularity: 70
+            },
+            {
+                id: 35,
+                name: "الكوسة",
+                scientific: "Cucurbita pepo",
+                category: "vegetable",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🥒",
+                color: "#90EE90",
+                description: "منخفضة السعرات وغنية بالفيتامينات والمعادن والماء.",
+                popularity: 75
+            },
+            {
+                id: 36,
+                name: "الفلفل الحلو",
+                scientific: "Capsicum annuum",
+                category: "vegetable",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🫑",
+                color: "#FF0000",
+                description: "غني بفيتامين سي ومضادات الأكسدة، يقوي المناعة.",
+                popularity: 80
+            },
+            {
+                id: 37,
+                name: "الفلفل الحار",
+                scientific: "Capsicum frutescens",
+                category: "vegetable",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌶️",
+                color: "#DC143C",
+                description: "يحتوي على الكابسيسين الذي يعزز الأيض ويخفف الآلام.",
+                popularity: 70
+            },
+            {
+                id: 38,
+                name: "القرع",
+                scientific: "Cucurbita maxima",
+                category: "vegetable",
+                type: "حولي",
+                season: "خريفي",
+                icon: "🎃",
+                color: "#FF8C00",
+                description: "غني بفيتامين أ ومضادات الأكسدة، مفيد للبصر والجلد.",
+                popularity: 65
+            },
+            {
+                id: 39,
+                name: "البامية",
+                scientific: "Abelmoschus esculentus",
+                category: "vegetable",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🥬",
+                color: "#228B22",
+                description: "غنية بالألياف وفيتامين ك، تساعد في السيطرة على سكر الدم.",
+                popularity: 60
+            },
+            {
+                id: 40,
+                name: "الخرشوف",
+                scientific: "Cynara scolymus",
+                category: "vegetable",
+                type: "معمر",
+                season: "ربيعي",
+                icon: "🥬",
+                color: "#2E8B57",
+                description: "مفيد لصحة الكبد والهضم، غني بمضادات الأكسدة.",
+                popularity: 55
+            },
+            {
+                id: 41,
+                name: "الهليون",
+                scientific: "Asparagus officinalis",
+                category: "vegetable",
+                type: "معمر",
+                season: "ربيعي",
+                icon: "🥬",
+                color: "#7CFC00",
+                description: "مدر للبول، غني بفيتامين ك والفولات، مفيد للحامل.",
+                popularity: 50
+            },
+            {
+                id: 42,
+                name: "الشمندر",
+                scientific: "Beta vulgaris",
+                category: "vegetable",
+                type: "حولي",
+                season: "خريفي,شتوي",
+                icon: "🥬",
+                color: "#8B0000",
+                description: "يخفض ضغط الدم، ويحسن الأداء الرياضي، وغني بالنترات.",
+                popularity: 70
+            },
+            {
+                id: 43,
+                name: "الفجل",
+                scientific: "Raphanus sativus",
+                category: "vegetable",
+                type: "حولي",
+                season: "ربيعي,خريفي",
+                icon: "🥬",
+                color: "#FF69B4",
+                description: "مفيد للهضم، غني بفيتامين سي، ومضاد للالتهابات.",
+                popularity: 60
+            },
+            {
+                id: 44,
+                name: "اللفت الأصفر",
+                scientific: "Brassica napus",
+                category: "vegetable",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🥬",
+                color: "#FFFF00",
+                description: "غني بفيتامين سي والألياف، يدعم صحة المناعة والهضم.",
+                popularity: 45
+            },
+            {
+                id: 45,
+                name: "الكرنب",
+                scientific: "Brassica oleracea var. capitata",
+                category: "vegetable",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🥬",
+                color: "#87CEEB",
+                description: "يحتوي على مركبات الكبريت المضادة للسرطان.",
+                popularity: 65
+            },
+            
+            // === الفواكه (20 محصول) ===
+            {
+                id: 46,
+                name: "الموز",
+                scientific: "Musa spp.",
+                category: "fruit",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                duration: "9-12 شهر",
+                temperature: "26-30°C",
+                water: "مرتفع",
+                soil: "خصبة جيدة الصرف",
+                ph: "5.5-7.0",
+                nutrients: ["بوتاسيوم", "نيتروجين"],
+                planting_method: "فسائل",
+                spacing: "2x2 متر",
+                depth: "30-40 سم",
+                yield: "30-50 طن/هكتار",
+                nutritional_value: {
+                    calories: 89,
+                    protein: "1.1g",
+                    carbs: "22.8g",
+                    fiber: "2.6g",
+                    vitamins: ["ب6", "C", "بوتاسيوم"]
+                },
+                health_benefits: [
+                    "مصدر طاقة سريع",
+                    "غني بالبوتاسيوم لصحة القلب",
+                    "يحسن الهضم",
+                    "ينظم ضغط الدم"
+                ],
+                treats: ["ارتفاع ضغط الدم", "الإمساك", "تشنجات العضلات"],
+                diseases: ["مرض بنما", "تبقع الأوراق", "عفن التاج"],
+                harvest_time: "طوال السنة",
+                storage: "مكان بارد جاف",
+                economic_value: "مرتفع جداً",
+                global_production: "116 مليون طن",
+                top_producers: ["الهند", "الصين", "الفلبين"],
+                organic: true,
+                icon: "🍌",
+                color: "#FFD700",
+                description: "الموز من أكثر الفواكه استهلاكاً في العالم، مصدر ممتاز للطاقة والبوتاسيوم.",
+                popularity: 90
+            },
+            {
+                id: 47,
+                name: "البرتقال",
+                scientific: "Citrus sinensis",
+                category: "fruit",
+                type: "معمر",
+                season: "شتوي",
+                region: ["subtropical", "mediterranean"],
+                duration: "8-12 شهر للإثمار",
+                temperature: "13-30°C",
+                water: "متوسط",
+                soil: "خفيفة إلى متوسطة",
+                ph: "6.0-7.5",
+                nutrients: ["نيتروجين", "حديد", "زنك"],
+                planting_method: "شتل",
+                spacing: "5x5 متر",
+                depth: "كما في المشتل",
+                yield: "15-30 طن/هكتار",
+                nutritional_value: {
+                    calories: 47,
+                    protein: "0.9g",
+                    carbs: "11.8g",
+                    fiber: "2.4g",
+                    vitamins: ["C", "A", "ب1"]
+                },
+                health_benefits: [
+                    "غني بفيتامين C",
+                    "تقوية المناعة",
+                    "مضاد للأكسدة",
+                    "يحسن صحة الجلد"
+                ],
+                treats: ["نزلات البرد", "ضعف المناعة", "شيخوخة الجلد"],
+                diseases: ["التعفن الأسود", "حشرة المن", "عفن الجذور"],
+                harvest_time: "ديسمبر - مارس",
+                storage: "مكان بارد جاف",
+                economic_value: "مرتفع",
+                global_production: "75 مليون طن",
+                top_producers: ["البرازيل", "الصين", "الهند"],
+                organic: true,
+                icon: "🍊",
+                color: "#FF9800",
+                description: "البرتقال من الحمضيات الأكثر شعبية، معروف بغناه بفيتامين C.",
+                popularity: 85
+            },
+            {
+                id: 48,
+                name: "العنب",
+                scientific: "Vitis vinifera",
+                category: "fruit",
+                type: "معمر",
+                season: "صيفي",
+                region: ["mediterranean", "temperate"],
+                duration: "سنتان للإثمار",
+                temperature: "15-35°C",
+                water: "منخفض إلى متوسط",
+                soil: "جيدة الصرف",
+                ph: "5.5-7.0",
+                nutrients: ["بوتاسيوم", "كالسيوم"],
+                planting_method: "عقل",
+                spacing: "2x3 متر",
+                depth: "30-40 سم",
+                yield: "10-20 طن/هكتار",
+                nutritional_value: {
+                    calories: 69,
+                    protein: "0.7g",
+                    carbs: "18g",
+                    fiber: "0.9g",
+                    vitamins: ["C", "K"]
+                },
+                health_benefits: [
+                    "مضادات أكسدة قوية",
+                    "صحة القلب والأوعية",
+                    "يحسن الذاكرة",
+                    "مضاد للالتهابات"
+                ],
+                treats: ["أمراض القلب", "فقر الدم", "ضعف الذاكرة"],
+                diseases: ["البياض الدقيقي", "عفن الثمار", "لفحة الأوراق"],
+                harvest_time: "يوليو - سبتمبر",
+                storage: "ثلاجة",
+                economic_value: "مرتفع",
+                global_production: "77 مليون طن",
+                top_producers: ["الصين", "إيطاليا", "الولايات المتحدة"],
+                organic: true,
+                icon: "🍇",
+                color: "#8E24AA",
+                description: "العنب من أقدم الفواكه المزروعة، يستخدم طازجاً ومجففاً وعصيراً ونبيذاً.",
+                popularity: 80
+            },
+            {
+                id: 49,
+                name: "التفاح",
+                scientific: "Malus domestica",
+                category: "fruit",
+                type: "معمر",
+                season: "خريفي",
+                region: ["temperate"],
+                icon: "🍎",
+                color: "#F44336",
+                description: "التفاح غني بالألياف ومضادات الأكسدة، مفيد للقلب والهضم.",
+                popularity: 95
+            },
+            {
+                id: 50,
+                name: "الفراولة",
+                scientific: "Fragaria × ananassa",
+                category: "fruit",
+                type: "معمر",
+                season: "ربيعي",
+                region: ["temperate"],
+                icon: "🍓",
+                color: "#F44336",
+                description: "غنية بفيتامين سي ومضادات الأكسدة، تحسن صحة الجلد والقلب.",
+                popularity: 90
+            },
+            {
+                id: 51,
+                name: "المانجو",
+                scientific: "Mangifera indica",
+                category: "fruit",
+                type: "معمر",
+                season: "صيفي",
+                region: ["tropical"],
+                icon: "🥭",
+                color: "#FFA500",
+                description: "ملك الفواكه الاستوائية، غني بفيتامينات أ وسي ومضادات الأكسدة.",
+                popularity: 85
+            },
+            {
+                id: 52,
+                name: "الأفوكادو",
+                scientific: "Persea americana",
+                category: "fruit",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical", "subtropical"],
+                icon: "🥑",
+                color: "#556B2F",
+                description: "غني بالدهون الصحية، مفيد لصحة القلب والدماغ والجلد.",
+                popularity: 90
+            },
+            {
+                id: 53,
+                name: "الأناناس",
+                scientific: "Ananas comosus",
+                category: "fruit",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🍍",
+                color: "#FFD700",
+                description: "يحتوي على إنزيم البروميلين الذي يساعد على الهضم ويقلل الالتهابات.",
+                popularity: 80
+            },
+            {
+                id: 54,
+                name: "البابايا",
+                scientific: "Carica papaya",
+                category: "fruit",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🥭",
+                color: "#FF6347",
+                description: "غنية بإنزيم الباباين الذي يساعد على هضم البروتين، وفيتامين سي.",
+                popularity: 75
+            },
+            {
+                id: 55,
+                name: "الجوافة",
+                scientific: "Psidium guajava",
+                category: "fruit",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🍈",
+                color: "#90EE90",
+                description: "غنية بفيتامين سي أكثر من البرتقال، مفيدة للمناعة والجلد.",
+                popularity: 70
+            },
+            {
+                id: 56,
+                name: "الليمون",
+                scientific: "Citrus limon",
+                category: "fruit",
+                type: "معمر",
+                season: "دائم",
+                icon: "🍋",
+                color: "#FFFF00",
+                description: "مضاد للجراثيم والفيروسات، غني بفيتامين سي، مطهر طبيعي.",
+                popularity: 85
+            },
+            {
+                id: 57,
+                name: "اليوسفي",
+                scientific: "Citrus reticulata",
+                category: "fruit",
+                type: "معمر",
+                season: "شتوي",
+                icon: "🍊",
+                color: "#FFA500",
+                description: "سهل التقشير، غني بفيتامين سي، مقوي للمناعة.",
+                popularity: 80
+            },
+            {
+                id: 58,
+                name: "الخوخ",
+                scientific: "Prunus persica",
+                category: "fruit",
+                type: "معمر",
+                season: "صيفي",
+                icon: "🍑",
+                color: "#FFB6C1",
+                description: "غني بالألياف ومضادات الأكسدة، مفيد لصحة الجلد والهضم.",
+                popularity: 75
+            },
+            {
+                id: 59,
+                name: "المشمش",
+                scientific: "Prunus armeniaca",
+                category: "fruit",
+                type: "معمر",
+                season: "صيفي",
+                icon: "🍑",
+                color: "#FFA07A",
+                description: "غني بفيتامين أ والحديد، مفيد للبصر وفقر الدم.",
+                popularity: 70
+            },
+            {
+                id: 60,
+                name: "الكرز",
+                scientific: "Prunus avium",
+                category: "fruit",
+                type: "معمر",
+                season: "صيفي",
+                icon: "🍒",
+                color: "#DC143C",
+                description: "غني بمضادات الأكسدة ومضادات الالتهاب، مفيد للنقرس والأرق.",
+                popularity: 75
+            },
+            {
+                id: 61,
+                name: "الكمثرى",
+                scientific: "Pyrus communis",
+                category: "fruit",
+                type: "معمر",
+                season: "خريفي",
+                icon: "🍐",
+                color: "#D3D3D3",
+                description: "غنية بالألياف، منخفضة المؤشر الجلايسيمي، مفيدة لمرضى السكري.",
+                popularity: 70
+            },
+            {
+                id: 62,
+                name: "الرمان",
+                scientific: "Punica granatum",
+                category: "fruit",
+                type: "معمر",
+                season: "خريفي",
+                icon: "🍎",
+                color: "#DC143C",
+                description: "من أقوى مضادات الأكسدة، يحمي القلب والشرايين، مضاد للسرطان.",
+                popularity: 85
+            },
+            {
+                id: 63,
+                name: "التين",
+                scientific: "Ficus carica",
+                category: "fruit",
+                type: "معمر",
+                season: "صيفي,خريفي",
+                icon: "🍈",
+                color: "#8B4513",
+                description: "غني بالألياف والمعادن، ملين طبيعي، مفيد لصحة العظام.",
+                popularity: 65
+            },
+            {
+                id: 64,
+                name: "التمر",
+                scientific: "Phoenix dactylifera",
+                category: "fruit",
+                type: "معمر",
+                season: "خريفي",
+                icon: "🍈",
+                color: "#8B4513",
+                description: "مصدر طاقة سريع، غني بالسكريات الطبيعية والمعادن، غذاء مثالي.",
+                popularity: 90
+            },
+            {
+                id: 65,
+                name: "الكيوي",
+                scientific: "Actinidia deliciosa",
+                category: "fruit",
+                type: "معمر",
+                season: "خريفي",
+                icon: "🥝",
+                color: "#9ACD32",
+                description: "غني بفيتامين سي أكثر من البرتقال، مفيد للجهاز التنفسي والمناعة.",
+                popularity: 75
+            },
+            
+            // === البقوليات (10 محصول) ===
+            {
+                id: 66,
+                name: "الفول",
+                scientific: "Vicia faba",
+                category: "legume",
+                type: "حولي",
+                season: "شتوي",
+                region: ["mediterranean", "temperate"],
+                duration: "120-150 يوم",
+                temperature: "15-25°C",
+                water: "متوسط",
+                soil: "طميية",
+                ph: "6.0-7.5",
+                nutrients: ["نيتروجين", "فوسفور"],
+                planting_method: "بذور مباشرة",
+                spacing: "20x50 سم",
+                depth: "5-7 سم",
+                yield: "2-4 طن/هكتار",
+                nutritional_value: {
+                    calories: 341,
+                    protein: "26.1g",
+                    carbs: "58.3g",
+                    fiber: "25g",
+                    vitamins: ["ب1", "ب2", "فولات"]
+                },
+                health_benefits: [
+                    "غني بالبروتين النباتي",
+                    "مصدر ممتاز للحديد",
+                    "يحسن صحة القلب",
+                    "ينظم سكر الدم"
+                ],
+                treats: ["فقر الدم", "سوء التغذية", "مرض السكري", "أمراض القلب"],
+                diseases: ["الصدأ", "عفن الجذور", "ذبول الفيوزاريوم"],
+                harvest_time: "أبريل - يونيو",
+                storage: "مكان جاف",
+                economic_value: "متوسط",
+                global_production: "4.5 مليون طن",
+                top_producers: ["الصين", "إثيوبيا", "أستراليا"],
+                organic: true,
+                icon: "🫘",
+                color: "#8D6E63",
+                description: "الفول من البقوليات الغنية بالبروتين، شائع في المطبخ العربي والمتوسطي.",
+                popularity: 80
+            },
+            {
+                id: 67,
+                name: "العدس",
+                scientific: "Lens culinaris",
+                category: "legume",
+                type: "حولي",
+                season: "شتوي",
+                region: ["mediterranean", "temperate"],
+                duration: "80-110 يوم",
+                temperature: "18-25°C",
+                water: "منخفض",
+                soil: "خفيفة إلى متوسطة",
+                ph: "6.0-8.0",
+                nutrients: ["نيتروجين", "حديد"],
+                planting_method: "بذور مباشرة",
+                spacing: "10-15 سم بين النباتات",
+                depth: "3-4 سم",
+                yield: "0.8-1.5 طن/هكتار",
+                nutritional_value: {
+                    calories: 353,
+                    protein: "25.8g",
+                    carbs: "60.1g",
+                    fiber: "30.5g",
+                    vitamins: ["ب1", "ب6", "فولات"]
+                },
+                health_benefits: [
+                    "غني بالحديد والبروتين",
+                    "منخفض الدهون",
+                    "يحسن صحة الجهاز الهضمي",
+                    "مصدر طاقة بطيء الإطلاق"
+                ],
+                treats: ["فقر الدم", "الإمساك", "سوء التغذية", "مرض السكري"],
+                diseases: ["عفن الساق", "الصدأ", "ذبول الفيوزاريوم"],
+                harvest_time: "مايو - يوليو",
+                storage: "مكان جاف مظلم",
+                economic_value: "متوسط",
+                global_production: "6.3 مليون طن",
+                top_producers: ["كندا", "الهند", "تركيا"],
+                organic: true,
+                icon: "🥣",
+                color: "#D2691E",
+                description: "العدس من أقدم المحاصيل المزروعة، مصدر مهم للبروتين خاصة في المناطق الفقيرة.",
+                popularity: 85
+            },
+            {
+                id: 68,
+                name: "الحمص",
+                scientific: "Cicer arietinum",
+                category: "legume",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🫘",
+                color: "#D2691E",
+                description: "غني بالبروتين والألياف، أساس طبق الحمص والفلافل في المطبخ العربي.",
+                popularity: 90
+            },
+            {
+                id: 69,
+                name: "الفاصوليا",
+                scientific: "Phaseolus vulgaris",
+                category: "legume",
+                type: "حولي",
+                season: "ربيعي,صيفي",
+                icon: "🫘",
+                color: "#228B22",
+                description: "مصدر ممتاز للبروتين النباتي، تنظم سكر الدم وتخفض الكوليسترول.",
+                popularity: 80
+            },
+            {
+                id: 70,
+                name: "البازلاء",
+                scientific: "Pisum sativum",
+                category: "legume",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🫛",
+                color: "#90EE90",
+                description: "غنية بالبروتين والفيتامينات، تحسن صحة العين والقلب.",
+                popularity: 75
+            },
+            {
+                id: 71,
+                name: "الفول السوداني",
+                scientific: "Arachis hypogaea",
+                category: "legume",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🥜",
+                color: "#D2691E",
+                description: "غني بالبروتين والدهون الصحية، مصدر للطاقة والعناصر الغذائية.",
+                popularity: 85
+            },
+            {
+                id: 72,
+                name: "اللوبيا",
+                scientific: "Vigna unguiculata",
+                category: "legume",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🫘",
+                color: "#8B4513",
+                description: "تتحمل الحرارة والجفاف، مصدر مهم للبروتين في أفريقيا.",
+                popularity: 60
+            },
+            {
+                id: 73,
+                name: "الترمس",
+                scientific: "Lupinus spp.",
+                category: "legume",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🫘",
+                color: "#6B8E23",
+                description: "غني بالبروتين والألياف، يحتاج للنقع لإزالة المرارة.",
+                popularity: 55
+            },
+            {
+                id: 74,
+                name: "فول الصويا",
+                scientific: "Glycine max",
+                category: "legume",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🫘",
+                color: "#8B4513",
+                description: "أغنى البقوليات بالبروتين، يستخرج منه الزيت والتوفو وحليب الصويا.",
+                popularity: 90
+            },
+            {
+                id: 75,
+                name: "البسلة",
+                scientific: "Pisum sativum var. sativum",
+                category: "legume",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🫛",
+                color: "#98FB98",
+                description: "غنية بالألياف والبروتين، تحافظ على صحة الجهاز الهضمي.",
+                popularity: 70
+            },
+            
+            // === المحاصيل الصناعية (10 محصول) ===
+            {
+                id: 76,
+                name: "قصب السكر",
+                scientific: "Saccharum officinarum",
+                category: "industrial",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical", "subtropical"],
+                duration: "12-18 شهر",
+                temperature: "20-30°C",
+                water: "مرتفع",
+                soil: "طينية ثقيلة",
+                ph: "6.0-8.0",
+                nutrients: ["نيتروجين", "بوتاسيوم"],
+                planting_method: "عقل",
+                spacing: "1.5x1.5 متر",
+                depth: "15-20 سم",
+                yield: "60-100 طن/هكتار",
+                nutritional_value: {
+                    calories: 387,
+                    protein: "0.4g",
+                    carbs: "99.8g",
+                    fiber: "0.6g",
+                    vitamins: ["ب1", "ب2", "ب3"]
+                },
+                health_benefits: [
+                    "مصدر سريع للطاقة",
+                    "يحتوي على معادن مفيدة",
+                    "مصدر للسكريات الطبيعية"
+                ],
+                treats: ["انخفاض الطاقة", "الإرهاق"],
+                diseases: ["الصدأ", "الفحة", "تعفن الساق"],
+                harvest_time: "نوفمبر - أبريل",
+                storage: "معالجة فورية",
+                economic_value: "مرتفع جداً",
+                global_production: "1.9 مليار طن",
+                top_producers: ["البرازيل", "الهند", "الصين"],
+                organic: true,
+                icon: "🎋",
+                color: "#8BC34A",
+                description: "قصب السكر من أهم المحاصيل الصناعية، يستخدم في إنتاج السكر والإيثانول.",
+                popularity: 85
+            },
+            {
+                id: 77,
+                name: "القطن",
+                scientific: "Gossypium spp.",
+                category: "industrial",
+                type: "حولي",
+                season: "صيفي",
+                region: ["subtropical", "tropical"],
+                duration: "150-180 يوم",
+                temperature: "21-30°C",
+                water: "متوسط",
+                soil: "طميية رملية",
+                ph: "5.5-8.0",
+                nutrients: ["نيتروجين", "بوتاسيوم"],
+                planting_method: "بذور مباشرة",
+                spacing: "30-60 سم",
+                depth: "2-3 سم",
+                yield: "2-4 طن قطن زهر/هكتار",
+                health_benefits: [
+                    "ألياف طبيعية للنسيج",
+                    "زيت البذور صحي",
+                    "منتجات ثانوية متنوعة"
+                ],
+                diseases: ["ذبول الفيوزاريوم", "لفحة الأوراق", "حشرة المن"],
+                harvest_time: "سبتمبر - نوفمبر",
+                storage: "مكان جاف",
+                economic_value: "مرتفع",
+                global_production: "26 مليون طن",
+                top_producers: ["الصين", "الهند", "الولايات المتحدة"],
+                organic: true,
+                icon: "👕",
+                color: "#FFFFFF",
+                description: "القطن مصدر رئيسي للألياف الطبيعية للنسيج والملابس حول العالم.",
+                popularity: 90
+            },
+            {
+                id: 78,
+                name: "البن",
+                scientific: "Coffea spp.",
+                category: "industrial",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "☕",
+                color: "#8B4513",
+                description: "من أشهر المشروبات في العالم، يحتوي على الكافيين المنبه.",
+                popularity: 95
+            },
+            {
+                id: 79,
+                name: "الشاي",
+                scientific: "Camellia sinensis",
+                category: "industrial",
+                type: "معمر",
+                season: "دائم",
+                region: ["subtropical", "tropical"],
+                icon: "🍵",
+                color: "#228B22",
+                description: "ثاني أكثر مشروب استهلاكاً في العالم بعد الماء، غني بمضادات الأكسدة.",
+                popularity: 90
+            },
+            {
+                id: 80,
+                name: "الكاكاو",
+                scientific: "Theobroma cacao",
+                category: "industrial",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🍫",
+                color: "#8B4513",
+                description: "يصنع منه الشوكولاتة، يحسن المزاج ويحتوي على مضادات الأكسدة.",
+                popularity: 85
+            },
+            {
+                id: 81,
+                name: "المطاط",
+                scientific: "Hevea brasiliensis",
+                category: "industrial",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🛞",
+                color: "#8B4513",
+                description: "مصدر المطاط الطبيعي المستخدم في صناعة الإطارات والمنتجات المختلفة.",
+                popularity: 70
+            },
+            {
+                id: 82,
+                name: "الزيتون",
+                scientific: "Olea europaea",
+                category: "industrial",
+                type: "معمر",
+                season: "خريفي",
+                region: ["mediterranean"],
+                icon: "🫒",
+                color: "#8BC34A",
+                description: "يستخرج منه زيت الزيتون الذي يعتبر من أصح الزيوت النباتية.",
+                popularity: 85
+            },
+            {
+                id: 83,
+                name: "عباد الشمس",
+                scientific: "Helianthus annuus",
+                category: "industrial",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌻",
+                color: "#FFD700",
+                description: "يستخرج منه زيت عباد الشمس الغني بفيتامين E، والزهرة للزينة.",
+                popularity: 75
+            },
+            {
+                id: 84,
+                name: "الكانولا",
+                scientific: "Brassica napus",
+                category: "industrial",
+                type: "حولي",
+                season: "شتوي",
+                icon: "🌿",
+                color: "#FFD700",
+                description: "يستخرج منه زيت الكانولا الصحي قليل الدهون المشبعة.",
+                popularity: 65
+            },
+            {
+                id: 85,
+                name: "التبغ",
+                scientific: "Nicotiana tabacum",
+                category: "industrial",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🚬",
+                color: "#8B4513",
+                description: "يستخدم في صناعة السجائر والسيجار، له تأثيرات صحية سلبية.",
+                popularity: 80
+            },
+            
+            // === التوابل والأعشاب (10 محصول) ===
+            {
+                id: 86,
+                name: "الزعتر",
+                scientific: "Thymus vulgaris",
+                category: "spice",
+                type: "معمر",
+                season: "دائم",
+                region: ["mediterranean"],
+                duration: "60-90 يوم للحصاد الأول",
+                temperature: "20-30°C",
+                water: "منخفض",
+                soil: "جيدة الصرف",
+                ph: "6.0-8.0",
+                nutrients: ["كالسيوم", "حديد"],
+                planting_method: "عقل أو بذور",
+                spacing: "20-30 سم",
+                depth: "0.5 سم",
+                yield: "2-3 طن/هكتار",
+                nutritional_value: {
+                    calories: 101,
+                    protein: "5.6g",
+                    carbs: "24.5g",
+                    fiber: "14g",
+                    vitamins: ["C", "A", "ب6"]
+                },
+                health_benefits: [
+                    "مضاد حيوي طبيعي",
+                    "يحسن الجهاز التنفسي",
+                    "مضاد للفطريات",
+                    "يحسن الهضم"
+                ],
+                treats: ["السعال", "التهابات الجهاز التنفسي", "عسر الهضم", "الالتهابات الفطرية"],
+                diseases: ["عفن الجذور", "الصدأ", "ذبول الفيوزاريوم"],
+                harvest_time: "أبريل - سبتمبر",
+                storage: "مكان جاف مظلم",
+                economic_value: "مرتفع",
+                global_production: "غير معلوم",
+                organic: true,
+                icon: "🌿",
+                color: "#8BC34A",
+                description: "الزعتر من الأعشاب الطبية الهامة، يستخدم في الطهي والعلاج.",
+                popularity: 85
+            },
+            {
+                id: 87,
+                name: "الكمون",
+                scientific: "Cuminum cyminum",
+                category: "spice",
+                type: "حولي",
+                season: "شتوي",
+                region: ["mediterranean", "desert"],
+                duration: "120-150 يوم",
+                temperature: "25-30°C",
+                water: "منخفض",
+                soil: "رملية جيدة الصرف",
+                ph: "6.8-8.3",
+                nutrients: ["حديد", "كالسيوم"],
+                planting_method: "بذور مباشرة",
+                spacing: "15x30 سم",
+                depth: "1-2 سم",
+                yield: "0.5-1 طن/هكتار",
+                nutritional_value: {
+                    calories: 375,
+                    protein: "17.8g",
+                    carbs: "44.2g",
+                    fiber: "10.5g",
+                    vitamins: ["A", "C", "E"]
+                },
+                health_benefits: [
+                    "يحسن الهضم",
+                    "مضاد للأكسدة",
+                    "مضاد للبكتيريا",
+                    "ينظم سكر الدم"
+                ],
+                treats: ["عسر الهضم", "انتفاخ البطن", "مرض السكري", "الالتهابات"],
+                diseases: ["ذبول الفيوزاريوم", "العفن", "الصدأ"],
+                harvest_time: "مارس - مايو",
+                storage: "مكان جاف مظلم",
+                economic_value: "مرتفع",
+                global_production: "300 ألف طن",
+                top_producers: ["الهند", "سوريا", "إيران"],
+                organic: true,
+                icon: "🌱",
+                color: "#D2691E",
+                description: "الكمون من التوابل الأساسية في المطابخ العالمية، معروف بفوائده الهضمية.",
+                popularity: 80
+            },
+            {
+                id: 88,
+                name: "القرفة",
+                scientific: "Cinnamomum verum",
+                category: "spice",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🌿",
+                color: "#8B4513",
+                description: "تخفض سكر الدم، مضادة للالتهابات، وتحسن حساسية الإنسولين.",
+                popularity: 85
+            },
+            {
+                id: 89,
+                name: "الكركم",
+                scientific: "Curcuma longa",
+                category: "spice",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🫚",
+                color: "#FFD700",
+                description: "يحتوي على الكركمين القوي المضاد للالتهابات والسرطان.",
+                popularity: 90
+            },
+            {
+                id: 90,
+                name: "الزنجبيل",
+                scientific: "Zingiber officinale",
+                category: "spice",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🫚",
+                color: "#FF9800",
+                description: "مضاد للغثيان والالتهابات، يحسن الهضم ويخفف الآلام.",
+                popularity: 85
+            },
+            {
+                id: 91,
+                name: "الفلفل الأسود",
+                scientific: "Piper nigrum",
+                category: "spice",
+                type: "معمر",
+                season: "دائم",
+                region: ["tropical"],
+                icon: "🌶️",
+                color: "#000000",
+                description: "يحسن امتصاص العناصر الغذائية، مضاد للأكسدة، ومضاد للبكتيريا.",
+                popularity: 90
+            },
+            {
+                id: 92,
+                name: "النعناع",
+                scientific: "Mentha spp.",
+                category: "spice",
+                type: "معمر",
+                season: "دائم",
+                icon: "🌿",
+                color: "#4CAF50",
+                description: "مهدئ للمعدة، مضاد للتشنج، ومنعش للنفس.",
+                popularity: 95
+            },
+            {
+                id: 93,
+                name: "الريحان",
+                scientific: "Ocimum basilicum",
+                category: "spice",
+                type: "حولي",
+                season: "صيفي",
+                icon: "🌿",
+                color: "#98FB98",
+                description: "مضاد للالتهابات والبكتيريا، غني بمضادات الأكسدة.",
+                popularity: 80
+            },
+            {
+                id: 94,
+                name: "الكزبرة",
+                scientific: "Coriandrum sativum",
+                category: "spice",
+                type: "حولي",
+                season: "ربيعي,خريفي",
+                icon: "🌿",
+                color: "#90EE90",
+                description: "تزيل المعادن الثقيلة من الجسم، مضادة للالتهابات والفطريات.",
+                popularity: 75
+            },
+            {
+                id: 95,
+                name: "الشبت",
+                scientific: "Anethum graveolens",
+                category: "spice",
+                type: "حولي",
+                season: "ربيعي",
+                icon: "🌿",
+                color: "#98FB98",
+                description: "مهدئ للمعدة، مضاد للتشنج، ويستخدم في تخليل الخيار.",
+                popularity: 70
+            },
+            
+            // === النباتات الطبية (5 محصول) ===
+            {
+                id: 96,
+                name: "الجنكة",
+                scientific: "Ginkgo biloba",
+                category: "medicinal",
+                type: "معمر",
+                season: "دائم",
+                region: ["temperate"],
+                icon: "🌿",
+                color: "#90EE90",
+                description: "تحسن الدورة الدموية والذاكرة، مضادة للأكسدة.",
+                popularity: 75
+            },
+            {
+                id: 97,
+                name: "الجنسنج",
+                scientific: "Panax ginseng",
+                category: "medicinal",
+                type: "معمر",
+                season: "دائم",
+                region: ["temperate"],
+                icon: "🌿",
+                color: "#8B4513",
+                description: "مقوٍ عام للجسم، يزيد الطاقة، ويحسن الوظيفة الإدراكية.",
+                popularity: 80
+            },
+            {
+                id: 98,
+                name: "الإشنسا",
+                scientific: "Echinacea purpurea",
+                category: "medicinal",
+                type: "معمر",
+                season: "دائم",
+                region: ["temperate"],
+                icon: "🌼",
+                color: "#DA70D6",
+                description: "تقوي المناعة، وتقلل من أعراض البرد والإنفلونزا.",
+                popularity: 70
+            },
+            {
+                id: 99,
+                name: "الخزامى",
+                scientific: "Lavandula angustifolia",
+                category: "medicinal",
+                type: "معمر",
+                season: "دائم",
+                region: ["mediterranean"],
+                icon: "🪻",
+                color: "#9370DB",
+                description: "مهدئ للأعصاب، يساعد على النوم، ومضاد للقلق.",
+                popularity: 85
+            },
+            {
+                id: 100,
+                name: "البابونج",
+                scientific: "Matricaria chamomilla",
+                category: "medicinal",
+                type: "حولي",
+                season: "ربيعي,صيفي",
+                region: ["temperate"],
+                icon: "🌼",
+                color: "#FFD700",
+                description: "مهدئ للمعدة والأعصاب، يساعد على النوم، ومضاد للالتهابات.",
+                popularity: 90
             }
         ];
         
-        // تحميل المحاصيل
-        function loadCrops(crops = cropsData) {
-            const grid = document.getElementById('cropsGrid');
-            grid.innerHTML = '';
+        // === متغيرات النظام ===
+        let allCrops = [...CROPS_DATABASE];
+        let displayedCrops = [];
+        let currentCategory = 'all';
+        let currentPage = 0;
+        const CROPS_PER_PAGE = 12;
+        let currentSort = 'name';
+        
+        // === تهيئة الصفحة ===
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🌱 المكتبة الزراعية الشاملة - الإصدار 1.0');
+            console.log('👨‍💻 المطور: محمد مقبل عبدالله سيف');
+            console.log('📍 اليمن - تعز - ماوية - ذراح');
+            console.log('📅 فبراير 2026');
             
-            crops.forEach(crop => {
-                const card = document.createElement('div');
-                card.className = 'crop-card';
-                
-                // تحديد لون الصنف
-                const categoryColors = {
-                    grains: '#8D6E63',
-                    vegetables: '#43A047',
-                    fruits: '#E53935',
-                    herbs: '#5E35B1'
-                };
-                
-                // تحديد أيقونة الصنف
-                const categoryIcons = {
-                    grains: 'fas fa-wheat-awn',
-                    vegetables: 'fas fa-carrot',
-                    fruits: 'fas fa-apple-alt',
-                    herbs: 'fas fa-spa'
-                };
-                
-                card.innerHTML = `
-                    <div class="crop-image">
-                        <img src="${crop.image}" alt="${crop.name}" 
-                             onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400'">
-                        <div class="crop-badge" style="background: ${categoryColors[crop.category]}">
-                            <i class="${categoryIcons[crop.category]}"></i>
-                            ${crop.category === 'grains' ? 'حبوب' : 
-                              crop.category === 'vegetables' ? 'خضروات' :
-                              crop.category === 'fruits' ? 'فواكه' : 'أعشاب'}
-                        </div>
-                    </div>
-                    <div class="crop-content">
-                        <h3 class="crop-title">
-                            ${crop.icon} ${crop.name}
-                        </h3>
-                        
-                        <div class="crop-details">
-                            <div class="detail-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>${crop.season.join(' / ')}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-clock"></i>
-                                <span>${crop.duration}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-tint"></i>
-                                <span>${crop.water}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-thermometer-half"></i>
-                                <span>${crop.temperature}</span>
-                            </div>
-                        </div>
-                        
-                        <p class="crop-description">${crop.description}</p>
-                        
-                        <div class="crop-actions">
-                            <button class="action-btn btn-details" onclick="viewCropDetails(${crop.id})">
-                                <i class="fas fa-info-circle"></i> التفاصيل
-                            </button>
-                            <button class="action-btn btn-save" onclick="saveCrop(${crop.id})">
-                                <i class="far fa-bookmark"></i> حفظ
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
+            loadFeaturedCrops();
+            loadCrops();
+            updateStatistics();
+            
+            // إضافة أحداث البحث
+            document.getElementById('searchInput').addEventListener('input', function() {
+                if (this.value.length >= 2) {
+                    performSearch();
+                }
             });
             
-            // تحديث الإحصائيات
-            updateStatistics(crops);
+            // البحث عند الضغط على Enter
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // تحديث عدد المحاصيل في العنوان
+            document.getElementById('totalCrops').textContent = `${allCrops.length} محصول`;
+        });
+        
+        // === تحميل المحاصيل المميزة ===
+        function loadFeaturedCrops() {
+            const featuredContainer = document.getElementById('featuredCrops');
+            const featured = allCrops
+                .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
+                .slice(0, 6);
+            
+            featuredContainer.innerHTML = '';
+            featured.forEach(crop => {
+                featuredContainer.appendChild(createCropCard(crop));
+            });
         }
         
-        // البحث عن المحاصيل
-        function searchCrops() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = cropsData.filter(crop => 
-                crop.name.toLowerCase().includes(searchTerm) ||
-                crop.description.toLowerCase().includes(searchTerm) ||
-                crop.season.some(s => s.toLowerCase().includes(searchTerm))
-            );
-            loadCrops(filtered);
+        // === تحميل المحاصيل ===
+        function loadCrops() {
+            const container = document.getElementById('cropsContainer');
+            const loading = document.getElementById('loadingIndicator');
+            
+            loading.style.display = 'block';
+            container.innerHTML = '';
+            
+            setTimeout(() => {
+                // فلترة المحاصيل حسب الفئة
+                let filteredCrops = allCrops;
+                if (currentCategory !== 'all') {
+                    filteredCrops = filteredCrops.filter(crop => crop.category === currentCategory);
+                }
+                
+                // ترتيب المحاصيل
+                filteredCrops = sortCrops(filteredCrops, currentSort);
+                
+                displayedCrops = filteredCrops;
+                currentPage = 0;
+                
+                // عرض الدفعة الأولى
+                const cropsToShow = filteredCrops.slice(0, CROPS_PER_PAGE);
+                displayCrops(cropsToShow, container);
+                
+                // تحديث زر تحميل المزيد
+                updateLoadMoreButton(filteredCrops.length);
+                
+                loading.style.display = 'none';
+            }, 300);
         }
         
-        // تصفية المحاصيل حسب الصنف
-        function filterCrops(category) {
-            // تحديد الأزرار النشطة
-            document.querySelectorAll('.category-filter').forEach(btn => {
-                btn.classList.remove('active');
+        // === عرض المحاصيل ===
+        function displayCrops(crops, container) {
+            crops.forEach(crop => {
+                container.appendChild(createCropCard(crop));
+            });
+        }
+        
+        // === إنشاء بطاقة المحصول ===
+        function createCropCard(crop) {
+            const card = document.createElement('div');
+            card.className = 'crop-card';
+            card.dataset.id = crop.id;
+            
+            // ألوان الفئات
+            const categoryColors = {
+                cereal: 'var(--cereal)',
+                vegetable: 'var(--vegetable)',
+                fruit: 'var(--fruit)',
+                legume: 'var(--legume)',
+                industrial: 'var(--industrial)',
+                spice: 'var(--spice)',
+                medicinal: 'var(--medicinal)'
+            };
+            
+            const backgroundColor = crop.color || categoryColors[crop.category] || 'var(--primary-green)';
+            
+            card.innerHTML = `
+                <div class="crop-header" style="background: linear-gradient(135deg, ${backgroundColor}, ${backgroundColor}aa);">
+                    <div class="crop-icon">${crop.icon || '🌱'}</div>
+                    <h3 class="crop-name">
+                        ${crop.icon || '🌱'} ${crop.name}
+                    </h3>
+                    <div class="crop-scientific">${crop.scientific || 'غير محدد'}</div>
+                    <div class="crop-tags">
+                        <span class="crop-tag">${getCategoryArabic(crop.category)}</span>
+                        <span class="crop-tag">${getSeasonArabic(crop.season)}</span>
+                        ${crop.organic ? '<span class="crop-tag">عضوي</span>' : ''}
+                        ${crop.popularity ? `<span class="crop-tag">${crop.popularity}%</span>` : ''}
+                    </div>
+                </div>
+                <div class="crop-body">
+                    <div class="crop-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">النوع:</span>
+                            <span class="info-value">${getCategoryArabic(crop.category)}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">الموسم:</span>
+                            <span class="info-value">${getSeasonArabic(crop.season)}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">المدة:</span>
+                            <span class="info-value">${crop.duration || 'غير محدد'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">الإنتاجية:</span>
+                            <span class="info-value">${crop.yield || 'غير محدد'}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="crop-description">
+                        ${crop.description ? (crop.description.length > 100 ? 
+                            crop.description.substring(0, 100) + '...' : crop.description) : 
+                            'محصول زراعي مهم له فوائد عديدة.'}
+                    </div>
+                    
+                    <div class="crop-actions">
+                        <button class="action-btn" onclick="showCropDetail(${crop.id})" 
+                                style="background: ${backgroundColor}; color: white;">
+                            <i class="fas fa-info-circle"></i> التفاصيل
+                        </button>
+                        <button class="action-btn" onclick="addToFavorites(${crop.id})"
+                                style="background: #F44336; color: white;">
+                            <i class="far fa-heart"></i> مفضلة
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // إضافة حدث النقر على البطاقة
+            card.addEventListener('click', function(e) {
+                if (!e.target.closest('.action-btn')) {
+                    showCropDetail(crop.id);
+                }
+            });
+            
+            return card;
+        }
+        
+        // === البحث المتقدم ===
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const category = document.getElementById('categoryFilter').value;
+            const season = document.getElementById('seasonFilter').value;
+            const region = document.getElementById('regionFilter').value;
+            const sort = document.getElementById('sortFilter').value;
+            
+            let filteredCrops = allCrops;
+            
+            // البحث النصي
+            if (searchTerm) {
+                filteredCrops = filteredCrops.filter(crop => 
+                    crop.name.toLowerCase().includes(searchTerm) ||
+                    crop.scientific.toLowerCase().includes(searchTerm) ||
+                    (crop.description && crop.description.toLowerCase().includes(searchTerm)) ||
+                    (crop.health_benefits && crop.health_benefits.some(b => b.toLowerCase().includes(searchTerm)))
+                );
+            }
+            
+            // الفلترة حسب الفئة
+            if (category !== 'all') {
+                filteredCrops = filteredCrops.filter(crop => crop.category === category);
+            }
+            
+            // الفلترة حسب الموسم
+            if (season !== 'all') {
+                filteredCrops = filteredCrops.filter(crop => {
+                    if (!crop.season) return false;
+                    if (season === 'perennial') return crop.season === 'دائم';
+                    return crop.season.includes(season);
+                });
+            }
+            
+            // الفلترة حسب المنطقة
+            if (region !== 'all') {
+                filteredCrops = filteredCrops.filter(crop => 
+                    crop.region && crop.region.includes(region)
+                );
+            }
+            
+            // الترتيب
+            filteredCrops = sortCrops(filteredCrops, sort);
+            currentSort = sort;
+            
+            // عرض النتائج
+            const container = document.getElementById('cropsContainer');
+            container.innerHTML = '';
+            displayedCrops = filteredCrops;
+            currentPage = 0;
+            
+            const cropsToShow = filteredCrops.slice(0, CROPS_PER_PAGE);
+            displayCrops(cropsToShow, container);
+            updateLoadMoreButton(filteredCrops.length);
+            
+            // إشعار بعدد النتائج
+            showNotification(`تم العثور على ${filteredCrops.length} محصول`);
+        }
+        
+        // === فلترة المحاصيل ===
+        function filterCrops() {
+            performSearch();
+        }
+        
+        // === فلترة حسب الفئة ===
+        function filterByCategory(category) {
+            currentCategory = category;
+            
+            // تحديد الزر النشط
+            document.querySelectorAll('.category-chip').forEach(chip => {
+                chip.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            if (category === 'all') {
-                loadCrops(cropsData);
-            } else {
-                const filtered = cropsData.filter(crop => crop.category === category);
-                loadCrops(filtered);
-            }
+            // تحديث الفلتر
+            document.getElementById('categoryFilter').value = category;
+            performSearch();
         }
         
-        // تحديث الإحصائيات
-        function updateStatistics(crops = cropsData) {
-            document.getElementById('totalCrops').textContent = crops.length;
-            document.getElementById('grainsCount').textContent = crops.filter(c => c.category === 'grains').length;
-            document.getElementById('vegetablesCount').textContent = crops.filter(c => c.category === 'vegetables').length;
-            document.getElementById('fruitsCount').textContent = crops.filter(c => c.category === 'fruits').length;
-        }
-        
-        // عرض تفاصيل المحصول
-        function viewCropDetails(cropId) {
-            const crop = cropsData.find(c => c.id === cropId);
-            if (crop) {
-                alert(`تفاصيل ${crop.name}:\n\n` +
-                      `الصنف: ${crop.category === 'grains' ? 'حبوب' : 
-                               crop.category === 'vegetables' ? 'خضروات' :
-                               crop.category === 'fruits' ? 'فواكه' : 'أعشاب'}\n` +
-                      `الموسم: ${crop.season.join(' / ')}\n` +
-                      `المدة: ${crop.duration}\n` +
-                      `الري: ${crop.water}\n` +
-                      `درجة الحرارة: ${crop.temperature}\n` +
-                      `التربة: ${crop.soil}\n` +
-                      `الإنتاجية: ${crop.yield}\n\n` +
-                      `${crop.description}`);
-            }
-        }
-        
-        // حفظ المحصول في المفضلة
-        function saveCrop(cropId) {
-            const crop = cropsData.find(c => c.id === cropId);
-            if (crop) {
-                // الحفظ في localStorage
-                let savedCrops = JSON.parse(localStorage.getItem('savedCrops') || '[]');
-                if (!savedCrops.includes(cropId)) {
-                    savedCrops.push(cropId);
-                    localStorage.setItem('savedCrops', JSON.stringify(savedCrops));
-                    alert(`✅ تم حفظ ${crop.name} في المفضلة`);
-                } else {
-                    alert(`⚠️ ${crop.name} محفوظ بالفعل في المفضلة`);
-                }
-            }
-        }
-        
-        // التحميل الأولي
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCrops();
-            
-            // إضافة حدث للبحث عند الضغط على Enter
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    searchCrops();
+        // === ترتيب المحاصيل ===
+        function sortCrops(crops, sortBy) {
+            return [...crops].sort((a, b) => {
+                switch(sortBy) {
+                    case 'name':
+                        return a.name.localeCompare(b.name, 'ar');
+                    case 'category':
+                        return a.category.localeCompare(b.category);
+                    case 'popular':
+                        return (b.popularity || 0) - (a.popularity || 0);
+                    case 'yield':
+                        // استخراج القيمة العددية من الإنتاجية
+                        const yieldA = extractYieldValue(a.yield);
+                        const yieldB = extractYieldValue(b.yield);
+                        return yieldB - yieldA;
+                    default:
+                        return 0;
                 }
             });
-        });
+        }
+        
+        // === استخراج قيمة الإنتاجية ===
+        function extractYieldValue(yieldStr) {
+            if (!yieldStr) return 0;
+            const match = yieldStr.match(/[\d.]+/);
+            return match ? parseFloat(match[0]) : 0;
+        }
+        
+        // === تحميل المزيد من المحاصيل ===
+        function loadMoreCrops() {
+            currentPage++;
+            const startIndex = currentPage * CROPS_PER_PAGE;
+            const endIndex = startIndex + CROPS_PER_PAGE;
+            
+            const moreCrops = displayedCrops.slice(startIndex, endIndex);
+            const container = document.getElementById('cropsContainer');
+            
+            if (moreCrops.length === 0) {
+                showNotification('لا توجد محاصيل إضافية');
+                return;
+            }
+            
+            displayCrops(moreCrops, container);
+            updateLoadMoreButton(displayedCrops.length);
+            
+            // التمرير للأسفل قليلاً
+            setTimeout(() => {
+                container.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+        
+        // === تحديث زر تحميل المزيد ===
+        function updateLoadMoreButton(totalCrops) {
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const remainingCrops = totalCrops - ((currentPage + 1) * CROPS_PER_PAGE);
+            
+            if (remainingCrops <= 0) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'inline-flex';
+                loadMoreBtn.innerHTML = `<i class="fas fa-plus"></i> تحميل ${remainingCrops} محصول إضافي`;
+            }
+        }
+        
+        // === تحديث الإحصائيات ===
+        function updateStatistics() {
+            const total = allCrops.length;
+            const cereal = allCrops.filter(c => c.category === 'cereal').length;
+            const vegetable = allCrops.filter(c => c.category === 'vegetable').length;
+            const fruit = allCrops.filter(c => c.category === 'fruit').length;
+            const organic = allCrops.filter(c => c.organic).length;
+            const global = allCrops.filter(c => c.global_production).length;
+            
+            document.getElementById('totalStats').textContent = total;
+            document.getElementById('cerealStats').textContent = cereal;
+            document.getElementById('vegetableStats').textContent = vegetable;
+            document.getElementById('fruitStats').textContent = fruit;
+            document.getElementById('organicStats').textContent = organic;
+            document.getElementById('globalStats').textContent = global;
+        }
+        
+        // === عرض تفاصيل المحصول ===
+        function showCropDetail(cropId) {
+            const crop = allCrops.find(c => c.id === cropId);
+            if (!crop) {
+                showNotification('المحصول غير موجود');
+                return;
+            }
+            
+            // تحديث الهيدر
+            const backgroundColor = crop.color || getCategoryColor(crop.category);
+            const header = document.getElementById('detailHeader');
+            header.style.background = `linear-gradient(135deg, ${backgroundColor}, ${backgroundColor}aa)`;
+            header.innerHTML = `
+                <div style="flex: 1;">
+                    <h3 style="margin: 0; font-size: 2rem; display: flex; align-items: center; gap: 15px;">
+                        ${crop.icon} ${crop.name}
+                    </h3>
+                    <div style="margin-top: 0.5rem; opacity: 0.9; font-size: 1.1rem;">
+                        ${crop.scientific}
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 0.95rem; opacity: 0.8;">
+                        ${crop.description || ''}
+                    </div>
+                </div>
+                <button onclick="closeModal()" style="
+                    background: rgba(255,255,255,0.2); 
+                    border: none; 
+                    color: white; 
+                    font-size: 1.5rem; 
+                    cursor: pointer; 
+                    padding: 0.5rem; 
+                    border-radius: 8px;
+                    transition: all 0.3s;"
+                    onmouseenter="this.style.background='rgba(255,255,255,0.3)'"
+                    onmouseleave="this.style.background='rgba(255,255,255,0.2)'">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // تحديث المحتوى
+            const body = document.getElementById('detailBody');
+            body.innerHTML = generateDetailHTML(crop);
+            
+            // عرض النافذة
+            document.getElementById('detailModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // === توليد HTML للتفاصيل ===
+        function generateDetailHTML(crop) {
+            const backgroundColor = crop.color || getCategoryColor(crop.category);
+            
+            return `
+                <div class="detail-grid">
+                    <!-- المعلومات الأساسية -->
+                    <div class="detail-section" style="border-color: ${backgroundColor};">
+                        <h4 style="color: ${backgroundColor}"><i class="fas fa-info-circle"></i> المعلومات الأساسية</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div><strong>التصنيف:</strong><br>${getCategoryArabic(crop.category)}</div>
+                            <div><strong>النوع:</strong><br>${crop.type || 'غير محدد'}</div>
+                            <div><strong>الموسم:</strong><br>${getSeasonArabic(crop.season)}</div>
+                            <div><strong>المدة:</strong><br>${crop.duration || 'غير محدد'}</div>
+                            <div><strong>درجة الحرارة:</strong><br>${crop.temperature || 'غير محدد'}</div>
+                            <div><strong>احتياجات الماء:</strong><br>${getWaterArabic(crop.water)}</div>
+                            <div><strong>نوع التربة:</strong><br>${crop.soil || 'غير محدد'}</div>
+                            <div><strong>درجة الحموضة:</strong><br>${crop.ph || 'غير محدد'}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- المعلومات الزراعية -->
+                    <div class="detail-section" style="border-color: #4CAF50;">
+                        <h4 style="color: #4CAF50"><i class="fas fa-seedling"></i> معلومات الزراعة</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            ${crop.planting_method ? `<div><strong>طريقة الزراعة:</strong><br>${crop.planting_method}</div>` : ''}
+                            ${crop.spacing ? `<div><strong>المسافات:</strong><br>${crop.spacing}</div>` : ''}
+                            ${crop.depth ? `<div><strong>عمق الزراعة:</strong><br>${crop.depth}</div>` : ''}
+                            ${crop.yield ? `<div><strong>المحصول المتوقع:</strong><br>${crop.yield}</div>` : ''}
+                            ${crop.harvest_time ? `<div><strong>وقت الحصاد:</strong><br>${crop.harvest_time}</div>` : ''}
+                            ${crop.storage ? `<div><strong>طريقة التخزين:</strong><br>${crop.storage}</div>` : ''}
+                        </div>
+                    </div>
+                    
+                    <!-- القيمة الغذائية -->
+                    ${crop.nutritional_value ? `
+                    <div class="detail-section" style="border-color: #FF9800;">
+                        <h4 style="color: #FF9800"><i class="fas fa-heartbeat"></i> القيمة الغذائية (لكل 100 جرام)</h4>
+                        <div class="nutrition-grid">
+                            <div class="nutrition-item">
+                                <div class="nutrition-value">${crop.nutritional_value.calories || '0'}</div>
+                                <div>سعرة حرارية</div>
+                            </div>
+                            <div class="nutrition-item">
+                                <div class="nutrition-value">${crop.nutritional_value.protein || '0g'}</div>
+                                <div>بروتين</div>
+                            </div>
+                            <div class="nutrition-item">
+                                <div class="nutrition-value">${crop.nutritional_value.carbs || '0g'}</div>
+                                <div>كربوهيدرات</div>
+                            </div>
+                            <div class="nutrition-item">
+                                <div class="nutrition-value">${crop.nutritional_value.fiber || '0g'}</div>
+                                <div>ألياف</div>
+                            </div>
+                        </div>
+                        ${crop.nutritional_value.vitamins ? `
+                            <div style="margin-top: 1rem;"><strong>الفيتامينات:</strong> ${crop.nutritional_value.vitamins.join('، ')}</div>
+                        ` : ''}
+                        ${crop.nutritional_value.minerals ? `
+                            <div style="margin-top: 0.5rem;"><strong>المعادن:</strong> ${crop.nutritional_value.minerals.join('، ')}</div>
+                        ` : ''}
+                    </div>
+                    ` : ''}
+                    
+                    <!-- الفوائد الصحية -->
+                    ${crop.health_benefits ? `
+                    <div class="detail-section" style="border-color: #2196F3;">
+                        <h4 style="color: #2196F3"><i class="fas fa-award"></i> الفوائد الصحية</h4>
+                        <ul style="padding-right: 1.5rem;">
+                            ${crop.health_benefits.map(benefit => `
+                                <li style="margin-bottom: 0.8rem; position: relative; padding-right: 1rem;">
+                                    <span style="position: absolute; right: 0; color: #2196F3;">•</span>
+                                    ${benefit}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- المعلومات الاقتصادية -->
+                    <div class="detail-section" style="border-color: #9C27B0;">
+                        <h4 style="color: #9C27B0"><i class="fas fa-chart-line"></i> المعلومات الاقتصادية</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            ${crop.economic_value ? `<div><strong>القيمة الاقتصادية:</strong><br>${crop.economic_value}</div>` : ''}
+                            ${crop.global_production ? `<div><strong>الإنتاج العالمي:</strong><br>${crop.global_production}</div>` : ''}
+                            ${crop.top_producers ? `<div><strong>أكبر المنتجين:</strong><br>${crop.top_producers.join('، ')}</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- أزرار التحكم -->
+                <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 2px solid #eee; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button onclick="closeModal()" style="
+                        background: #f44336; color: white; border: none; padding: 0.8rem 2rem; 
+                        border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1;">
+                        <i class="fas fa-times"></i> إغلاق
+                    </button>
+                    <button onclick="addToFavorites(${crop.id})" style="
+                        background: #F44336; color: white; border: none; padding: 0.8rem 2rem; 
+                        border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1;">
+                        <i class="far fa-heart"></i> إضافة للمفضلة
+                    </button>
+                    <button onclick="shareCrop(${crop.id})" style="
+                        background: #4CAF50; color: white; border: none; padding: 0.8rem 2rem; 
+                        border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1;">
+                        <i class="fas fa-share"></i> مشاركة
+                    </button>
+                </div>
+            `;
+        }
+        
+        // === إغلاق النافذة المنبثقة ===
+        function closeModal(event) {
+            if (!event || event.target.classList.contains('modal-overlay') || event.target.closest('[onclick*="closeModal"]')) {
+                document.getElementById('detailModal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // === دوال المساعدة ===
+        function getCategoryArabic(category) {
+            const categories = {
+                cereal: 'حبوب ونشويات',
+                vegetable: 'خضروات',
+                fruit: 'فواكه',
+                legume: 'بقوليات',
+                industrial: 'محاصيل صناعية',
+                spice: 'توابل وأعشاب',
+                medicinal: 'نباتات طبية',
+                tuber: 'محاصيل درنية',
+                nut: 'مكسرات',
+                oil: 'محاصيل زيتية'
+            };
+            return categories[category] || category;
+        }
+        
+        function getSeasonArabic(season) {
+            if (!season) return 'غير محدد';
+            if (season === 'دائم') return 'طوال السنة';
+            
+            const seasons = {
+                winter: 'شتوي',
+                summer: 'صيفي',
+                spring: 'ربيعي',
+                autumn: 'خريفي',
+                perennial: 'طوال السنة'
+            };
+            
+            if (seasons[season]) return seasons[season];
+            if (season.includes(',')) {
+                return season.split(',').map(s => seasons[s] || s).join('، ');
+            }
+            return season;
+        }
+        
+        function getWaterArabic(water) {
+            const levels = {
+                low: 'قليل',
+                medium: 'متوسط',
+                high: 'كثير',
+                'منخفض': 'قليل',
+                'متوسط': 'متوسط',
+                'مرتفع': 'كثير'
+            };
+            return levels[water] || water || 'غير محدد';
+        }
+        
+        function getCategoryColor(category) {
+            const colors = {
+                cereal: '#FFD54F',
+                vegetable: '#81C784',
+                fruit: '#FF8A65',
+                legume: '#D2691E',
+                industrial: '#90CAF9',
+                spice: '#CE93D8',
+                medicinal: '#A5D6A7'
+            };
+            return colors[category] || '#4CAF50';
+        }
+        
+        // === إضافة للمفضلة ===
+        function addToFavorites(cropId) {
+            let favorites = JSON.parse(localStorage.getItem('favorite_crops') || '[]');
+            if (!favorites.includes(cropId)) {
+                favorites.push(cropId);
+                localStorage.setItem('favorite_crops', JSON.stringify(favorites));
+                showNotification('تمت الإضافة للمفضلة');
+            } else {
+                showNotification('المنتج موجود بالفعل في المفضلة');
+            }
+        }
+        
+        // === مشاركة المحصول ===
+        function shareCrop(cropId) {
+            const crop = allCrops.find(c => c.id === cropId);
+            if (!crop) return;
+            
+            const text = `🌱 ${crop.name}\n\n${crop.description}\n\n🔗 من مكتبة المحاصيل الزراعية الشاملة`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: crop.name,
+                    text: text,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(text);
+                showNotification('تم نسخ المعلومات للحافظة');
+            }
+        }
+        
+        // === إشعارات ===
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // === دوال التحكم ===
+        function showAllCrops() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = 'all';
+            document.getElementById('seasonFilter').value = 'all';
+            document.getElementById('regionFilter').value = 'all';
+            document.getElementById('sortFilter').value = 'name';
+            
+            document.querySelectorAll('.category-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            document.querySelector('.category-chip[onclick*="all"]').classList.add('active');
+            
+            currentCategory = 'all';
+            currentSort = 'name';
+            loadCrops();
+            showNotification('تم عرض جميع المحاصيل');
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // === المعلومات التعريفية ===
+        console.log(`
+        ============================================
+        🌱 المكتبة الزراعية الشاملة - الإصدار 1.0
+        ============================================
+
+        ============================================
+        المميزات:
+        • عرض 100+ محصول زراعي
+        • نظام بحث متقدم
+        • معلومات تفصيلية لكل محصول
+        • نظام التفضيلات
+        • واجهة متجاوبة
+        • أنظمة فلترة متعددة
+        ============================================
+        `);
     </script>
 </body>
 </html>

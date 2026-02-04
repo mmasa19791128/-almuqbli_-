@@ -3,741 +3,2113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التقويم الزراعي - المرشد الزراعي الذكي</title>
+    <title>التقويم الزراعي الذكي - المرشد الزراعي الذكي</title>
     
-    <!-- مكتبات التطبيق الرئيسي -->
+    <!-- مكتبات التطبيق -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
     <style>
         :root {
-            --primary-color: #2E7D32;
-            --secondary-color: #4CAF50;
-            --winter-color: #2196F3;
-            --spring-color: #4CAF50;
-            --summer-color: #FF9800;
-            --autumn-color: #795548;
+            --primary-green: #2E7D32;
+            --secondary-green: #4CAF50;
+            --spring: #81C784;
+            --summer: #FFB74D;
+            --autumn: #FF9800;
+            --winter: #64B5F6;
+            --urgent: #F44336;
+            --important: #FF9800;
+            --normal: #2196F3;
+            --info: #2196F3;
+            --success: #4CAF50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
             font-family: 'Tajawal', sans-serif;
-            background: #f5f5f5;
-            margin: 0;
-            padding: 0;
+            background: linear-gradient(135deg, #f5f5f5 0%, #f0f7ff 100%);
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 100px;
         }
         
-        /* رأس الصفحة */
-        .calendar-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* زر العودة */
+        .back-to-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
             color: white;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+            transition: all 0.3s;
         }
         
-        .calendar-header h1 {
-            margin: 0 0 1rem 0;
+        .back-to-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+        }
+        
+        /* الهيدر */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(46, 125, 50, 0.3);
+            animation: slideInRight 0.5s ease;
+        }
+        
+        .page-header h1 {
             font-size: 2.5rem;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 20px;
         }
         
-        /* الحاوية الرئيسية */
-        .calendar-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        /* نظام التبويب */
+        .tabs-container {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
         
-        /* التحكم في الشهور */
-        .month-controls {
+        .tabs-header {
+            display: flex;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 1.2rem 2rem;
+            background: none;
+            border: none;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-green);
+            background: white;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            left: 0;
+            height: 3px;
+            background: var(--primary-green);
+        }
+        
+        .tab-btn .badge {
+            background: var(--urgent);
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            margin-right: 5px;
+        }
+        
+        /* التقويم الشهري */
+        .calendar-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .calendar-section.active {
+            display: block;
+        }
+        
+        .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: white;
             padding: 1.5rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            background: white;
+            border-radius: 15px 15px 0 0;
+            border-bottom: 2px solid #e0e0e0;
         }
         
-        .month-nav {
+        .month-navigation {
             display: flex;
             align-items: center;
             gap: 1rem;
-        }
-        
-        .nav-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        
-        .nav-btn:hover {
-            transform: scale(1.1);
-            background: var(--secondary-color);
         }
         
         .current-month {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--primary-green);
+            min-width: 200px;
+            text-align: center;
         }
         
-        /* الشبكة الشهرية */
-        .month-grid {
+        .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-            background: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .day-header {
-            background: var(--primary-color);
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            font-weight: 600;
-        }
-        
-        .day-cell {
             background: white;
+            border-radius: 0 0 15px 15px;
+            overflow: hidden;
+        }
+        
+        .calendar-day-header {
+            padding: 1rem;
+            background: #f8f9fa;
+            text-align: center;
+            font-weight: 700;
+            color: var(--primary-green);
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .calendar-day {
             padding: 1rem;
             min-height: 120px;
+            border: 1px solid #f0f0f0;
+            background: white;
             position: relative;
+            cursor: pointer;
             transition: all 0.3s;
         }
         
-        .day-cell:hover {
-            background: #F9F9F9;
+        .calendar-day:hover {
+            background: #f9f9f9;
             transform: translateY(-2px);
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         .day-number {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #f0f0f0;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
         }
         
-        /* المهام الزراعية */
-        .agricultural-tasks {
-            margin-top: 30px;
+        .events-container {
+            max-height: 80px;
+            overflow-y: auto;
+        }
+        
+        .event-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 5px;
+            margin-bottom: 3px;
+        }
+        
+        .event-item {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.4rem;
+            margin-bottom: 0.2rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+        
+        /* القائمة الأسبوعية */
+        .weekly-list {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .weekly-list.active {
+            display: block;
+        }
+        
+        .week-day {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            border-right: 4px solid var(--primary-green);
+        }
+        
+        .week-day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .day-name {
+            font-weight: 700;
+            color: var(--primary-green);
+            font-size: 1.2rem;
+        }
+        
+        /* التنبيهات */
+        .alerts-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .alerts-section.active {
+            display: block;
+        }
+        
+        .alert-card {
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            border-right: 4px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideInLeft 0.3s ease;
+        }
+        
+        .alert-urgent {
+            background: #FFEBEE;
+            border-right-color: var(--urgent);
+        }
+        
+        .alert-important {
+            background: #FFF3E0;
+            border-right-color: var(--important);
+        }
+        
+        .alert-normal {
+            background: #E3F2FD;
+            border-right-color: var(--normal);
+        }
+        
+        .alert-time {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* المهام */
+        .tasks-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .tasks-section.active {
+            display: block;
         }
         
         .task-item {
-            background: #E8F5E9;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            border-radius: 5px;
-            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-right: 4px solid;
+            cursor: move;
+        }
+        
+        .task-item.dragging {
+            opacity: 0.5;
+        }
+        
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
             cursor: pointer;
-            transition: all 0.3s;
-            border-right: 3px solid var(--primary-color);
         }
         
-        .task-item:hover {
-            background: #C8E6C9;
-            transform: translateX(-5px);
-        }
-        
-        .task-icon {
-            margin-left: 5px;
-            color: var(--primary-color);
-        }
-        
-        /* معلومات الموسم */
-        .season-info {
+        /* الخريطة الموسمية */
+        .seasonal-map-section {
             background: white;
             border-radius: 15px;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
         
-        .season-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 1.5rem;
+        .seasonal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .season-card {
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .season-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
         
         .season-icon {
-            font-size: 2.5rem;
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
         
-        .winter .season-icon { color: var(--winter-color); }
-        .spring .season-icon { color: var(--spring-color); }
-        .summer .season-icon { color: var(--summer-color); }
-        .autumn .season-icon { color: var(--autumn-color); }
+        /* الإحصائيات */
+        .stats-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
         
-        .season-crops {
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .crop-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 0.8rem;
-            background: #F9F9F9;
-            border-radius: 8px;
-        }
-        
-        /* الأزرار */
-        .action-buttons {
-            display: flex;
-            justify-content: center;
             gap: 1.5rem;
-            margin-top: 3rem;
-            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* النافذة المنبثقة */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideInRight 0.4s ease;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        /* أزرار الإجراءات */
+        .action-buttons {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 900;
         }
         
         .action-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
             color: white;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
             transition: all 0.3s;
         }
         
         .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
         }
         
-        /* تحسينات للهواتف */
+        .action-btn.add-event {
+            background: linear-gradient(135deg, var(--urgent), #EF5350);
+        }
+        
+        .action-btn.settings {
+            background: linear-gradient(135deg, var(--info), #1976D2);
+        }
+        
+        /* التنبيهات العائمة */
+        .floating-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 10001;
+            animation: slideInRight 0.5s ease;
+            max-width: 400px;
+        }
+        
+        /* الأنيميشن */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* متجاوب */
+        @media (max-width: 1200px) {
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+        }
+        
         @media (max-width: 768px) {
-            .calendar-container {
-                padding: 1rem;
+            .page-header h1 {
+                font-size: 2rem;
+                flex-direction: column;
             }
             
-            .month-grid {
-                grid-template-columns: repeat(1, 1fr);
+            .tabs-header {
+                flex-direction: column;
             }
             
-            .day-header {
-                display: none;
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                font-size: 0.9rem;
             }
             
-            .day-cell {
-                min-height: auto;
-                padding: 0.8rem;
-            }
-            
-            .season-crops {
-                grid-template-columns: 1fr;
+            .calendar-day {
+                min-height: 80px;
+                padding: 0.5rem;
             }
             
             .action-buttons {
-                flex-direction: column;
-                align-items: center;
+                bottom: 20px;
+                left: 20px;
             }
+            
+            .action-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* محدد التاريخ */
+        .date-picker-container {
+            margin: 1rem 0;
+        }
+        
+        /* راديو البطانات */
+        .priority-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .priority-label {
+            flex: 1;
+            text-align: center;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .priority-label input {
+            display: none;
+        }
+        
+        .priority-label.active {
+            border-color: var(--primary-green);
+            background: #E8F5E9;
+            font-weight: bold;
+        }
+        
+        /* إشعارات الويب */
+        .notification-permission {
+            background: linear-gradient(135deg, #FF9800, #FFB74D);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* المزامنة */
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .sync-status.syncing {
+            color: var(--info);
+        }
+        
+        .sync-status.success {
+            color: var(--success);
+        }
+        
+        .sync-status.error {
+            color: var(--urgent);
         }
     </style>
 </head>
 <body>
-    <!-- رأس الصفحة -->
-    <header class="calendar-header">
-        <h1>
-            <i class="fas fa-calendar-alt"></i>
-            التقويم الزراعي الذكي
-        </h1>
-        <p>خطط لموسمك الزراعي واعرف مواعيد الزراعة والري والحصاد</p>
-    </header>
+    <!-- زر العودة -->
+    <button class="back-to-home" onclick="window.location.href='../index.html'">
+        <i class="fas fa-arrow-right"></i> العودة للرئيسية
+    </button>
     
-    <!-- المحتوى الرئيسي -->
-    <div class="calendar-container">
-        <!-- التحكم في الشهور -->
-        <div class="month-controls">
-            <div class="month-nav">
-                <button class="nav-btn" onclick="changeMonth(-1)">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-                <span class="current-month" id="currentMonth">يناير 2026</span>
-                <button class="nav-btn" onclick="changeMonth(1)">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
+    <!-- أزرار الإجراءات السريعة -->
+    <div class="action-buttons">
+        <button class="action-btn add-event" onclick="openAddEventModal()" title="إضافة مهمة جديدة">
+            <i class="fas fa-plus"></i>
+        </button>
+        <button class="action-btn" onclick="showTodayEvents()" title="أحداث اليوم">
+            <i class="fas fa-calendar-day"></i>
+        </button>
+        <button class="action-btn" onclick="syncCalendar()" title="مزامنة">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="action-btn settings" onclick="openSettings()" title="الإعدادات">
+            <i class="fas fa-cog"></i>
+        </button>
+    </div>
+    
+    <!-- تنبيهات عائمة -->
+    <div id="floatingAlert" class="floating-alert" style="display: none;"></div>
+
+    <div class="container">
+        <!-- رأس الصفحة -->
+        <header class="page-header">
+            <h1>
+                <i class="fas fa-calendar-alt"></i>
+                التقويم الزراعي الذكي مع التنبيهات
+            </h1>
+            <p>خطط مواسمك الزراعية، تتبع المهام، واحصل على تنبيهات ذكية لأهم الأحداث</p>
+        </header>
+        
+        <!-- طلب إذن الإشعارات -->
+        <div id="notificationPermission" class="notification-permission">
+            <div>
+                <i class="fas fa-bell"></i>
+                <strong>تفعيل التنبيهات</strong>
+                <p style="margin: 5px 0 0; font-size: 0.9rem;">اسمح بإرسال إشعارات للحصول على تنبيهات المهام</p>
             </div>
-            <div class="season-tag" id="seasonTag">
-                <span style="background: #2196F3; color: white; padding: 0.5rem 1rem; border-radius: 20px;">
-                    ❄️ موسم الشتاء
-                </span>
-            </div>
+            <button onclick="requestNotificationPermission()" style="background: white; color: #FF9800; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">
+                تفعيل
+            </button>
         </div>
         
-        <!-- الشبكة الشهرية -->
-        <div class="month-grid" id="monthGrid">
-            <!-- سيتم ملؤها ديناميكياً -->
-        </div>
-        
-        <!-- معلومات الموسم الحالي -->
-        <div class="season-info winter" id="seasonInfo">
-            <div class="season-header">
-                <div class="season-icon">❄️</div>
-                <div>
-                    <h2 style="margin: 0; color: var(--winter-color);">موسم الشتاء</h2>
-                    <p style="margin: 0; color: #666;">ديسمبر - يناير - فبراير</p>
+        <!-- نظام التبويب -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab('monthly')">
+                    <i class="fas fa-calendar"></i>
+                    تقويم شهري
+                </button>
+                <button class="tab-btn" onclick="switchTab('weekly')">
+                    <i class="fas fa-list"></i>
+                    قائمة أسبوعية
+                    <span class="badge" id="weeklyBadge">0</span>
+                </button>
+                <button class="tab-btn" onclick="switchTab('alerts')">
+                    <i class="fas fa-bell"></i>
+                    التنبيهات
+                    <span class="badge" id="alertsBadge">0</span>
+                </button>
+                <button class="tab-btn" onclick="switchTab('tasks')">
+                    <i class="fas fa-tasks"></i>
+                    المهام
+                    <span class="badge" id="tasksBadge">0</span>
+                </button>
+                <button class="tab-btn" onclick="switchTab('seasonal')">
+                    <i class="fas fa-seedling"></i>
+                    الخريطة الموسمية
+                </button>
+            </div>
+            
+            <!-- التقويم الشهري -->
+            <div id="monthlyTab" class="calendar-section active">
+                <div class="calendar-header">
+                    <div class="month-navigation">
+                        <button onclick="changeMonth(-1)" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="current-month" id="currentMonth"></div>
+                        <button onclick="changeMonth(1)" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <button onclick="goToToday()" style="background: var(--primary-green); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-calendar-day"></i> اليوم
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- سيتم تعبئتها بالجافاسكريبت -->
                 </div>
             </div>
             
-            <p>موسم الشتاء هو الوقت المناسب لزراعة المحاصيل التي تتحمل البرودة وتنمو في درجات حرارة منخفضة.</p>
+            <!-- القائمة الأسبوعية -->
+            <div id="weeklyTab" class="weekly-list">
+                <div id="weeklyContainer">
+                    <!-- سيتم تعبئتها بالجافاسكريبت -->
+                </div>
+            </div>
             
-            <div class="season-crops">
-                <div class="crop-item">
-                    <span style="font-size: 1.5rem;">🌾</span>
-                    <div>
-                        <strong>القمح</strong>
-                        <div style="font-size: 0.9rem; color: #666;">زراعة - ري - تسميد</div>
-                    </div>
+            <!-- التنبيهات -->
+            <div id="alertsTab" class="alerts-section">
+                <div id="alertsContainer">
+                    <!-- سيتم تعبئتها بالجافاسكريبت -->
                 </div>
-                <div class="crop-item">
-                    <span style="font-size: 1.5rem;">🧅</span>
-                    <div>
-                        <strong>البصل</strong>
-                        <div style="font-size: 0.9rem; color: #666;">زراعة - رعاية</div>
-                    </div>
+            </div>
+            
+            <!-- المهام -->
+            <div id="tasksTab" class="tasks-section">
+                <div id="tasksContainer">
+                    <!-- سيتم تعبئتها بالجافاسكريبت -->
                 </div>
-                <div class="crop-item">
-                    <span style="font-size: 1.5rem;">🧄</span>
-                    <div>
-                        <strong>الثوم</strong>
-                        <div style="font-size: 0.9rem; color: #666;">زراعة - ري</div>
-                    </div>
-                </div>
-                <div class="crop-item">
-                    <span style="font-size: 1.5rem;">🥔</span>
-                    <div>
-                        <strong>البطاطس</strong>
-                        <div style="font-size: 0.9rem; color: #666;">زراعة - تسميد</div>
-                    </div>
+            </div>
+            
+            <!-- الخريطة الموسمية -->
+            <div id="seasonalTab" class="seasonal-map-section">
+                <h2 style="color: var(--primary-green); text-align: center; margin-bottom: 1.5rem;">
+                    <i class="fas fa-map"></i> خريطة المحاصيل الموسمية
+                </h2>
+                <div class="seasonal-grid" id="seasonalMap">
+                    <!-- سيتم تعبئتها بالجافاسكريبت -->
                 </div>
             </div>
         </div>
         
-        <!-- النصائح الشهرية -->
-        <div class="season-info" style="background: linear-gradient(135deg, #FFF3E0, #FFECB3);">
-            <h3 style="color: #FF9800; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-lightbulb"></i> نصائح يناير
-            </h3>
-            <ul style="padding-right: 1.5rem;">
-                <li>ابدأ بتحضير التربة لزراعة المحاصيل الشتوية</li>
-                <li>قلّم أشجار الفاكهة المتساقطة الأوراق</li>
-                <li>احمِ النباتات الحساسة من الصقيع</li>
-                <li>جهز البيوت البلاستيكية للزراعات المبكرة</li>
-                <li>خطط لبرنامج التسميد الربيعي</li>
-            </ul>
-        </div>
+        <!-- إحصائيات سريعة -->
+        <section class="stats-section">
+            <h2 style="color: var(--primary-green); text-align: center; margin-bottom: 1.5rem;">
+                <i class="fas fa-chart-line"></i> إحصائيات التقويم
+            </h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalEvents">0</div>
+                    <div>حدث زراعي</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pendingTasks">0</div>
+                    <div>مهمة معلقة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="upcomingAlerts">0</div>
+                    <div>تنبيه قادم</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedTasks">0</div>
+                    <div>مهمة مكتملة</div>
+                </div>
+            </div>
+        </section>
         
-        <!-- أزرار التنقل -->
-        <div class="action-buttons">
-            <a href="index.html" class="action-btn">
-                <i class="fas fa-home"></i> الرئيسية
-            </a>
-            <a href="crops.html" class="action-btn" style="background: linear-gradient(135deg, #43A047, #66BB6A);">
-                <i class="fas fa-leaf"></i> المحاصيل
-            </a>
-            <button class="action-btn" onclick="addReminder()" style="background: linear-gradient(135deg, #FF9800, #FFB74D);">
-                <i class="fas fa-bell"></i> إضافة تذكير
-            </button>
-            <button class="action-btn" onclick="printCalendar()" style="background: linear-gradient(135deg, #757575, #9E9E9E);">
-                <i class="fas fa-print"></i> طباعة التقويم
-            </button>
+        <!-- التقويم العالمي -->
+        <section class="seasonal-map-section">
+            <h2 style="color: var(--primary-green); text-align: center; margin-bottom: 1.5rem;">
+                <i class="fas fa-globe"></i> التقويم الزراعي العالمي
+            </h2>
+            <div id="globalCalendar">
+                <!-- سيتم تعبئتها بالجافاسكريبت -->
+            </div>
+        </section>
+    </div>
+    
+    <!-- نافذة إضافة حدث -->
+    <div id="addEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin: 0;"><i class="fas fa-plus"></i> إضافة مهمة زراعية جديدة</h3>
+                <button onclick="closeModal('addEventModal')" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div style="padding: 2rem;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">عنوان المهمة</label>
+                    <input type="text" id="eventTitle" placeholder="مثال: زراعة القمح، ري المزرعة، تسميد الأشجار..." 
+                           style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">التاريخ</label>
+                        <input type="date" id="eventDate" style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">الوقت</label>
+                        <input type="time" id="eventTime" style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px;">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">نوع النشاط</label>
+                    <select id="eventType" style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px;">
+                        <option value="planting">زراعة</option>
+                        <option value="watering">ري</option>
+                        <option value="fertilizing">تسميد</option>
+                        <option value="harvesting">حصاد</option>
+                        <option value="spraying">رش</option>
+                        <option value="pruning">تقليم</option>
+                        <option value="plowing">حرث</option>
+                        <option value="other">أخرى</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">المحصول</label>
+                    <input type="text" id="eventCrop" placeholder="اسم المحصول..." 
+                           style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">الأولوية</label>
+                    <div class="priority-buttons">
+                        <label class="priority-label active" onclick="setPriority('high', this)">
+                            <input type="radio" name="priority" value="high" checked>
+                            <i class="fas fa-exclamation-circle" style="color: var(--urgent);"></i>
+                            عاجل
+                        </label>
+                        <label class="priority-label" onclick="setPriority('medium', this)">
+                            <input type="radio" name="priority" value="medium">
+                            <i class="fas fa-exclamation-triangle" style="color: var(--important);"></i>
+                            مهم
+                        </label>
+                        <label class="priority-label" onclick="setPriority('low', this)">
+                            <input type="radio" name="priority" value="low">
+                            <i class="fas fa-info-circle" style="color: var(--info);"></i>
+                            عادي
+                        </label>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">ملاحظات إضافية</label>
+                    <textarea id="eventNotes" rows="3" placeholder="تفاصيل إضافية عن المهمة..." 
+                              style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; resize: vertical;"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button onclick="saveEvent()" style="flex: 1; background: var(--primary-green); color: white; border: none; 
+                            padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1.1rem;">
+                        <i class="fas fa-save"></i> حفظ المهمة
+                    </button>
+                    <button onclick="closeModal('addEventModal')" style="flex: 1; background: #f5f5f5; color: #333; border: none; 
+                            padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
     
-    <!-- جافاسكريبت -->
-    <script>
-        // بيانات التقويم الزراعي
-        const agriculturalCalendar = {
-            months: [
-                {
-                    name: "يناير",
-                    season: "winter",
-                    tasks: [
-                        { day: 5, task: "زراعة القمح والشعير", icon: "🌾", type: "planting" },
-                        { day: 10, task: "ري البصل والثوم", icon: "💧", type: "watering" },
-                        { day: 15, task: "تسميد أشجار الفاكهة", icon: "🧪", type: "fertilizing" },
-                        { day: 20, task: "حصاد البرسيم", icon: "✂️", type: "harvesting" }
-                    ],
-                    tips: [
-                        "ابدأ بتحضير التربة لزراعة المحاصيل الشتوية",
-                        "قلّم أشجار الفاكهة المتساقطة الأوراق",
-                        "احمِ النباتات الحساسة من الصقيع"
-                    ]
-                },
-                {
-                    name: "فبراير",
-                    season: "winter",
-                    tasks: [
-                        { day: 5, task: "زراعة البطاطس والجزر", icon: "🥔", type: "planting" },
-                        { day: 12, task: "رش المبيدات الوقائية", icon: "🛡️", type: "spraying" },
-                        { day: 20, task: "تهوية البيوت البلاستيكية", icon: "💨", type: "ventilation" }
-                    ]
-                },
-                {
-                    name: "مارس",
-                    season: "spring",
-                    tasks: [
-                        { day: 1, task: "زراعة الطماطم والخيار", icon: "🍅", type: "planting" },
-                        { day: 10, task: "بداية موسم الري المنتظم", icon: "💧", type: "watering" },
-                        { day: 20, task: "تسميد المحاصيل الربيعية", icon: "🧪", type: "fertilizing" }
-                    ]
-                },
-                {
-                    name: "أبريل",
-                    season: "spring",
-                    tasks: [
-                        { day: 5, task: "زراعة الفلفل والباذنجان", icon: "🍆", type: "planting" },
-                        { day: 15, task: "مكافحة الآفات الربيعية", icon: "🐛", type: "pestControl" },
-                        { day: 25, task: "حصاد الخس والسبانخ", icon: "✂️", type: "harvesting" }
-                    ]
-                },
-                {
-                    name: "مايو",
-                    season: "spring",
-                    tasks: [
-                        { day: 1, task: "زراعة الذرة والبطيخ", icon: "🌽", type: "planting" },
-                        { day: 10, task: "ري المزارع الصيفية", icon: "💧", type: "watering" },
-                        { day: 20, task: "تسميد أشجار الفاكهة", icon: "🧪", type: "fertilizing" }
-                    ]
-                },
-                {
-                    name: "يونيو",
-                    season: "summer",
-                    tasks: [
-                        { day: 5, task: "حصاد القمح والشعير", icon: "✂️", type: "harvesting" },
-                        { day: 15, task: "ري المزارع بانتظام", icon: "💧", type: "watering" },
-                        { day: 25, task: "مكافحة حشرات الصيف", icon: "🐜", type: "pestControl" }
-                    ]
-                },
-                {
-                    name: "يوليو",
-                    season: "summer",
-                    tasks: [
-                        { day: 1, task: "حصاد الطماطم والخيار", icon: "✂️", type: "harvesting" },
-                        { day: 10, task: "زراعة الخضروات الصيفية", icon: "🥬", type: "planting" },
-                        { day: 20, task: "ترطيب التربة والتظليل", icon: "🌳", type: "shading" }
-                    ]
-                },
-                {
-                    name: "أغسطس",
-                    season: "summer",
-                    tasks: [
-                        { day: 5, task: "حصاد الذرة والبطيخ", icon: "✂️", type: "harvesting" },
-                        { day: 15, task: "تحضير الأرض للخريف", icon: "🔨", type: "preparation" },
-                        { day: 25, task: "ري المسطحات الخضراء", icon: "💧", type: "watering" }
-                    ]
-                },
-                {
-                    name: "سبتمبر",
-                    season: "autumn",
-                    tasks: [
-                        { day: 1, task: "زراعة الفجل واللفت", icon: "🥕", type: "planting" },
-                        { day: 10, task: "حصاد العنب والتين", icon: "✂️", type: "harvesting" },
-                        { day: 20, task: "تسميد محاصيل الخريف", icon: "🧪", type: "fertilizing" }
-                    ]
-                },
-                {
-                    name: "أكتوبر",
-                    season: "autumn",
-                    tasks: [
-                        { day: 5, task: "زراعة البصل والثوم", icon: "🧅", type: "planting" },
-                        { day: 15, task: "حصاد الزيتون", icon: "✂️", type: "harvesting" },
-                        { day: 25, task: "تحضير الأرض للشتاء", icon: "🔨", type: "preparation" }
-                    ]
-                },
-                {
-                    name: "نوفمبر",
-                    season: "autumn",
-                    tasks: [
-                        { day: 1, task: "زراعة القمح الشتوي", icon: "🌾", type: "planting" },
-                        { day: 10, task: "قلّم أشجار الفاكهة", icon: "✂️", type: "pruning" },
-                        { day: 20, task: "تغطية النباتات الحساسة", icon: "🛡️", type: "protection" }
-                    ]
-                },
-                {
-                    name: "ديسمبر",
-                    season: "winter",
-                    tasks: [
-                        { day: 1, task: "حصاد الحمضيات", icon: "✂️", type: "harvesting" },
-                        { day: 10, task: "ري المحاصيل الشتوية", icon: "💧", type: "watering" },
-                        { day: 20, task: "تسميد المحاصيل الدائمة", icon: "🧪", type: "fertilizing" }
-                    ]
-                }
-            ],
-            
-            seasons: {
-                winter: {
-                    name: "الشتاء",
-                    icon: "❄️",
-                    color: "#2196F3",
-                    crops: ["القمح", "الشعير", "البصل", "الثوم", "البطاطس", "الجزر"],
-                    description: "موسم البرودة والمحاصيل الشتوية المقاومة للصقيع"
-                },
-                spring: {
-                    name: "الربيع",
-                    icon: "🌷",
-                    color: "#4CAF50",
-                    crops: ["الطماطم", "الخيار", "الفلفل", "الباذنجان", "الذرة", "البطيخ"],
-                    description: "موسم النمو والازدهار وبداية المحاصيل الصيفية"
-                },
-                summer: {
-                    name: "الصيف",
-                    icon: "☀️",
-                    color: "#FF9800",
-                    crops: ["الذرة", "الشمام", "البطيخ", "الخضروات الورقية", "الفواكه الصيفية"],
-                    description: "موسم الحرارة والحصاد والري المنتظم"
-                },
-                autumn: {
-                    name: "الخريف",
-                    icon: "🍂",
-                    color: "#795548",
-                    crops: ["الزيتون", "العنب", "التين", "الفجل", "اللفت", "القمح الشتوي"],
-                    description: "موسم الحصاد والتحضير للموسم الشتوي"
-                }
-            }
-        };
-        
-        let currentMonthIndex = 0; // يناير
-        
-        // تحميل الشهر الحالي
-        function loadCurrentMonth() {
-            const currentMonth = agriculturalCalendar.months[currentMonthIndex];
-            const monthGrid = document.getElementById('monthGrid');
-            
-            // تحديث عنوان الشهر
-            document.getElementById('currentMonth').textContent = `${currentMonth.name} 2026`;
-            
-            // تحديث الموسم
-            const seasonTag = document.getElementById('seasonTag');
-            const season = agriculturalCalendar.seasons[currentMonth.season];
-            seasonTag.innerHTML = `
-                <span style="background: ${season.color}; color: white; padding: 0.5rem 1rem; border-radius: 20px;">
-                    ${season.icon} ${season.name}
-                </span>
-            `;
-            
-            // تحديث معلومات الموسم
-            const seasonInfo = document.getElementById('seasonInfo');
-            seasonInfo.className = `season-info ${currentMonth.season}`;
-            seasonInfo.innerHTML = `
-                <div class="season-header">
-                    <div class="season-icon">${season.icon}</div>
-                    <div>
-                        <h2 style="margin: 0; color: ${season.color};">${season.name}</h2>
-                        <p style="margin: 0; color: #666;">${getSeasonMonths(currentMonth.season)}</p>
+    <!-- نافذة تفاصيل الحدث -->
+    <div id="eventDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="eventDetailHeader">
+                <!-- سيتم تعبئتها بالجافاسكريبت -->
+            </div>
+            <div style="padding: 2rem;" id="eventDetailBody">
+                <!-- سيتم تعبئتها بالجافاسكريبت -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- نافذة الإعدادات -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin: 0;"><i class="fas fa-cog"></i> إعدادات التقويم</h3>
+                <button onclick="closeModal('settingsModal')" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div style="padding: 2rem;">
+                <div style="margin-bottom: 2rem;">
+                    <h4 style="color: var(--primary-green); margin-bottom: 1rem;">إعدادات التنبيهات</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <span>التنبيهات الصوتية</span>
+                        <label style="position: relative; display: inline-block; width: 60px; height: 30px;">
+                            <input type="checkbox" id="soundNotifications" style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;"></span>
+                            <span style="position: absolute; content: ''; height: 22px; width: 22px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <span>التنبيهات قبل الموعد</span>
+                        <select id="alertTime" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 8px;">
+                            <option value="5">5 دقائق</option>
+                            <option value="15" selected>15 دقيقة</option>
+                            <option value="30">30 دقيقة</option>
+                            <option value="60">ساعة</option>
+                            <option value="1440">يوم كامل</option>
+                        </select>
                     </div>
                 </div>
                 
-                <p>${season.description}</p>
-                
-                <div class="season-crops">
-                    ${season.crops.map(crop => `
-                        <div class="crop-item">
-                            <span style="font-size: 1.5rem;">${getCropIcon(crop)}</span>
-                            <div>
-                                <strong>${crop}</strong>
-                                <div style="font-size: 0.9rem; color: #666;">${getCropTasks(crop, currentMonth.season)}</div>
-                            </div>
-                        </div>
-                    `).join('')}
+                <div style="margin-bottom: 2rem;">
+                    <h4 style="color: var(--primary-green); margin-bottom: 1rem;">إعدادات المزامنة</h4>
+                    <div class="sync-status" id="syncStatus">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>آخر مزامنة: الآن</span>
+                    </div>
+                    <button onclick="forceSync()" style="width: 100%; background: var(--primary-green); color: white; 
+                            border: none; padding: 1rem; border-radius: 8px; cursor: pointer; margin-top: 1rem;">
+                        <i class="fas fa-sync-alt"></i> مزامنة فورية
+                    </button>
                 </div>
-            `;
-            
-            // بناء الشبكة الشهرية
-            monthGrid.innerHTML = '';
-            
-            // إضافة عناوين الأيام
-            const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-            days.forEach(day => {
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                dayHeader.textContent = day;
-                monthGrid.appendChild(dayHeader);
-            });
-            
-            // إضافة الأيام
-            const daysInMonth = 31; // يمكن جعله ديناميكياً
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayCell = document.createElement('div');
-                dayCell.className = 'day-cell';
                 
-                // رقم اليوم
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'day-number';
-                dayNumber.textContent = day;
-                dayCell.appendChild(dayNumber);
+                <div>
+                    <h4 style="color: var(--primary-green); margin-bottom: 1rem;">نسخ احتياطي</h4>
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="backupData()" style="flex: 1; background: var(--info); color: white; border: none; 
+                                padding: 0.8rem; border-radius: 8px; cursor: pointer;">
+                            <i class="fas fa-download"></i> تصدير البيانات
+                        </button>
+                        <button onclick="restoreData()" style="flex: 1; background: var(--success); color: white; border: none; 
+                                padding: 0.8rem; border-radius: 8px; cursor: pointer;">
+                            <i class="fas fa-upload"></i> استيراد البيانات
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مكتبات خارجية -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+
+    <!-- جافاسكريبت -->
+    <script>
+        // ====== قاعدة بيانات الأحداث والمهام ======
+        class CalendarSystem {
+            constructor() {
+                this.events = JSON.parse(localStorage.getItem('agriculture_events')) || [];
+                this.settings = JSON.parse(localStorage.getItem('calendar_settings')) || {
+                    soundNotifications: true,
+                    alertTime: 15,
+                    theme: 'light'
+                };
+                this.currentDate = new Date();
+                this.currentView = 'monthly';
+                this.notificationPermission = false;
                 
-                // المهام لهذا اليوم
-                const tasksForDay = currentMonth.tasks.filter(task => task.day === day);
-                if (tasksForDay.length > 0) {
-                    const tasksContainer = document.createElement('div');
-                    tasksContainer.className = 'agricultural-tasks';
-                    
-                    tasksForDay.forEach(task => {
-                        const taskItem = document.createElement('div');
-                        taskItem.className = 'task-item';
-                        taskItem.innerHTML = `
-                            <span class="task-icon">${task.icon}</span>
-                            ${task.task}
-                        `;
-                        taskItem.onclick = () => showTaskDetails(task);
-                        tasksContainer.appendChild(taskItem);
-                    });
-                    
-                    dayCell.appendChild(tasksContainer);
+                this.init();
+            }
+            
+            init() {
+                console.log('جاري تهيئة نظام التقويم الزراعي...');
+                
+                // تحميل الأحداث الافتراضية إذا لم تكن هناك أحداث
+                if (this.events.length === 0) {
+                    this.loadDefaultEvents();
                 }
                 
-                monthGrid.appendChild(dayCell);
+                // طلب إذن الإشعارات
+                this.checkNotificationPermission();
+                
+                // تهيئة التقويم
+                this.renderCalendar();
+                this.updateStats();
+                this.checkUpcomingAlerts();
+                
+                // تشغيل فاحص التنبيهات
+                setInterval(() => this.checkUpcomingAlerts(), 60000); // كل دقيقة
+                
+                console.log('تم تهيئة نظام التقويم بنجاح!');
+            }
+            
+            loadDefaultEvents() {
+                const defaultEvents = [
+                    {
+                        id: 1,
+                        title: 'زراعة القمح الشتوي',
+                        date: this.getDateString(new Date().getFullYear(), 10, 15), // 15 نوفمبر
+                        time: '08:00',
+                        type: 'planting',
+                        crop: 'القمح',
+                        priority: 'high',
+                        notes: 'زراعة القمح في الحقول المفتوحة',
+                        completed: false,
+                        alertSent: false
+                    },
+                    {
+                        id: 2,
+                        title: 'ري بستان الزيتون',
+                        date: this.getDateString(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1),
+                        time: '06:00',
+                        type: 'watering',
+                        crop: 'الزيتون',
+                        priority: 'medium',
+                        notes: 'الري بالتنقيط لمدة 4 ساعات',
+                        completed: false,
+                        alertSent: false
+                    },
+                    {
+                        id: 3,
+                        title: 'تسميد أشجار الفاكهة',
+                        date: this.getDateString(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 3),
+                        time: '09:00',
+                        type: 'fertilizing',
+                        crop: 'أشجار الفاكهة',
+                        priority: 'medium',
+                        notes: 'استخدام السماد العضوي المتكامل',
+                        completed: false,
+                        alertSent: false
+                    },
+                    {
+                        id: 4,
+                        title: 'حصاد الخضروات الصيفية',
+                        date: this.getDateString(new Date().getFullYear(), 7, 20), // 20 أغسطس
+                        time: '07:00',
+                        type: 'harvesting',
+                        crop: 'الخضروات',
+                        priority: 'high',
+                        notes: 'حصاد الطماطم والخيار والفلفل',
+                        completed: false,
+                        alertSent: false
+                    },
+                    {
+                        id: 5,
+                        title: 'رش مبيدات وقائية',
+                        date: this.getDateString(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7),
+                        time: '17:00',
+                        type: 'spraying',
+                        crop: 'جميع المحاصيل',
+                        priority: 'low',
+                        notes: 'رش وقائي ضد الأمراض الفطرية',
+                        completed: false,
+                        alertSent: false
+                    }
+                ];
+                
+                this.events = defaultEvents;
+                this.saveEvents();
+            }
+            
+            // ====== إدارة الأحداث ======
+            addEvent(event) {
+                event.id = Date.now();
+                event.completed = false;
+                event.alertSent = false;
+                event.createdAt = new Date().toISOString();
+                
+                this.events.push(event);
+                this.saveEvents();
+                this.renderCalendar();
+                this.updateStats();
+                this.showFloatingAlert('تم إضافة المهمة الجديدة بنجاح!', 'success');
+                
+                // جدولة تنبيه
+                this.scheduleAlert(event);
+                
+                return event;
+            }
+            
+            updateEvent(id, updates) {
+                const index = this.events.findIndex(event => event.id === id);
+                if (index !== -1) {
+                    this.events[index] = { ...this.events[index], ...updates };
+                    this.saveEvents();
+                    this.renderCalendar();
+                    this.updateStats();
+                    return true;
+                }
+                return false;
+            }
+            
+            deleteEvent(id) {
+                const index = this.events.findIndex(event => event.id === id);
+                if (index !== -1) {
+                    this.events.splice(index, 1);
+                    this.saveEvents();
+                    this.renderCalendar();
+                    this.updateStats();
+                    return true;
+                }
+                return false;
+            }
+            
+            toggleEventCompletion(id) {
+                const event = this.events.find(e => e.id === id);
+                if (event) {
+                    event.completed = !event.completed;
+                    this.saveEvents();
+                    this.renderCalendar();
+                    this.updateStats();
+                    return true;
+                }
+                return false;
+            }
+            
+            saveEvents() {
+                localStorage.setItem('agriculture_events', JSON.stringify(this.events));
+            }
+            
+            // ====== عرض التقويم ======
+            renderCalendar() {
+                const year = this.currentDate.getFullYear();
+                const month = this.currentDate.getMonth();
+                
+                // تحديث عنوان الشهر
+                const monthNames = [
+                    'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+                    'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+                ];
+                document.getElementById('currentMonth').textContent = 
+                    `${monthNames[month]} ${year}`;
+                
+                // إنشاء التقويم
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0);
+                const daysInMonth = lastDay.getDate();
+                const startingDay = firstDay.getDay();
+                
+                // الأيام العربية
+                const dayNames = ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+                
+                let calendarHTML = '';
+                
+                // رؤوس الأيام
+                for (let i = 0; i < 7; i++) {
+                    calendarHTML += `
+                        <div class="calendar-day-header">
+                            ${dayNames[i]}
+                        </div>
+                    `;
+                }
+                
+                // أيام فارغة في بداية الشهر
+                for (let i = 0; i < startingDay; i++) {
+                    calendarHTML += `<div class="calendar-day" style="background: #f9f9f9;"></div>`;
+                }
+                
+                // أيام الشهر
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = this.getDateString(year, month, day);
+                    const dayEvents = this.getEventsForDate(dateStr);
+                    const isToday = this.isToday(year, month, day);
+                    
+                    calendarHTML += `
+                        <div class="calendar-day ${isToday ? 'pulse' : ''}" onclick="calendar.showDayEvents('${dateStr}')">
+                            <div class="day-number" style="${isToday ? 'color: var(--urgent);' : ''}">
+                                ${day}
+                                ${isToday ? '<span style="font-size: 0.8rem; color: var(--urgent);">(اليوم)</span>' : ''}
+                            </div>
+                            <div class="events-container">
+                                ${dayEvents.map(event => `
+                                    <div class="event-item" style="background: ${this.getPriorityColor(event.priority)}20; 
+                                         border-right: 3px solid ${this.getPriorityColor(event.priority)};"
+                                         onclick="event.stopPropagation(); calendar.showEventDetail(${event.id})">
+                                        <span class="event-dot" style="background: ${this.getPriorityColor(event.priority)}"></span>
+                                        ${event.title}
+                                        ${event.completed ? '<i class="fas fa-check" style="color: var(--success); margin-right: 5px;"></i>' : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('calendarGrid').innerHTML = calendarHTML;
+                
+                // تحديث القائمة الأسبوعية
+                this.renderWeeklyView();
+                
+                // تحديث التنبيهات
+                this.renderAlerts();
+                
+                // تحديث المهام
+                this.renderTasks();
+                
+                // تحديث الخريطة الموسمية
+                this.renderSeasonalMap();
+            }
+            
+            renderWeeklyView() {
+                const today = new Date();
+                const weekStart = new Date(today);
+                weekStart.setDate(today.getDate() - today.getDay());
+                
+                let weeklyHTML = '';
+                
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(weekStart);
+                    day.setDate(weekStart.getDate() + i);
+                    
+                    const dateStr = this.getDateString(day.getFullYear(), day.getMonth(), day.getDate());
+                    const dayEvents = this.getEventsForDate(dateStr);
+                    const dayName = this.getArabicDayName(day.getDay());
+                    
+                    weeklyHTML += `
+                        <div class="week-day">
+                            <div class="week-day-header">
+                                <div class="day-name">${dayName} - ${day.getDate()}/${day.getMonth() + 1}</div>
+                                <span style="color: #666; font-size: 0.9rem;">${dayEvents.length} مهمة</span>
+                            </div>
+                            ${dayEvents.map(event => `
+                                <div class="event-item" style="background: ${this.getPriorityColor(event.priority)}20; 
+                                     border-right: 3px solid ${this.getPriorityColor(event.priority)}; margin-bottom: 0.5rem;"
+                                     onclick="calendar.showEventDetail(${event.id})">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>
+                                            <i class="fas ${this.getEventIcon(event.type)}"></i>
+                                            ${event.title}
+                                        </span>
+                                        <span style="font-size: 0.8rem; color: #666;">${event.time}</span>
+                                    </div>
+                                    ${event.crop ? `<div style="font-size: 0.8rem; color: #666; margin-top: 0.2rem;">${event.crop}</div>` : ''}
+                                </div>
+                            `).join('')}
+                            ${dayEvents.length === 0 ? '<div style="text-align: center; color: #999; padding: 1rem;">لا توجد مهام لهذا اليوم</div>' : ''}
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('weeklyContainer').innerHTML = weeklyHTML;
+                document.getElementById('weeklyBadge').textContent = this.getUpcomingEventsCount(7);
+            }
+            
+            renderAlerts() {
+                const now = new Date();
+                const upcomingAlerts = this.events
+                    .filter(event => !event.completed && !event.alertSent)
+                    .sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time));
+                
+                let alertsHTML = '';
+                
+                upcomingAlerts.forEach(event => {
+                    const eventDate = new Date(event.date + ' ' + event.time);
+                    const timeDiff = eventDate - now;
+                    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+                    
+                    let timeText = '';
+                    if (hoursDiff < 0) {
+                        timeText = 'منتهي';
+                    } else if (hoursDiff < 24) {
+                        timeText = `بعد ${hoursDiff} ساعة`;
+                    } else {
+                        timeText = `بعد ${Math.floor(hoursDiff / 24)} يوم`;
+                    }
+                    
+                    alertsHTML += `
+                        <div class="alert-card alert-${event.priority}">
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">
+                                    <i class="fas ${this.getEventIcon(event.type)}"></i>
+                                    ${event.title}
+                                </div>
+                                <div style="color: #666; font-size: 0.9rem;">
+                                    ${event.crop ? `المحصول: ${event.crop} • ` : ''}
+                                    ${eventDate.toLocaleDateString('ar-SA')} - ${event.time}
+                                </div>
+                            </div>
+                            <div class="alert-time">
+                                ${timeText}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('alertsContainer').innerHTML = alertsHTML || 
+                    '<div style="text-align: center; padding: 3rem; color: #999;">لا توجد تنبيهات حالياً</div>';
+                document.getElementById('alertsBadge').textContent = upcomingAlerts.length;
+            }
+            
+            renderTasks() {
+                const pendingTasks = this.events.filter(event => !event.completed);
+                const completedTasks = this.events.filter(event => event.completed);
+                
+                let tasksHTML = `
+                    <h3 style="color: var(--primary-green); margin-bottom: 1rem;">المهام المعلقة (${pendingTasks.length})</h3>
+                `;
+                
+                pendingTasks.forEach(event => {
+                    tasksHTML += `
+                        <div class="task-item" draggable="true" ondragstart="calendar.dragStart(event, ${event.id})" 
+                             style="border-right-color: ${this.getPriorityColor(event.priority)};">
+                            <input type="checkbox" class="task-checkbox" onchange="calendar.toggleEventCompletion(${event.id})">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 0.3rem;">${event.title}</div>
+                                <div style="font-size: 0.9rem; color: #666;">
+                                    ${this.getArabicDate(event.date)} - ${event.time}
+                                    ${event.crop ? ` • ${event.crop}` : ''}
+                                </div>
+                            </div>
+                            <div>
+                                <button onclick="calendar.showEventDetail(${event.id})" style="background: none; border: none; 
+                                        color: var(--info); cursor: pointer; font-size: 1.2rem; margin-left: 1rem;">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="calendar.deleteEvent(${event.id})" style="background: none; border: none; 
+                                        color: var(--urgent); cursor: pointer; font-size: 1.2rem;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                if (completedTasks.length > 0) {
+                    tasksHTML += `
+                        <h3 style="color: var(--success); margin: 2rem 0 1rem;">المهام المكتملة (${completedTasks.length})</h3>
+                    `;
+                    
+                    completedTasks.forEach(event => {
+                        tasksHTML += `
+                            <div class="task-item" style="border-right-color: var(--success); opacity: 0.7;">
+                                <input type="checkbox" class="task-checkbox" checked onchange="calendar.toggleEventCompletion(${event.id})">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; margin-bottom: 0.3rem; text-decoration: line-through;">${event.title}</div>
+                                    <div style="font-size: 0.9rem; color: #666;">
+                                        ${this.getArabicDate(event.date)} - ${event.time}
+                                        ${event.crop ? ` • ${event.crop}` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                document.getElementById('tasksContainer').innerHTML = tasksHTML;
+                document.getElementById('tasksBadge').textContent = pendingTasks.length;
+            }
+            
+            renderSeasonalMap() {
+                const currentMonth = this.currentDate.getMonth();
+                const seasons = [
+                    { name: 'الربيع', months: [2, 3, 4], color: 'var(--spring)', icon: '🌱' },
+                    { name: 'الصيف', months: [5, 6, 7], color: 'var(--summer)', icon: '☀️' },
+                    { name: 'الخريف', months: [8, 9, 10], color: 'var(--autumn)', icon: '🍂' },
+                    { name: 'الشتاء', months: [11, 0, 1], color: 'var(--winter)', icon: '❄️' }
+                ];
+                
+                let seasonalHTML = '';
+                
+                seasons.forEach(season => {
+                    const isCurrent = season.months.includes(currentMonth);
+                    const crops = this.getCropsForSeason(season.name);
+                    
+                    seasonalHTML += `
+                        <div class="season-card" style="background: ${season.color}20; border: 2px solid ${isCurrent ? season.color : '#ddd'};"
+                             onclick="calendar.showSeasonDetails('${season.name}')">
+                            <div class="season-icon">${season.icon}</div>
+                            <h3 style="color: ${season.color}; margin-bottom: 0.5rem;">${season.name}</h3>
+                            <div style="color: #666; margin-bottom: 1rem;">
+                                ${season.months.map(m => this.getMonthName(m)).join('، ')}
+                            </div>
+                            <div style="font-size: 0.9rem; color: #333;">
+                                ${crops.length} محاصيل موسمية
+                            </div>
+                            ${isCurrent ? '<div style="margin-top: 0.5rem; color: var(--urgent); font-weight: 600;">الموسم الحالي</div>' : ''}
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('seasonalMap').innerHTML = seasonalHTML;
+            }
+            
+            // ====== دوال المساعدة ======
+            getEventsForDate(dateStr) {
+                return this.events.filter(event => event.date === dateStr);
+            }
+            
+            getDateString(year, month, day) {
+                return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            }
+            
+            isToday(year, month, day) {
+                const today = new Date();
+                return today.getFullYear() === year && 
+                       today.getMonth() === month && 
+                       today.getDate() === day;
+            }
+            
+            getPriorityColor(priority) {
+                const colors = {
+                    high: 'var(--urgent)',
+                    medium: 'var(--important)',
+                    low: 'var(--normal)'
+                };
+                return colors[priority] || colors.low;
+            }
+            
+            getEventIcon(type) {
+                const icons = {
+                    planting: 'fa-seedling',
+                    watering: 'fa-tint',
+                    fertilizing: 'fa-flask',
+                    harvesting: 'fa-harvest',
+                    spraying: 'fa-spray-can',
+                    pruning: 'fa-cut',
+                    plowing: 'fa-tractor',
+                    other: 'fa-calendar-check'
+                };
+                return icons[type] || icons.other;
+            }
+            
+            getArabicDayName(dayIndex) {
+                const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                return days[dayIndex];
+            }
+            
+            getArabicDate(dateStr) {
+                const date = new Date(dateStr);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                return date.toLocaleDateString('ar-SA', options);
+            }
+            
+            getMonthName(monthIndex) {
+                const months = [
+                    'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+                    'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+                ];
+                return months[monthIndex];
+            }
+            
+            getCropsForSeason(season) {
+                const seasonCrops = {
+                    'الربيع': ['الطماطم', 'الخيار', 'الفلفل', 'الباذنجان'],
+                    'الصيف': ['البطيخ', 'الشمام', 'الذرة', 'القصب'],
+                    'الخريف': ['الزيتون', 'العنب', 'التفاح', 'الكمثرى'],
+                    'الشتاء': ['القمح', 'الشعير', 'العدس', 'الفول']
+                };
+                return seasonCrops[season] || [];
+            }
+            
+            getUpcomingEventsCount(days = 7) {
+                const today = new Date();
+                const futureDate = new Date();
+                futureDate.setDate(today.getDate() + days);
+                
+                return this.events.filter(event => {
+                    const eventDate = new Date(event.date);
+                    return eventDate >= today && eventDate <= futureDate && !event.completed;
+                }).length;
+            }
+            
+            // ====== نظام التنبيهات ======
+            checkNotificationPermission() {
+                if ('Notification' in window) {
+                    if (Notification.permission === 'granted') {
+                        this.notificationPermission = true;
+                        document.getElementById('notificationPermission').style.display = 'none';
+                    } else if (Notification.permission === 'default') {
+                        document.getElementById('notificationPermission').style.display = 'flex';
+                    }
+                }
+            }
+            
+            async requestNotificationPermission() {
+                if ('Notification' in window) {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                        this.notificationPermission = true;
+                        document.getElementById('notificationPermission').style.display = 'none';
+                        this.showFloatingAlert('تم تفعيل التنبيهات بنجاح!', 'success');
+                    }
+                }
+            }
+            
+            scheduleAlert(event) {
+                const eventDate = new Date(event.date + ' ' + event.time);
+                const alertTime = this.settings.alertTime * 60 * 1000; // تحويل إلى ميلي ثانية
+                const alertDate = new Date(eventDate.getTime() - alertTime);
+                
+                const now = new Date();
+                if (alertDate > now) {
+                    const timeUntilAlert = alertDate.getTime() - now.getTime();
+                    
+                    setTimeout(() => {
+                        this.sendAlert(event);
+                    }, timeUntilAlert);
+                }
+            }
+            
+            sendAlert(event) {
+                // تحديث حالة التنبيه
+                event.alertSent = true;
+                this.saveEvents();
+                
+                // عرض تنبيه عائم
+                this.showFloatingAlert(`تنبيه: ${event.title} - ${event.time}`, 'info');
+                
+                // إشعارات المتصفح
+                if (this.notificationPermission) {
+                    new Notification('تنبيه زراعي', {
+                        body: `${event.title}\nالوقت: ${event.time}\nالمحصول: ${event.crop || 'غير محدد'}`,
+                        icon: '../assets/icons/favicon.png',
+                        tag: 'agriculture-alert'
+                    });
+                }
+                
+                // تشغيل صوت التنبيه
+                if (this.settings.soundNotifications) {
+                    this.playAlertSound();
+                }
+            }
+            
+            playAlertSound() {
+                const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+                audio.volume = 0.3;
+                audio.play().catch(e => console.log('تعذر تشغيل الصوت:', e));
+            }
+            
+            checkUpcomingAlerts() {
+                const now = new Date();
+                const checkTime = 5 * 60 * 1000; // 5 دقائق
+                
+                this.events.forEach(event => {
+                    if (!event.completed && !event.alertSent) {
+                        const eventDate = new Date(event.date + ' ' + event.time);
+                        const timeDiff = eventDate.getTime() - now.getTime();
+                        
+                        if (timeDiff > 0 && timeDiff <= checkTime) {
+                            this.sendAlert(event);
+                        }
+                    }
+                });
+            }
+            
+            // ====== إحصائيات ======
+            updateStats() {
+                const totalEvents = this.events.length;
+                const pendingTasks = this.events.filter(e => !e.completed).length;
+                const upcomingAlerts = this.events.filter(e => !e.completed && !e.alertSent).length;
+                const completedTasks = this.events.filter(e => e.completed).length;
+                
+                document.getElementById('totalEvents').textContent = totalEvents;
+                document.getElementById('pendingTasks').textContent = pendingTasks;
+                document.getElementById('upcomingAlerts').textContent = upcomingAlerts;
+                document.getElementById('completedTasks').textContent = completedTasks;
+            }
+            
+            // ====== العرض ======
+            showDayEvents(dateStr) {
+                const events = this.getEventsForDate(dateStr);
+                const date = new Date(dateStr);
+                
+                if (events.length === 0) {
+                    this.showFloatingAlert('لا توجد أحداث في هذا التاريخ', 'info');
+                    return;
+                }
+                
+                let detailHTML = `
+                    <h3 style="color: var(--primary-green); margin-bottom: 1.5rem;">
+                        <i class="fas fa-calendar-day"></i> أحداث ${this.getArabicDate(dateStr)}
+                    </h3>
+                `;
+                
+                events.forEach(event => {
+                    detailHTML += `
+                        <div class="alert-card alert-${event.priority}" onclick="calendar.showEventDetail(${event.id})" 
+                             style="cursor: pointer; margin-bottom: 1rem;">
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">
+                                    <i class="fas ${this.getEventIcon(event.type)}"></i>
+                                    ${event.title}
+                                </div>
+                                <div style="color: #666; font-size: 0.9rem;">
+                                    ${event.time} • ${event.crop || 'عام'}
+                                    ${event.completed ? '<span style="color: var(--success); margin-right: 1rem;">✓ مكتمل</span>' : ''}
+                                </div>
+                            </div>
+                            <div>
+                                <i class="fas fa-chevron-left"></i>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                this.showModal('eventDetailModal', 'أحداث اليوم', detailHTML);
+            }
+            
+            showEventDetail(eventId) {
+                const event = this.events.find(e => e.id === eventId);
+                if (!event) return;
+                
+                const headerHTML = `
+                    <div style="flex: 1;">
+                        <h3 style="margin: 0; font-size: 1.5rem;">
+                            <i class="fas ${this.getEventIcon(event.type)}"></i> ${event.title}
+                        </h3>
+                        <div style="opacity: 0.9; margin-top: 0.5rem;">
+                            ${this.getArabicDate(event.date)} - ${event.time}
+                        </div>
+                    </div>
+                    <button onclick="closeModal('eventDetailModal')" style="background: rgba(255,255,255,0.2); border: none; 
+                            color: white; font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                const bodyHTML = `
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="color: var(--primary-green); margin-bottom: 1rem;">تفاصيل المهمة</h4>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <strong>نوع النشاط:</strong><br>
+                                    <span style="color: #333;">${this.getActivityTypeArabic(event.type)}</span>
+                                </div>
+                                <div>
+                                    <strong>المحصول:</strong><br>
+                                    <span style="color: #333;">${event.crop || 'غير محدد'}</span>
+                                </div>
+                                <div>
+                                    <strong>الأولوية:</strong><br>
+                                    <span style="color: ${this.getPriorityColor(event.priority)}; font-weight: 600;">
+                                        ${this.getPriorityArabic(event.priority)}
+                                    </span>
+                                </div>
+                                <div>
+                                    <strong>الحالة:</strong><br>
+                                    <span style="color: ${event.completed ? 'var(--success)' : 'var(--urgent)'}; font-weight: 600;">
+                                        ${event.completed ? 'مكتملة' : 'معلقة'}
+                                    </span>
+                                </div>
+                            </div>
+                            ${event.notes ? `
+                                <div>
+                                    <strong>ملاحظات:</strong><br>
+                                    <span style="color: #333;">${event.notes}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button onclick="calendar.toggleEventCompletion(${event.id}); closeModal('eventDetailModal')" 
+                                style="background: ${event.completed ? '#FF9800' : 'var(--success)'}; color: white; border: none; 
+                                       padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1;">
+                            <i class="fas ${event.completed ? 'fa-undo' : 'fa-check'}"></i>
+                            ${event.completed ? 'إعادة الفتح' : 'تحديد كمكتملة'}
+                        </button>
+                        <button onclick="calendar.editEvent(${event.id})" 
+                                style="background: var(--info); color: white; border: none; 
+                                       padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1;">
+                            <i class="fas fa-edit"></i> تعديل
+                        </button>
+                        <button onclick="calendar.deleteEvent(${event.id}); closeModal('eventDetailModal')" 
+                                style="background: var(--urgent); color: white; border: none; 
+                                       padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1;">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('eventDetailHeader').innerHTML = headerHTML;
+                document.getElementById('eventDetailHeader').style.background = 
+                    `linear-gradient(135deg, ${this.getPriorityColor(event.priority)}, ${this.getPriorityColor(event.priority)}aa)`;
+                document.getElementById('eventDetailBody').innerHTML = bodyHTML;
+                
+                document.getElementById('eventDetailModal').style.display = 'flex';
+            }
+            
+            showSeasonDetails(seasonName) {
+                const crops = this.getCropsForSeason(seasonName);
+                
+                let detailHTML = `
+                    <h3 style="color: var(--primary-green); margin-bottom: 1.5rem;">
+                        <i class="fas fa-seedling"></i> محاصيل موسم ${seasonName}
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                `;
+                
+                crops.forEach(crop => {
+                    detailHTML += `
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌱</div>
+                            <div style="font-weight: 600;">${crop}</div>
+                            <button onclick="calendar.addCropEvent('${crop}', '${seasonName}')" 
+                                    style="margin-top: 0.5rem; background: var(--primary-green); color: white; 
+                                           border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-size: 0.9rem;">
+                                إضافة للتقويم
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                detailHTML += `</div>`;
+                
+                this.showModal('eventDetailModal', `موسم ${seasonName}`, detailHTML);
+            }
+            
+            addCropEvent(crop, season) {
+                // حساب تاريخ مناسب للموسم
+                const today = new Date();
+                let targetMonth = today.getMonth();
+                
+                switch(season) {
+                    case 'الربيع': targetMonth = 2; break; // مارس
+                    case 'الصيف': targetMonth = 5; break; // يونيو
+                    case 'الخريف': targetMonth = 8; break; // سبتمبر
+                    case 'الشتاء': targetMonth = 11; break; // ديسمبر
+                }
+                
+                const eventDate = new Date(today.getFullYear(), targetMonth, 15);
+                const dateStr = this.getDateString(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+                
+                const newEvent = {
+                    title: `زراعة ${crop}`,
+                    date: dateStr,
+                    time: '08:00',
+                    type: 'planting',
+                    crop: crop,
+                    priority: 'medium',
+                    notes: `زراعة ${crop} في موسم ${season}`,
+                    completed: false,
+                    alertSent: false
+                };
+                
+                this.addEvent(newEvent);
+                closeModal('eventDetailModal');
+            }
+            
+            showModal(modalId, title, content) {
+                // يمكن توسيع هذه الدالة إذا لزم الأمر
+                console.log(`عرض نافذة: ${title}`);
+            }
+            
+            showFloatingAlert(message, type = 'info') {
+                const alertDiv = document.getElementById('floatingAlert');
+                const typeIcons = {
+                    success: 'fa-check-circle',
+                    error: 'fa-exclamation-circle',
+                    warning: 'fa-exclamation-triangle',
+                    info: 'fa-info-circle'
+                };
+                
+                const typeColors = {
+                    success: '#4CAF50',
+                    error: '#F44336',
+                    warning: '#FF9800',
+                    info: '#2196F3'
+                };
+                
+                alertDiv.innerHTML = `
+                    <i class="fas ${typeIcons[type]}" style="color: ${typeColors[type]}; font-size: 1.5rem;"></i>
+                    <div style="flex: 1;">${message}</div>
+                    <button onclick="this.parentElement.style.display='none'" 
+                            style="background: none; border: none; color: #666; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                alertDiv.style.display = 'flex';
+                alertDiv.style.borderRight = `4px solid ${typeColors[type]}`;
+                
+                setTimeout(() => {
+                    alertDiv.style.display = 'none';
+                }, 5000);
+            }
+            
+            // ====== دوال إضافية ======
+            getActivityTypeArabic(type) {
+                const types = {
+                    planting: 'زراعة',
+                    watering: 'ري',
+                    fertilizing: 'تسميد',
+                    harvesting: 'حصاد',
+                    spraying: 'رش',
+                    pruning: 'تقليم',
+                    plowing: 'حرث',
+                    other: 'أخرى'
+                };
+                return types[type] || type;
+            }
+            
+            getPriorityArabic(priority) {
+                const priorities = {
+                    high: 'عاجل',
+                    medium: 'مهم',
+                    low: 'عادي'
+                };
+                return priorities[priority] || priority;
+            }
+            
+            dragStart(event, taskId) {
+                event.dataTransfer.setData('text/plain', taskId.toString());
+                event.currentTarget.classList.add('dragging');
+            }
+            
+            editEvent(eventId) {
+                const event = this.events.find(e => e.id === eventId);
+                if (!event) return;
+                
+                // تعبئة النموذج
+                document.getElementById('eventTitle').value = event.title;
+                document.getElementById('eventDate').value = event.date;
+                document.getElementById('eventTime').value = event.time;
+                document.getElementById('eventType').value = event.type;
+                document.getElementById('eventCrop').value = event.crop || '';
+                document.getElementById('eventNotes').value = event.notes || '';
+                
+                // تعيين الأولوية
+                document.querySelectorAll('.priority-label').forEach(label => {
+                    label.classList.remove('active');
+                    if (label.querySelector('input').value === event.priority) {
+                        label.classList.add('active');
+                    }
+                });
+                
+                // تغيير النص
+                document.querySelector('#addEventModal .modal-header h3').innerHTML = 
+                    '<i class="fas fa-edit"></i> تعديل المهمة';
+                
+                // تغيير زر الحفظ
+                const saveBtn = document.querySelector('#addEventModal button[onclick="saveEvent()"]');
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> حفظ التعديلات';
+                saveBtn.onclick = () => this.updateEventFromForm(eventId);
+                
+                // فتح النافذة
+                document.getElementById('addEventModal').style.display = 'flex';
+            }
+            
+            updateEventFromForm(eventId) {
+                const eventData = {
+                    title: document.getElementById('eventTitle').value,
+                    date: document.getElementById('eventDate').value,
+                    time: document.getElementById('eventTime').value,
+                    type: document.getElementById('eventType').value,
+                    crop: document.getElementById('eventCrop').value,
+                    notes: document.getElementById('eventNotes').value,
+                    priority: document.querySelector('input[name="priority"]:checked').value,
+                    alertSent: false // إعادة جدولة التنبيه
+                };
+                
+                if (this.updateEvent(eventId, eventData)) {
+                    this.showFloatingAlert('تم تحديث المهمة بنجاح!', 'success');
+                    closeModal('addEventModal');
+                }
             }
         }
-        
-        // تغيير الشهر
-        function changeMonth(direction) {
-            currentMonthIndex += direction;
+
+        // ====== تهيئة النظام ======
+        const calendar = new CalendarSystem();
+
+        // ====== دوال الواجهة ======
+        function switchTab(tabName) {
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('.calendar-section, .weekly-list, .alerts-section, .tasks-section, .seasonal-map-section')
+                .forEach(section => {
+                    section.classList.remove('active');
+                    section.style.display = 'none';
+                });
             
-            // التأكد من البقاء ضمن الحدود
-            if (currentMonthIndex < 0) {
-                currentMonthIndex = agriculturalCalendar.months.length - 1;
-            } else if (currentMonthIndex >= agriculturalCalendar.months.length) {
-                currentMonthIndex = 0;
-            }
+            // إلغاء تنشيط جميع الأزرار
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
             
-            loadCurrentMonth();
-        }
-        
-        // الحصول على أشهر الموسم
-        function getSeasonMonths(season) {
-            const seasonMonths = {
-                winter: "ديسمبر - يناير - فبراير",
-                spring: "مارس - أبريل - مايو",
-                summer: "يونيو - يوليو - أغسطس",
-                autumn: "سبتمبر - أكتوبر - نوفمبر"
-            };
-            return seasonMonths[season] || "";
-        }
-        
-        // الحصول على أيقونة المحصول
-        function getCropIcon(crop) {
-            const icons = {
-                "القمح": "🌾",
-                "الشعير": "🌾",
-                "البصل": "🧅",
-                "الثوم": "🧄",
-                "البطاطس": "🥔",
-                "الجزر": "🥕",
-                "الطماطم": "🍅",
-                "الخيار": "🥒",
-                "الفلفل": "🌶️",
-                "الباذنجان": "🍆",
-                "الذرة": "🌽",
-                "البطيخ": "🍉",
-                "الشمام": "🍈",
-                "الزيتون": "🫒",
-                "العنب": "🍇",
-                "التين": "🍈",
-                "الفجل": "🌱",
-                "اللفت": "🥬"
-            };
-            return icons[crop] || "🌱";
-        }
-        
-        // الحصول على مهام المحصول
-        function getCropTasks(crop, season) {
-            const tasks = {
-                winter: "زراعة - ري - تسميد",
-                spring: "زراعة - رعاية - ري",
-                summer: "ري - حصاد - وقاية",
-                autumn: "حصاد - تحضير - تخزين"
-            };
-            return tasks[season] || "رعاية - متابعة";
-        }
-        
-        // عرض تفاصيل المهمة
-        function showTaskDetails(task) {
-            alert(`📅 المهمة: ${task.task}\n\n` +
-                  `📆 التاريخ: ${task.day} ${agriculturalCalendar.months[currentMonthIndex].name}\n` +
-                  `🎯 النوع: ${getTaskTypeName(task.type)}\n\n` +
-                  `💡 نصائح:\n${getTaskTips(task.type)}`);
-        }
-        
-        // الحصول على اسم نوع المهمة
-        function getTaskTypeName(type) {
-            const types = {
-                planting: "زراعة",
-                watering: "ري",
-                fertilizing: "تسميد",
-                harvesting: "حصاد",
-                spraying: "رش",
-                ventilation: "تهوية",
-                pestControl: "مكافحة آفات",
-                shading: "تظليل",
-                preparation: "تحضير",
-                pruning: "تقليم",
-                protection: "حماية"
-            };
-            return types[type] || "مهمة زراعية";
-        }
-        
-        // الحصول على نصائح المهمة
-        function getTaskTips(type) {
-            const tips = {
-                planting: "• اختر الوقت المناسب للزراعة\n• استخدم بذوراً جيدة\n• حافظ على مسافات الزراعة المناسبة",
-                watering: "• ري النباتات في الصباح الباكر\n• تجنب الري في وقت الظهيرة\n• استخدم نظام الري المناسب",
-                fertilizing: "• استخدم الأسمدة المناسبة\n• تجنب الإفراط في التسميد\n• وزع السماد بالتساوي",
-                harvesting: "• احصد في الوقت المناسب\n• استخدم أدوات حصاد نظيفة\n• خزن المحصول بشكل صحيح"
-            };
-            return tips[type] || "• اتبع التعليمات الزراعية العامة\n• استشر الخبراء عند الحاجة";
-        }
-        
-        // إضافة تذكير
-        function addReminder() {
-            const date = prompt("أدخل تاريخ التذكير (مثال: 15 يناير):");
-            const task = prompt("أدخل المهمة:");
+            // تفعيل الزر المحدد
+            event.currentTarget.classList.add('active');
             
-            if (date && task) {
-                alert(`✅ تم إضافة تذكير:\n📅 ${date}\n📝 ${task}`);
-                // يمكن إضافة حفظ في localStorage هنا
+            // إظهار القسم المحدد
+            const tabId = tabName + 'Tab';
+            const tabElement = document.getElementById(tabId);
+            if (tabElement) {
+                tabElement.classList.add('active');
+                tabElement.style.display = 'block';
+                
+                // إذا كان قسم الأسبوع، قم بتحديثه
+                if (tabName === 'weekly') {
+                    calendar.renderWeeklyView();
+                }
             }
         }
-        
-        // طباعة التقويم
-        function printCalendar() {
-            window.print();
+
+        function changeMonth(delta) {
+            calendar.currentDate.setMonth(calendar.currentDate.getMonth() + delta);
+            calendar.renderCalendar();
         }
-        
-        // التحميل الأولي
-        document.addEventListener('DOMContentLoaded', loadCurrentMonth);
+
+        function goToToday() {
+            calendar.currentDate = new Date();
+            calendar.renderCalendar();
+            calendar.showFloatingAlert('تم الانتقال إلى تاريخ اليوم', 'info');
+        }
+
+        function openAddEventModal() {
+            // إعادة تعيين النموذج
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('eventTime').value = '08:00';
+            document.getElementById('eventType').value = 'planting';
+            document.getElementById('eventCrop').value = '';
+            document.getElementById('eventNotes').value = '';
+            
+            // تعيين الأولوية الافتراضية
+            document.querySelectorAll('.priority-label').forEach(label => {
+                label.classList.remove('active');
+            });
+            document.querySelector('.priority-label[onclick*="high"]').classList.add('active');
+            
+            // إعادة نص العنوان
+            document.querySelector('#addEventModal .modal-header h3').innerHTML = 
+                '<i class="fas fa-plus"></i> إضافة مهمة زراعية جديدة';
+            
+            // إعادة زر الحفظ
+            const saveBtn = document.querySelector('#addEventModal button[onclick="saveEvent()"]');
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> حفظ المهمة';
+            saveBtn.onclick = saveEvent;
+            
+            document.getElementById('addEventModal').style.display = 'flex';
+        }
+
+        function saveEvent() {
+            const eventData = {
+                title: document.getElementById('eventTitle').value,
+                date: document.getElementById('eventDate').value,
+                time: document.getElementById('eventTime').value,
+                type: document.getElementById('eventType').value,
+                crop: document.getElementById('eventCrop').value,
+                notes: document.getElementById('eventNotes').value,
+                priority: document.querySelector('input[name="priority"]:checked').value
+            };
+            
+            if (!eventData.title.trim()) {
+                calendar.showFloatingAlert('يرجى إدخال عنوان للمهمة', 'error');
+                return;
+            }
+            
+            calendar.addEvent(eventData);
+            closeModal('addEventModal');
+        }
+
+        function setPriority(priority, element) {
+            document.querySelectorAll('.priority-label').forEach(label => {
+                label.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function openSettings() {
+            // تعبئة الإعدادات الحالية
+            document.getElementById('soundNotifications').checked = calendar.settings.soundNotifications;
+            document.getElementById('alertTime').value = calendar.settings.alertTime;
+            
+            document.getElementById('settingsModal').style.display = 'flex';
+        }
+
+        function syncCalendar() {
+            const syncStatus = document.getElementById('syncStatus');
+            syncStatus.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> جاري المزامنة...';
+            syncStatus.className = 'sync-status syncing';
+            
+            setTimeout(() => {
+                // محاكاة المزامنة
+                syncStatus.innerHTML = '<i class="fas fa-check-circle"></i> تمت المزامنة بنجاح';
+                syncStatus.className = 'sync-status success';
+                calendar.showFloatingAlert('تمت مزامنة التقويم بنجاح', 'success');
+                
+                setTimeout(() => {
+                    syncStatus.innerHTML = '<i class="fas fa-sync-alt"></i> آخر مزامنة: الآن';
+                    syncStatus.className = 'sync-status';
+                }, 2000);
+            }, 1500);
+        }
+
+        function forceSync() {
+            syncCalendar();
+        }
+
+        function backupData() {
+            const data = {
+                events: calendar.events,
+                settings: calendar.settings,
+                backupDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `agriculture-calendar-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            calendar.showFloatingAlert('تم تصدير نسخة احتياطية بنجاح', 'success');
+        }
+
+        function restoreData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        calendar.events = data.events || [];
+                        calendar.settings = data.settings || calendar.settings;
+                        calendar.saveEvents();
+                        calendar.renderCalendar();
+                        calendar.updateStats();
+                        calendar.showFloatingAlert('تم استعادة النسخة الاحتياطية بنجاح', 'success');
+                    } catch (error) {
+                        calendar.showFloatingAlert('خطأ في استعادة النسخة الاحتياطية', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function showTodayEvents() {
+            const today = new Date();
+            const dateStr = calendar.getDateString(today.getFullYear(), today.getMonth(), today.getDate());
+            calendar.showDayEvents(dateStr);
+        }
+
+        function requestNotificationPermission() {
+            calendar.requestNotificationPermission();
+        }
+
+        // ====== التهيئة عند تحميل الصفحة ======
+        document.addEventListener('DOMContentLoaded', () => {
+            // تعيين تاريخ اليوم في نموذج الإضافة
+            document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
+            
+            // تفعيل السحب والإفلات
+            document.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const taskId = parseInt(e.dataTransfer.getData('text/plain'));
+                if (taskId) {
+                    const taskElement = document.querySelector(`[draggable="true"]`);
+                    if (taskElement) {
+                        taskElement.classList.remove('dragging');
+                    }
+                }
+            });
+            
+            // إغلاق النوافذ عند النقر خارجها
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+            
+            // إغلاق النوافذ بالزر ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                }
+            });
+            
+            console.log('تم تحميل التقويم الزراعي بنجاح!');
+        });
     </script>
 </body>
 </html>

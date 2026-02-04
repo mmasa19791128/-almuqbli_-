@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ====== ✅ المعلومات الحقيقية ====== -->
+    <title>شروط الاستخدام - مرشد المزارع الذكي</title>
+    <meta name="description" content="شروط وأحكام استخدام تطبيق مرشد المزارع الذكي">
+    <meta name="author" content="محمد مقبل عبدالله سيف">
+    <meta name="location" content="اليمن - تعز - ماوية - ذراح">
+    <meta name="email" content="mmasa197911282017@gmail.com">
+    <meta name="phone" content="+967734750438">
+    
+    <style>
+        /* تصميم صفحة الشروط */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', 'Arial', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #f5f5f5, #e8f5e9);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        /* الهيدر */
+        .terms-header {
+            background: linear-gradient(135deg, #1B5E20, #2E7D32);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .terms-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .terms-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .terms-header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .terms-header .tagline {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* محتوى الشروط */
+        .terms-content {
+            padding: 50px;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            padding: 40px;
+            background: #f9f9f9;
+            border-radius: 20px;
+            border-right: 5px solid #2E7D32;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            color: #1B5E20;
+            font-size: 36px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #C8E6C9;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .section h2 i {
+            background: #2E7D32;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .section h3 {
+            color: #2E7D32;
+            font-size: 28px;
+            margin: 35px 0 20px;
+            padding-right: 20px;
+            border-right: 4px solid #4CAF50;
+        }
+        
+        .section p {
+            margin-bottom: 25px;
+            text-align: justify;
+            line-height: 1.9;
+            font-size: 18px;
+            color: #444;
+        }
+        
+        .section ul, .section ol {
+            margin: 25px 0 25px 40px;
+        }
+        
+        .section li {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            padding-right: 15px;
+            position: relative;
+        }
+        
+        .section li::before {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: 12px;
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+        }
+        
+        /* البطاقات التوضيحية */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-top: 5px solid;
+            transition: all 0.3s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .info-card.important {
+            border-top-color: #F44336;
+            background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+        }
+        
+        .info-card.warning {
+            border-top-color: #FF9800;
+            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+        }
+        
+        .info-card.success {
+            border-top-color: #4CAF50;
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+        }
+        
+        .info-card.info {
+            border-top-color: #2196F3;
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+        }
+        
+        .info-card h4 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* الجداول */
+        .terms-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .terms-table th {
+            background: #2E7D32;
+            color: white;
+            padding: 20px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .terms-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: right;
+        }
+        
+        .terms-table tr:hover {
+            background: #F1F8E9;
+        }
+        
+        /* أقوال قانونية */
+        .legal-quote {
+            background: linear-gradient(135deg, #FFFDE7, #FFF9C4);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border-right: 5px solid #FFD600;
+            text-align: center;
+            font-style: italic;
+            font-size: 20px;
+            color: #5D4037;
+        }
+        
+        .legal-quote::before, .legal-quote::after {
+            content: '"';
+            font-size: 40px;
+            color: #FFD600;
+        }
+        
+        /* قسم الموافقة */
+        .consent-section {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 50px 0;
+            border: 3px solid #2E7D32;
+        }
+        
+        .consent-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .consent-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .consent-checkbox input {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .consent-checkbox label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1B5E20;
+        }
+        
+        /* قسم المطور */
+        .developer-section {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            color: white;
+            padding: 50px;
+            border-radius: 20px;
+            margin: 50px 0;
+            text-align: center;
+        }
+        
+        .developer-info {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .developer-avatar {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: #2E7D32;
+            border: 5px solid #FFD700;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .developer-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+        }
+        
+        .developer-detail {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .developer-detail i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+        
+        /* الفوتر */
+        .terms-footer {
+            background: #1B5E20;
+            color: white;
+            padding: 50px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            margin: 35px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+        }
+        
+        /* زر العودة */
+        .back-btn {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            background: #2E7D32;
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #1B5E20;
+            transform: scale(1.1);
+        }
+        
+        /* تأثيرات التمرير */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* التكيف مع الجوال */
+        @media (max-width: 768px) {
+            .terms-header {
+                padding: 40px 20px;
+            }
+            
+            .terms-header h1 {
+                font-size: 36px;
+            }
+            
+            .terms-content {
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 25px;
+            }
+            
+            .section h2 {
+                font-size: 28px;
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .section h2 i {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .back-btn {
+                bottom: 20px;
+                left: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+        }
+        
+        /* توقيعات */
+        .signature-section {
+            background: #f5f5f5;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 50px 0;
+            text-align: center;
+        }
+        
+        .signature-box {
+            display: inline-block;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .signature-line {
+            width: 300px;
+            height: 2px;
+            background: #333;
+            margin: 30px auto;
+        }
+        
+        .signature-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2E7D32;
+        }
+    </style>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- زر العودة -->
+    <a href="../index.html" class="back-btn" title="العودة للرئيسية">
+        <i class="fas fa-home"></i>
+    </a>
+    
+    <div class="container">
+        <!-- الهيدر -->
+        <header class="terms-header">
+            <div class="header-content">
+                <div class="terms-icon">⚖️</div>
+                <h1>شروط وأحكام الاستخدام</h1>
+                <p class="tagline">مرشد المزارع الذكي - تطبيق زراعي ذكي للمزارعين العرب</p>
+            </div>
+        </header>
+        
+        <!-- المحتوى الرئيسي -->
+        <main class="terms-content">
+            <!-- مقدمة -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-gavel"></i> المقدمة والموافقة</h2>
+                <p>مرحباً بكم في تطبيق <strong>"مرشد المزارع الذكي"</strong>. يرجى قراءة شروط الاستخدام هذه بعناية قبل استخدام التطبيق. باستخدامك للتطبيق، فإنك توافق على الالتزام بهذه الشروط والأحكام بشكل كامل.</p>
+                
+                <div class="info-cards">
+                    <div class="info-card important">
+                        <h4><i class="fas fa-exclamation-triangle"></i> تنبيه هام</h4>
+                        <p>إذا كنت لا توافق على أي من هذه الشروط، يرجى التوقف عن استخدام التطبيق فوراً.</p>
+                    </div>
+                    
+                    <div class="info-card info">
+                        <h4><i class="fas fa-info-circle"></i> تاريخ السريان</h4>
+                        <p>هذه الشروط سارية من تاريخ <strong>01 فبراير 2026</strong> وتخضع للتحديث بشكل دوري.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- تعريفات -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-book"></i> تعريفات</h2>
+                
+                <table class="terms-table">
+                    <thead>
+                        <tr>
+                            <th>المصطلح</th>
+                            <th>التعريف</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>التطبيق</td>
+                            <td>تطبيق "مرشد المزارع الذكي" المتاح عبر الإنترنت</td>
+                        </tr>
+                        <tr>
+                            <td>المطور</td>
+                            <td>محمد مقبل عبدالله سيف - مطور التطبيق</td>
+                        </tr>
+                        <tr>
+                            <td>المستخدم</td>
+                            <td>أي شخص يستخدم التطبيق بغض النظر عن طريقة الوصول</td>
+                        </tr>
+                        <tr>
+                            <td>الخدمة</td>
+                            <td>جميع الميزات والوظائف المتاحة ضمن التطبيق</td>
+                        </tr>
+                        <tr>
+                            <td>المحتوى</td>
+                            <td>جميع النصوص، الصور، الفيديوهات، والمعلومات في التطبيق</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- شروط الاستخدام -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-check-circle"></i> شروط الاستخدام الأساسية</h2>
+                
+                <h3><i class="fas fa-user-check"></i> أهلية المستخدم</h3>
+                <p>يجب أن يكون المستخدم:</p>
+                <ul>
+                    <li>قادراً قانونياً على الالتزام بالاتفاقيات</li>
+                    <li>يستخدم التطبيق لأغراض شخصية وتعليمية فقط</li>
+                    <li>يلتزم بالقوانين والأنظمة المحلية والدولية</li>
+                    <li>لا يستخدم التطبيق لأي أغراض غير مشروعة</li>
+                </ul>
+                
+                <h3><i class="fas fa-ban"></i> الاستخدامات الممنوعة</h3>
+                <p>يمنع المستخدم من:</p>
+                <ol>
+                    <li>اختراق أو محاولة اختراق التطبيق</li>
+                    <li>استخدام التطبيق لنشر محتوى غير قانوني</li>
+                    <li>نسخ أو توزيع المحتوى دون إذن</li>
+                    <li>إساءة استخدام الميزات التقنية للتطبيق</li>
+                    <li>التلاعب بنظام النقاط والمكافآت</li>
+                </ol>
+                
+                <div class="legal-quote">
+                    استخدامك للتطبيق يعني موافقتك الكاملة على جميع الشروط والأحكام المذكورة هنا
+                </div>
+            </section>
+            
+            <!-- الملكية الفكرية -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-copyright"></i> الملكية الفكرية</h2>
+                
+                <h3><i class="fas fa-code"></i> حقوق المطور</h3>
+                <p>جميع حقوق الملكية الفكرية للتطبيق محفوظة للمطور <strong>محمد مقبل عبدالله سيف</strong>، وتشمل:</p>
+                <ul>
+                    <li>الشيفرة المصدرية</li>
+                    <li>التصميم والواجهة</li>
+                    <li>الشعار والأيقونات</li>
+                    <li>المحتوى التعليمي</li>
+                    <li>قواعد البيانات</li>
+                </ul>
+                
+                <h3><i class="fas fa-share-alt"></i> الترخيص المحدود</h3>
+                <p>يمنح المطور المستخدم ترخيصاً محدوداً غير حصري وغير قابل للتحويل لاستخدام التطبيق، بشروط:</p>
+                
+                <div class="info-cards">
+                    <div class="info-card success">
+                        <h4><i class="fas fa-check"></i> مسموح</h4>
+                        <ul style="list-style: none; margin: 0; padding: 0;">
+                            <li>✓ الاستخدام الشخصي</li>
+                            <li>✓ الاستخدام التعليمي</li>
+                            <li>✓ المشاركة مع الآخرين</li>
+                            <li>✓ التوصية بالتطبيق</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card warning">
+                        <h4><i class="fas fa-times"></i> ممنوع</h4>
+                        <ul style="list-style: none; margin: 0; padding: 0;">
+                            <li>✗ البيع أو التأجير</li>
+                            <li>✗ التعديل وإعادة البيع</li>
+                            <li>✗ الاستخدام التجاري</li>
+                            <li>✗ انتهاك الحقوق</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- الخصوصية والبيانات -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-shield-alt"></i> الخصوصية وحماية البيانات</h2>
+                
+                <h3><i class="fas fa-database"></i> جمع البيانات</h3>
+                <p>نلتزم بعدم جمع أي بيانات شخصية من المستخدمين. جميع البيانات المخزنة هي:</p>
+                <ul>
+                    <li>بيانات تطبيقية محلية فقط</li>
+                    <li>إعدادات المستخدم الشخصية</li>
+                    <li>نقاط ومكافآت التطبيق</li>
+                    <li>تقارير التشخيص المحفوظة</li>
+                </ul>
+                
+                <h3><i class="fas fa-ad"></i> الإعلانات و AdMob</h3>
+                <p>يستخدم التطبيق خدمة Google AdMob لعرض الإعلانات:</p>
+                <table class="terms-table">
+                    <thead>
+                        <tr>
+                            <th>البند</th>
+                            <th>التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>مزود الإعلانات</td>
+                            <td>Google AdMob (شركة Google LLC)</td>
+                        </tr>
+                        <tr>
+                            <td>رقم الحساب</td>
+                            <td>pub-9866663686163267</td>
+                        </tr>
+                        <tr>
+                            <td>بيانات الإعلانات</td>
+                            <td>بيانات مجهولة المصدر فقط</td>
+                        </tr>
+                        <tr>
+                            <td>التحكم</td>
+                            <td>يمكن إدارة إعدادات الإعلانات من حساب Google</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p>للمزيد من التفاصيل، يرجى الاطلاع على <a href="privacy.html" style="color: #2E7D32; font-weight: bold;">سياسة الخصوصية الكاملة</a>.</p>
+            </section>
+            
+            <!-- إخلاء المسؤولية -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-exclamation-circle"></i> إخلاء المسؤولية</h2>
+                
+                <h3><i class="fas fa-seedling"></i> الطبيعة التعليمية</h3>
+                <p>يؤكد المطور أن التطبيق:</p>
+                <ul>
+                    <li>يهدف لأغراض <strong>تعليمية وتوعوية</strong> فقط</li>
+                    <li>لا يقدم استشارات زراعية <strong>احترافية</strong></li>
+                    <li>المعلومات المقدمة <strong>ليست بديلاً</strong> عن خبراء الزراعة</li>
+                    <li>يجب استشارة المختصين للقرارات الزراعية الهامة</li>
+                </ul>
+                
+                <div class="info-card important" style="margin: 30px 0;">
+                    <h4><i class="fas fa-hand-paper"></i> تحذير هام</h4>
+                    <p>لا يتحمل المطور أي مسؤولية عن الأضرار الناتجة عن الاعتماد الكلي على معلومات التطبيق في اتخاذ القرارات الزراعية.</p>
+                </div>
+                
+                <h3><i class="fas fa-heartbeat"></i> السلامة والصحة</h3>
+                <p>يجب على المستخدم:</p>
+                <ol>
+                    <li>التأكد من سلامة المبيدات والأسمدة قبل الاستخدام</li>
+                    <li>ارتداء معدات الحماية الشخصية المناسبة</li>
+                    <li>اتباع تعليمات السلامة على عبوات المواد الكيميائية</li>
+                    <li>استشارة المختصين في حالات الشك</li>
+                </ol>
+            </section>
+            
+            <!-- النظام النقدي والمكافآت -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-coins"></i> نظام النقاط والمكافآت</h2>
+                
+                <h3><i class="fas fa-gift"></i> طرق كسب النقاط</h3>
+                <p>يقدم التطبيق نظام نقاط يمكن كسبه عبر:</p>
+                <ul>
+                    <li>استخدام كاميرا التشخيص (+5 نقاط)</li>
+                    <li>الدردشة مع المساعد الذكي (+2 نقطة)</li>
+                    <li>مشاهدة الإعلانات المكافأة (+10 نقاط)</li>
+                    <li>مشاركة التطبيق (+15 نقطة)</li>
+                    <li>حفظ التقارير (+2 نقطة)</li>
+                    <li>التقييم اليومي (+3 نقاط)</li>
+                </ul>
+                
+                <h3><i class="fas fa-exchange-alt"></i> استبدال النقاط</h3>
+                <p>يمكن استبدال النقاط بمكافآت محددة:</p>
+                <table class="terms-table">
+                    <thead>
+                        <tr>
+                            <th>المكافأة</th>
+                            <th>التكلفة</th>
+                            <th>الشروط</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>كتاب زراعي</td>
+                            <td>150 نقطة</td>
+                            <td>إلكتروني - يصل عبر البريد</td>
+                        </tr>
+                        <tr>
+                            <td>دورة تدريبية</td>
+                            <td>300 نقطة</td>
+                            <td>أونلاين - مدتها أسبوع</td>
+                        </tr>
+                        <tr>
+                            <td>خصم على أدوات</td>
+                            <td>500 نقطة</td>
+                            <td>يتطلب شراء من شركائنا</td>
+                        </tr>
+                        <tr>
+                            <td>شهادة إنجاز</td>
+                            <td>1000 نقطة</td>
+                            <td>شهادة رسمية معتمدة</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info-card info" style="margin: 30px 0;">
+                    <h4><i class="fas fa-info-circle"></i> ملاحظة هامة</h4>
+                    <p>يحق للمطور تعديل نظام النقاط والمكافآت في أي وقت دون إشعار مسبق. النقاط ليس لها قيمة نقدية ولا يمكن استبدالها نقدياً.</p>
+                </div>
+            </section>
+            
+            <!-- القيود والمسؤوليات -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-balance-scale"></i> القيود والمسؤوليات القانونية</h2>
+                
+                <h3><i class="fas fa-user-times"></i> إنهاء الوصول</h3>
+                <p>يحق للمطور تعليق أو إنهاء وصول المستخدم للتطبيق إذا:</p>
+                <ul>
+                    <li>انتهك المستخدم شروط الاستخدام</li>
+                    <li>استخدم التطبيق بشكل ضار أو غير قانوني</li>
+                    <li>حاول التلاعب بالنظام أو اختراقه</li>
+                    <li>انتهك حقوق الملكية الفكرية</li>
+                </ul>
+                
+                <h3><i class="fas fa-gavel"></i> المسؤولية القانونية</h3>
+                <p>يقر المستخدم بأن:</p>
+                <ol>
+                    <li>يستخدم التطبيق على مسؤوليته الشخصية</li>
+                    <li>المطور غير مسؤول عن أي أضرار مباشرة أو غير مباشرة</li>
+                    <li>المسؤولية القصوى محدودة بقيمة 0 دولار</li>
+                    <li>يحق للمطور تعديل الشروط في أي وقت</li>
+                </ol>
+                
+                <div class="legal-quote">
+                    القوانين اليمنية هي المرجع في تفسير وتنفيذ هذه الشروط
+                </div>
+            </section>
+            
+            <!-- قسم الموافقة -->
+            <section class="consent-section fade-in">
+                <div class="consent-box">
+                    <h3 style="color: #1B5E20; margin-bottom: 20px;">📝 إقرار بالموافقة</h3>
+                    <p>أقر بأنني قد قرأت وفهمت شروط وأحكام استخدام تطبيق "مرشد المزارع الذكي" وأوافق على الالتزام بها كاملة.</p>
+                    
+                    <div class="consent-checkbox">
+                        <input type="checkbox" id="agreeTerms">
+                        <label for="agreeTerms">أوافق على شروط الاستخدام كاملة</label>
+                    </div>
+                    
+                    <button onclick="acceptTerms()" style="background: #2E7D32; color: white; border: none; padding: 15px 40px; border-radius: 25px; font-size: 18px; font-family: 'Tajawal'; cursor: pointer; margin-top: 20px;">
+                        <i class="fas fa-signature"></i> تأكيد الموافقة
+                    </button>
+                </div>
+            </section>
+            
+            <!-- قسم المطور -->
+            <section class="developer-section fade-in">
+                <h2 style="color: white; margin-bottom: 30px; font-size: 36px;">👨‍💻 معلومات المطور</h2>
+                
+                <div class="developer-info">
+                    <div class="developer-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    
+                    <h3 style="font-size: 32px; margin-bottom: 15px;">محمد مقبل عبدالله سيف</h3>
+                    <p style="opacity: 0.9; font-size: 20px; margin-bottom: 25px;">مطور ومبرمج تطبيق مرشد المزارع الذكي</p>
+                    
+                    <div class="developer-details">
+                        <div class="developer-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>اليمن - تعز - ماوية - ذراح</p>
+                        </div>
+                        
+                        <div class="developer-detail">
+                            <i class="fas fa-envelope"></i>
+                            <p>mmasa197911282017@gmail.com</p>
+                        </div>
+                        
+                        <div class="developer-detail">
+                            <i class="fas fa-phone"></i>
+                            <p>+967734750438</p>
+                        </div>
+                        
+                        <div class="developer-detail">
+                            <i class="fas fa-globe"></i>
+                            <p>Almoqblymmasas.netlify.app</p>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 35px; font-style: italic; opacity: 0.9; font-size: 18px;">
+                        "طورت هذا التطبيق بخبرة وتفانٍ لخدمة المزارعين العرب، وأسعى دائماً لتطويره وتحسينه"
+                    </p>
+                </div>
+            </section>
+            
+            <!-- التوقيعات -->
+            <section class="signature-section fade-in">
+                <h3 style="color: #1B5E20; margin-bottom: 20px;">📄 تواقيع الأطراف</h3>
+                
+                <div class="signature-box">
+                    <p><strong>موقع نيابة عن المطور:</strong></p>
+                    <div class="signature-line"></div>
+                    <p class="signature-name">محمد مقبل عبدالله سيف</p>
+                    <p>مطور تطبيق مرشد المزارع الذكي</p>
+                    <p style="color: #666; margin-top: 10px;">تاريخ: 01 فبراير 2026</p>
+                </div>
+            </section>
+        </main>
+        
+        <!-- الفوتر -->
+        <footer class="terms-footer">
+            <div class="footer-content">
+                <h2 style="color: white; margin-bottom: 25px; font-size: 32px;">مرشد المزارع الذكي</h2>
+                <p style="opacity: 0.9; font-size: 18px;">تطبيق زراعي ذكي - إبداع يمني خالص لخدمة المزارعين العرب</p>
+                
+                <div class="footer-links">
+                    <a href="../index.html" class="footer-link">
+                        <i class="fas fa-home"></i> الرئيسية
+                    </a>
+                    <a href="about.html" class="footer-link">
+                        <i class="fas fa-info-circle"></i> عن التطبيق
+                    </a>
+                    <a href="privacy.html" class="footer-link">
+                        <i class="fas fa-shield-alt"></i> سياسة الخصوصية
+                    </a>
+                    <a href="points.html" class="footer-link">
+                        <i class="fas fa-coins"></i> نظام النقاط
+                    </a>
+                    <a href="mailto:mmasa197911282017@gmail.com" class="footer-link">
+                        <i class="fas fa-headset"></i> الدعم والاستفسارات
+                    </a>
+                </div>
+                
+                <div class="copyright">
+                    <p>© 2026 شروط استخدام مرشد المزارع الذكي</p>
+                    <p>جميع الحقوق محفوظة لمحمد مقبل عبدالله سيف - اليمن 🇾🇪</p>
+                    <p style="margin-top: 15px; font-size: 14px;">
+                        <i class="fas fa-book" style="color: #FFD700;"></i> 
+                        هذه الوثيقة قانونية وملزمة للأطراف
+                        <i class="fas fa-book" style="color: #FFD700;"></i>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // ====== المعلومات الحقيقية ======
+        const DEVELOPER_INFO = {
+            name: 'محمد مقبل عبدالله سيف',
+            location: 'اليمن - تعز - ماوية - ذراح',
+            email: 'mmasa197911282017@gmail.com',
+            phone: '+967734750438',
+            website: 'https://Almoqblymmasas.netlify.app'
+        };
+        
+        // ====== التحميل الأولي ======
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('⚖️ صفحة شروط الاستخدام محملة بنجاح');
+            console.log('👨‍💻 المطور:', DEVELOPER_INFO.name);
+            console.log('📍 الموقع:', DEVELOPER_INFO.location);
+            
+            // إعداد تأثيرات التمرير
+            setupScrollEffects();
+            
+            // تحميل حالة الموافقة السابقة
+            loadConsentStatus();
+            
+            // إعداد زر العودة
+            setupBackButton();
+            
+            // تاريخ اليوم
+            const today = new Date().toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            console.log('📅 تاريخ الزيارة:', today);
+        });
+        
+        // إعداد تأثيرات التمرير
+        function setupScrollEffects() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // تأثير زر العودة
+            window.addEventListener('scroll', function() {
+                const backBtn = document.querySelector('.back-btn');
+                if (window.scrollY > 300) {
+                    backBtn.style.opacity = '1';
+                    backBtn.style.visibility = 'visible';
+                } else {
+                    backBtn.style.opacity = '0';
+                    backBtn.style.visibility = 'hidden';
+                }
+            });
+        }
+        
+        // تحميل حالة الموافقة السابقة
+        function loadConsentStatus() {
+            const hasAgreed = localStorage.getItem('agreed_to_terms');
+            if (hasAgreed === 'true') {
+                document.getElementById('agreeTerms').checked = true;
+                console.log('✅ المستخدم وافق مسبقاً على الشروط');
+            }
+        }
+        
+        // إعداد زر العودة
+        function setupBackButton() {
+            const backBtn = document.querySelector('.back-btn');
+            backBtn.addEventListener('click', function(e) {
+                const hasAgreed = localStorage.getItem('agreed_to_terms');
+                if (!hasAgreed || hasAgreed !== 'true') {
+                    e.preventDefault();
+                    if (confirm('⚠️ لم توافق بعد على شروط الاستخدام. هل تريد المتابعة دون الموافقة؟')) {
+                        window.location.href = '../index.html';
+                    }
+                }
+            });
+        }
+        
+        // قبول الشروط
+        function acceptTerms() {
+            const agreeCheckbox = document.getElementById('agreeTerms');
+            
+            if (!agreeCheckbox.checked) {
+                showNotification('❌ يجب الموافقة على الشروط أولاً', 'error');
+                return;
+            }
+            
+            // حفظ الموافقة
+            localStorage.setItem('agreed_to_terms', 'true');
+            localStorage.setItem('terms_agreement_date', new Date().toISOString());
+            
+            // إشعار النجاح
+            showNotification('✅ تم تسجيل موافقتك على شروط الاستخدام بنجاح', 'success');
+            
+            // تسجيل الحدث
+            console.log('📝 المستخدم وافق على شروط الاستخدام:', new Date().toISOString());
+            
+            // إضافة تأثير
+            createConfirmationEffect();
+            
+            // إمكانية إضافة إعادة توجيه
+            setTimeout(() => {
+                showNotification('🎉 يمكنك الآن استخدام التطبيق بشكل كامل', 'info');
+            }, 1500);
+        }
+        
+        // عرض الإشعارات
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#f44336' : type === 'success' ? '#4CAF50' : '#2196F3'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                font-family: 'Tajawal';
+                max-width: 400px;
+                text-align: right;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+            
+            // إضافة أنيميشن CSS إذا لم تكن موجودة
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOutRight {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // تأثير التأكيد
+        function createConfirmationEffect() {
+            const effect = document.createElement('div');
+            effect.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 80px;
+                color: #4CAF50;
+                z-index: 9999;
+                pointer-events: none;
+                animation: confirmPulse 1.5s ease-out forwards;
+                text-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+            `;
+            
+            effect.innerHTML = '✅';
+            document.body.appendChild(effect);
+            
+            // إضافة أنيميشن CSS
+            if (!document.querySelector('#confirmation-styles')) {
+                const style = document.createElement('style');
+                style.id = 'confirmation-styles';
+                style.textContent = `
+                    @keyframes confirmPulse {
+                        0% {
+                            opacity: 0;
+                            transform: translate(-50%, -50%) scale(0.5);
+                        }
+                        50% {
+                            opacity: 1;
+                            transform: translate(-50%, -50%) scale(1.2);
+                        }
+                        100% {
+                            opacity: 0;
+                            transform: translate(-50%, -50%) scale(1);
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            setTimeout(() => {
+                effect.remove();
+            }, 1500);
+        }
+        
+        // ====== وظائف إضافية ======
+        
+        // طباعة الشروط
+        function printTerms() {
+            window.print();
+        }
+        
+        // تحميل نسخة PDF (محاكاة)
+        function downloadPDF() {
+            showNotification('⏳ جاري تحضير نسخة PDF من الشروط...', 'info');
+            
+            setTimeout(() => {
+                const data = {
+                    title: 'شروط استخدام مرشد المزارع الذكي',
+                    content: document.querySelector('.terms-content').innerText,
+                    developer: DEVELOPER_INFO,
+                    date: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `شروط-الاستخدام-مرشد-المزارع-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                
+                showNotification('📥 تم تحميل نسخة من الشروط', 'success');
+            }, 2000);
+        }
+        
+        // نسخ رابط الشروط
+        function copyTermsLink() {
+            const currentUrl = window.location.href;
+            navigator.clipboard.writeText(currentUrl)
+                .then(() => {
+                    showNotification('📋 تم نسخ رابط الشروط', 'success');
+                })
+                .catch(err => {
+                    showNotification('❌ فشل نسخ الرابط', 'error');
+                });
+        }
+        
+        // البحث في الشروط
+        function searchInTerms() {
+            const searchTerm = prompt('🔍 ابحث في شروط الاستخدام:');
+            if (searchTerm) {
+                const content = document.querySelector('.terms-content').innerText;
+                if (content.includes(searchTerm)) {
+                    showNotification(`✅ تم العثور على "${searchTerm}" في الشروط`, 'success');
+                    
+                    // تمييز النتائج
+                    const regex = new RegExp(searchTerm, 'gi');
+                    const highlighted = content.replace(regex, match => `<mark>${match}</mark>`);
+                    // يمكن إضافة ميزة التمييز في نسخة محسنة
+                } else {
+                    showNotification(`❌ لم يتم العثور على "${searchTerm}"`, 'error');
+                }
+            }
+        }
+        
+        // رسالة ترحيبية
+        setTimeout(() => {
+            console.log('⚖️ شروط الاستخدام جاهزة للقراءة');
+            console.log('📄 عدد الأقسام:', document.querySelectorAll('.section').length);
+            console.log('👤 المطور:', DEVELOPER_INFO.name);
+        }, 1000);
+        
+        // إضافة أزرار إضافية في الكونسول
+        console.log('%c⚖️ أوامر إضافية:', 'color: #4CAF50; font-weight: bold; font-size: 14px;');
+        console.log('%c• printTerms() - لطباعة الشروط', 'color: #666;');
+        console.log('%c• downloadPDF() - لتحميل نسخة', 'color: #666;');
+        console.log('%c• copyTermsLink() - نسخ الرابط', 'color: #666;');
+        console.log('%c• searchInTerms() - البحث في الشروط', 'color: #666;');
+    </script>
+</body>
+</html>

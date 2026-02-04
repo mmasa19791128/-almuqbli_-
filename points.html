@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ====== ✅ المعلومات الحقيقية ====== -->
+    <title>نظام النقاط - مرشد المزارع الذكي</title>
+    <meta name="description" content="نظام النقاط والمكافآت في تطبيق مرشد المزارع الذكي">
+    <meta name="author" content="محمد مقبل عبدالله سيف">
+    <meta name="location" content="اليمن - تعز - ماوية - ذراح">
+    <meta name="email" content="mmasa197911282017@gmail.com">
+    <meta name="phone" content="+967734750438">
+    
+    <style>
+        /* تصميم صفحة النقاط */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', 'Arial', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #f5f5f5, #fff3e0);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* الهيدر */
+        .points-header {
+            background: linear-gradient(135deg, #FFD700, #FFC107, #FF9800);
+            color: #333;
+            padding: 40px 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .points-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.2)"/></svg>');
+            background-size: cover;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .points-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .points-header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0 rgba(255,255,255,0.5);
+        }
+        
+        .points-header .tagline {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* لوحة النقاط الرئيسية */
+        .points-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .points-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+        
+        .points-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .points-card.primary {
+            border-color: #FFD700;
+            background: linear-gradient(135deg, #FFFDE7, #FFF9C4);
+        }
+        
+        .points-card.secondary {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+        }
+        
+        .points-card.tertiary {
+            border-color: #2196F3;
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+        }
+        
+        .card-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .points-value {
+            font-size: 72px;
+            font-weight: bold;
+            color: #FF9800;
+            margin: 20px 0;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+        
+        .points-label {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        /* طرق كسب النقاط */
+        .earning-methods {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            color: #1B5E20;
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #FFD700;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 100px;
+            height: 3px;
+            background: #4CAF50;
+        }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .method-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #FFD700, #FF9800);
+        }
+        
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .method-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #FF9800;
+        }
+        
+        .method-points {
+            display: inline-block;
+            background: #FFD700;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 15px 0;
+        }
+        
+        .method-btn {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: 'Tajawal';
+            font-size: 16px;
+        }
+        
+        .method-btn:hover {
+            background: #2E7D32;
+            transform: scale(1.05);
+        }
+        
+        /* المستويات والإنجازات */
+        .levels-section {
+            margin-bottom: 50px;
+        }
+        
+        .levels-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .level-item {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s;
+            border-right: 5px solid transparent;
+        }
+        
+        .level-item:hover {
+            transform: translateX(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .level-item.beginner {
+            border-right-color: #9E9E9E;
+        }
+        
+        .level-item.active {
+            border-right-color: #FFD700;
+            background: linear-gradient(135deg, #FFFDE7, #FFF9C4);
+        }
+        
+        .level-item.pro {
+            border-right-color: #2196F3;
+        }
+        
+        .level-item.champion {
+            border-right-color: #FF9800;
+        }
+        
+        .level-icon {
+            font-size: 40px;
+            width: 80px;
+            height: 80px;
+            background: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .level-icon.beginner {
+            background: #E0E0E0;
+            color: #757575;
+        }
+        
+        .level-icon.active {
+            background: #FFF9C4;
+            color: #FF9800;
+        }
+        
+        .level-icon.pro {
+            background: #E3F2FD;
+            color: #2196F3;
+        }
+        
+        .level-icon.champion {
+            background: #FFECB3;
+            color: #FF9800;
+        }
+        
+        .level-info {
+            flex: 1;
+        }
+        
+        .level-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .level-requirements {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .level-rewards {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        /* الجوائز */
+        .rewards-section {
+            margin-bottom: 50px;
+        }
+        
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .reward-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .reward-card:hover {
+            transform: translateY(-5px);
+            border-color: #FFD700;
+        }
+        
+        .reward-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #FF9800;
+        }
+        
+        .reward-cost {
+            display: inline-block;
+            background: #FFD700;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        /* قسم المطور */
+        .developer-section {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        
+        .developer-info {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .developer-avatar {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #2E7D32;
+            border: 5px solid #FFD700;
+        }
+        
+        .developer-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .developer-detail {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        /* الفوتر */
+        .points-footer {
+            background: #333;
+            color: white;
+            padding: 40px 20px;
+            border-radius: 20px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        
+        .footer-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* تأثيرات التحميل */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FFD700, #FF9800);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+        
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* زر العودة */
+        .back-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: #2E7D32;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #1B5E20;
+            transform: scale(1.1);
+        }
+        
+        /* التكيف مع الجوال */
+        @media (max-width: 768px) {
+            .points-header h1 {
+                font-size: 36px;
+            }
+            
+            .points-value {
+                font-size: 48px;
+            }
+            
+            .section-title {
+                font-size: 28px;
+            }
+            
+            .level-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .back-btn {
+                bottom: 20px;
+                left: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+        
+        /* تأثيرات التمرير */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- شاشة التحميل -->
+    <div id="loadingScreen" class="loading">
+        <div class="points-icon">🏆</div>
+        <h2 style="margin: 20px 0;">جاري تحميل نظام النقاط...</h2>
+        <div style="width: 100px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden;">
+            <div id="loadingBar" style="width: 0%; height: 100%; background: white; transition: width 0.3s;"></div>
+        </div>
+    </div>
+    
+    <!-- زر العودة -->
+    <a href="../index.html" class="back-btn" title="العودة للرئيسية">
+        <i class="fas fa-home"></i>
+    </a>
+    
+    <div class="container">
+        <!-- الهيدر -->
+        <header class="points-header">
+            <div class="header-content">
+                <div class="points-icon">🏆</div>
+                <h1>نظام النقاط والمكافآت</h1>
+                <p class="tagline">اربح نقاطاً واستبدلها بمكافآت حقيقية أثناء استخدامك للتطبيق!</p>
+            </div>
+        </header>
+        
+        <!-- لوحة النقاط الرئيسية -->
+        <section class="points-dashboard">
+            <div class="points-card primary fade-in">
+                <div class="card-icon">💰</div>
+                <h2>رصيدك الحالي</h2>
+                <div class="points-value" id="currentPoints">0</div>
+                <p class="points-label">نقطة مكتسبة من استخدام التطبيق</p>
+                <div style="margin-top: 20px; font-size: 14px; color: #666;">
+                    <i class="fas fa-sync-alt"></i> يتم تحديث الرصيد تلقائياً
+                </div>
+            </div>
+            
+            <div class="points-card secondary fade-in">
+                <div class="card-icon">📊</div>
+                <h2>مستواك الحالي</h2>
+                <div class="points-value" style="font-size: 48px; color: #4CAF50;" id="currentLevel">مبتدئ</div>
+                <p class="points-label" id="nextLevelInfo">100 نقطة للوصول للمستوى التالي</p>
+                <div class="progress-bar" style="width: 100%; height: 10px; background: #e0e0e0; border-radius: 5px; margin: 20px 0; overflow: hidden;">
+                    <div id="levelProgress" style="width: 0%; height: 100%; background: linear-gradient(90deg, #4CAF50, #2E7D32); transition: width 0.5s;"></div>
+                </div>
+            </div>
+            
+            <div class="points-card tertiary fade-in">
+                <div class="card-icon">🎯</div>
+                <h2>هدفك الشهري</h2>
+                <div class="points-value" style="color: #2196F3;">500</div>
+                <p class="points-label">نقطة لتحقيق التحدي الشهري</p>
+                <div style="margin-top: 20px; font-size: 14px; color: #666;">
+                    <i class="fas fa-trophy"></i> جائزة خاصة عند تحقيق الهدف
+                </div>
+            </div>
+        </section>
+        
+        <!-- طرق كسب النقاط -->
+        <section class="earning-methods">
+            <h2 class="section-title fade-in">🎁 طرق كسب النقاط</h2>
+            
+            <div class="methods-grid">
+                <!-- طريقة 1 -->
+                <div class="method-card fade-in">
+                    <div class="method-icon">📸</div>
+                    <h3>كاميرا التشخيص</h3>
+                    <p>استخدم كاميرا التشخيص لفحص النباتات والأمراض</p>
+                    <div class="method-points">+5 نقاط لكل استخدام</div>
+                    <p style="color: #666; font-size: 14px;">تشخيص دقيق = نقاط أكثر</p>
+                    <button class="method-btn" onclick="earnPoints('camera')">
+                        <i class="fas fa-camera"></i> استخدام الكاميرا
+                    </button>
+                </div>
+                
+                <!-- طريقة 2 -->
+                <div class="method-card fade-in">
+                    <div class="method-icon">🤖</div>
+                    <h3>الدردشة الذكية</h3>
+                    <p>اسأل المساعد الزراعي الذكي عن أي استفسار زراعي</p>
+                    <div class="method-points">+2 نقطة لكل سؤال</div>
+                    <p style="color: #666; font-size: 14px;">أسئلة متعددة = نقاط متعددة</p>
+                    <button class="method-btn" onclick="earnPoints('chat')">
+                        <i class="fas fa-comment"></i> بدء الدردشة
+                    </button>
+                </div>
+                
+                <!-- طريقة 3 -->
+                <div class="method-card fade-in">
+                    <div class="method-icon">📢</div>
+                    <h3>مشاهدة الإعلانات</h3>
+                    <p>شاهد إعلاناً قصيراً واربح نقاطاً إضافية</p>
+                    <div class="method-points">+10 نقاط لكل إعلان</div>
+                    <p style="color: #666; font-size: 14px;">إعلان واحد يومياً على الأقل</p>
+                    <button class="method-btn" onclick="watchAd()">
+                        <i class="fas fa-play-circle"></i> مشاهدة إعلان
+                    </button>
+                </div>
+                
+                <!-- طريقة 4 -->
+                <div class="method-card fade-in">
+                    <div class="method-icon">🔗</div>
+                    <h3>مشاركة التطبيق</h3>
+                    <p>شارك التطبيق مع أصدقائك المزارعين</p>
+                    <div class="method-points">+15 نقطة لكل مشاركة</div>
+                    <p style="color: #666; font-size: 14px;">مشاركات متعددة = نقاط غير محدودة</p>
+                    <button class="method-btn" onclick="shareApp()">
+                        <i class="fas fa-share-alt"></i> مشاركة الآن
+                    </button>
+                </div>
+                
+                <!-- طريقة 5 -->
+                <div class="method-card fade-in">
+                    <div class="method-icon">💾</div>
+                    <h3>حفظ التقارير</h3>
+                    <p>احفظ تقارير التشخيص والتحليل للرجوع إليها</p>
+                    <div class="method-points">+2 نقطة لكل تقرير</div>
+                    <p style="color: #666; font-size: 14px;">بناء مكتبة شخصية = نقاط مستمرة</p>
+                    <button class="method-btn" onclick="earnPoints('save')">
+                        <i class="fas fa-save"></i> حفظ تقرير
+                    </button>
+                </div>
+                
+                <!-- طريقة 6 -->
+                <div class="method-card fade-in">
+                    <div class="method-icon">⭐</div>
+                    <h3>التقييم اليومي</h3>
+                    <p>قم بتقييم التطبيق بشكل يومي</p>
+                    <div class="method-points">+3 نقاط يومياً</div>
+                    <p style="color: #666; font-size: 14px;">تقييم مستمر = نقاط يومية</p>
+                    <button class="method-btn" onclick="dailyRating()">
+                        <i class="fas fa-star"></i> تقييم اليوم
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- المستويات والإنجازات -->
+        <section class="levels-section">
+            <h2 class="section-title fade-in">📈 مستويات الإنجاز</h2>
+            
+            <div class="levels-container">
+                <!-- المستوى 1 -->
+                <div class="level-item beginner fade-in">
+                    <div class="level-icon beginner">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div class="level-info">
+                        <h3 class="level-title">🥉 المستوى المبتدئ</h3>
+                        <p class="level-requirements">0 - 100 نقطة</p>
+                        <p class="level-rewards">مكافأة: وصول كامل للميزات الأساسية</p>
+                    </div>
+                </div>
+                
+                <!-- المستوى 2 -->
+                <div class="level-item active fade-in">
+                    <div class="level-icon active">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="level-info">
+                        <h3 class="level-title">🥈 المستوى النشط</h3>
+                        <p class="level-requirements">101 - 500 نقطة</p>
+                        <p class="level-rewards">مكافأة: +10% نقاط إضافية على جميع المهام</p>
+                    </div>
+                </div>
+                
+                <!-- المستوى 3 -->
+                <div class="level-item pro fade-in">
+                    <div class="level-icon pro">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <div class="level-info">
+                        <h3 class="level-title">🏆 المستوى المحترف</h3>
+                        <p class="level-requirements">501 - 1000 نقطة</p>
+                        <p class="level-rewards">مكافأة: وصول مبكر للميزات الجديدة</p>
+                    </div>
+                </div>
+                
+                <!-- المستوى 4 -->
+                <div class="level-item champion fade-in">
+                    <div class="level-icon champion">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="level-info">
+                        <h3 class="level-title">👑 المستوى البطل</h3>
+                        <p class="level-requirements">1001+ نقطة</p>
+                        <p class="level-rewards">مكافأة: شهادة إنجاز + ميزات حصرية</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- الجوائز -->
+        <section class="rewards-section">
+            <h2 class="section-title fade-in">🎁 استبدال النقاط</h2>
+            
+            <div class="rewards-grid">
+                <!-- جائزة 1 -->
+                <div class="reward-card fade-in">
+                    <div class="reward-icon">📚</div>
+                    <h3>كتاب زراعي</h3>
+                    <p>كتاب إلكتروني عن الزراعة الحديثة</p>
+                    <div class="reward-cost">150 نقطة</div>
+                    <button class="method-btn" onclick="redeemReward('كتاب زراعي', 150)">
+                        <i class="fas fa-shopping-cart"></i> استبدال
+                    </button>
+                </div>
+                
+                <!-- جائزة 2 -->
+                <div class="reward-card fade-in">
+                    <div class="reward-icon">🎓</div>
+                    <h3>دورة تدريبية</h3>
+                    <p>دورة مجانية في الزراعة الذكية</p>
+                    <div class="reward-cost">300 نقطة</div>
+                    <button class="method-btn" onclick="redeemReward('دورة تدريبية', 300)">
+                        <i class="fas fa-shopping-cart"></i> استبدال
+                    </button>
+                </div>
+                
+                <!-- جائزة 3 -->
+                <div class="reward-card fade-in">
+                    <div class="reward-icon">🛠️</div>
+                    <h3>أدوات زراعية</h3>
+                    <p>خصم على شراء أدوات زراعية</p>
+                    <div class="reward-cost">500 نقطة</div>
+                    <button class="method-btn" onclick="redeemReward('أدوات زراعية', 500)">
+                        <i class="fas fa-shopping-cart"></i> استبدال
+                    </button>
+                </div>
+                
+                <!-- جائزة 4 -->
+                <div class="reward-card fade-in">
+                    <div class="reward-icon">🏅</div>
+                    <h3>شهادة إنجاز</h3>
+                    <p>شهادة رسمية من التطبيق</p>
+                    <div class="reward-cost">1000 نقطة</div>
+                    <button class="method-btn" onclick="redeemReward('شهادة إنجاز', 1000)">
+                        <i class="fas fa-shopping-cart"></i> استبدال
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- قسم المطور -->
+        <section class="developer-section fade-in">
+            <h2 style="color: white; margin-bottom: 30px; font-size: 36px;">👨‍💻 عن المطور</h2>
+            
+            <div class="developer-info">
+                <div class="developer-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                
+                <h3 style="font-size: 28px; margin-bottom: 10px;">محمد مقبل عبدالله سيف</h3>
+                <p style="opacity: 0.9; margin-bottom: 20px;">مطور تطبيق مرشد المزارع الذكي</p>
+                
+                <div class="developer-details">
+                    <div class="developer-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>اليمن - تعز - ماوية - ذراح</p>
+                    </div>
+                    
+                    <div class="developer-detail">
+                        <i class="fas fa-envelope"></i>
+                        <p>mmasa197911282017@gmail.com</p>
+                    </div>
+                    
+                    <div class="developer-detail">
+                        <i class="fas fa-phone"></i>
+                        <p>+967734750438</p>
+                    </div>
+                    
+                    <div class="developer-detail">
+                        <i class="fas fa-globe"></i>
+                        <p>Almoqblymmasas.netlify.app</p>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 30px; font-style: italic; opacity: 0.9;">
+                    "نظام النقاط صممته لتشجيع المزارعين على الاستفادة القصوى من التطبيق والاستمرار في التعلم والتطوير"
+                </p>
+            </div>
+        </section>
+        
+        <!-- الفوتر -->
+        <footer class="points-footer fade-in">
+            <h2 style="color: white; margin-bottom: 20px;">مرشد المزارع الذكي</h2>
+            <p>نظام النقاط والمكافآت - صمم خصيصاً لتشجيع التعلم والتطوير</p>
+            
+            <div class="footer-links">
+                <a href="../index.html" class="footer-link"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="about.html" class="footer-link"><i class="fas fa-info-circle"></i> عن التطبيق</a>
+                <a href="privacy.html" class="footer-link"><i class="fas fa-shield-alt"></i> الخصوصية</a>
+                <a href="terms.html" class="footer-link"><i class="fas fa-file-contract"></i> الشروط</a>
+                <a href="mailto:mmasa197911282017@gmail.com" class="footer-link"><i class="fas fa-headset"></i> الدعم</a>
+            </div>
+            
+            <div class="copyright">
+                <p>© 2026 نظام النقاط - مرشد المزارع الذكي</p>
+                <p>جميع الحقوق محفوظة لمحمد مقبل عبدالله سيف</p>
+                <p style="margin-top: 10px; font-size: 14px;">
+                    <i class="fas fa-coins" style="color: #FFD700;"></i> 
+                    استمر في كسب النقاط واربح مكافآت حقيقية!
+                    <i class="fas fa-coins" style="color: #FFD700;"></i>
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // ====== المعلومات الحقيقية ======
+        const DEVELOPER_INFO = {
+            name: 'محمد مقبل عبدالله سيف',
+            location: 'اليمن - تعز - ماوية - ذراح',
+            email: 'mmasa197911282017@gmail.com',
+            phone: '+967734750438',
+            website: 'https://Almoqblymmasas.netlify.app'
+        };
+        
+        // ====== نظام النقاط ======
+        let userPoints = localStorage.getItem('farmer_points') ? parseInt(localStorage.getItem('farmer_points')) : 100;
+        let userLevel = 'مبتدئ';
+        let levelProgress = 0;
+        
+        // ====== التحميل الأولي ======
+        document.addEventListener('DOMContentLoaded', function() {
+            // محاكاة شاشة التحميل
+            let progress = 0;
+            const loadingInterval = setInterval(() => {
+                progress += 10;
+                document.getElementById('loadingBar').style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        document.getElementById('loadingScreen').classList.add('hidden');
+                        setTimeout(() => {
+                            document.getElementById('loadingScreen').style.display = 'none';
+                        }, 500);
+                    }, 500);
+                }
+            }, 100);
+            
+            // تحميل بيانات النقاط
+            loadPointsData();
+            
+            // إعداد تأثيرات التمرير
+            setupScrollEffects();
+            
+            // إعداد أزرار الفعل
+            setupActionButtons();
+        });
+        
+        // تحميل بيانات النقاط
+        function loadPointsData() {
+            // تحديث عرض النقاط
+            document.getElementById('currentPoints').textContent = userPoints;
+            
+            // تحديد المستوى والتقدم
+            if (userPoints >= 1000) {
+                userLevel = 'بطل';
+                levelProgress = 100;
+            } else if (userPoints >= 500) {
+                userLevel = 'محترف';
+                levelProgress = ((userPoints - 500) / 500) * 100;
+            } else if (userPoints >= 100) {
+                userLevel = 'نشط';
+                levelProgress = ((userPoints - 100) / 400) * 100;
+            } else {
+                userLevel = 'مبتدئ';
+                levelProgress = (userPoints / 100) * 100;
+            }
+            
+            // تحديث العرض
+            document.getElementById('currentLevel').textContent = userLevel;
+            document.getElementById('levelProgress').style.width = levelProgress + '%';
+            
+            // تحديث معلومات المستوى التالي
+            let nextLevelInfo = '';
+            if (userLevel === 'مبتدئ') {
+                nextLevelInfo = `${100 - userPoints} نقطة للوصول للمستوى النشط`;
+            } else if (userLevel === 'نشط') {
+                nextLevelInfo = `${500 - userPoints} نقطة للوصول للمستوى المحترف`;
+            } else if (userLevel === 'محترف') {
+                nextLevelInfo = `${1000 - userPoints} نقطة للوصول لمستوى البطل`;
+            } else {
+                nextLevelInfo = 'وصلت لأعلى مستوى! 🎉';
+            }
+            document.getElementById('nextLevelInfo').textContent = nextLevelInfo;
+        }
+        
+        // إعداد تأثيرات التمرير
+        function setupScrollEffects() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // تأثير زر العودة
+            window.addEventListener('scroll', function() {
+                const backBtn = document.querySelector('.back-btn');
+                if (window.scrollY > 300) {
+                    backBtn.style.opacity = '1';
+                    backBtn.style.visibility = 'visible';
+                } else {
+                    backBtn.style.opacity = '0';
+                    backBtn.style.visibility = 'hidden';
+                }
+            });
+        }
+        
+        // إعداد أزرار الفعل
+        function setupActionButtons() {
+            console.log('🎯 نظام النقاط جاهز للعمل!');
+            console.log('👨‍💻 المطور:', DEVELOPER_INFO.name);
+            console.log('📍 الموقع:', DEVELOPER_INFO.location);
+        }
+        
+        // ====== وظائف كسب النقاط ======
+        
+        function earnPoints(method) {
+            let pointsToAdd = 0;
+            let message = '';
+            
+            switch(method) {
+                case 'camera':
+                    pointsToAdd = 5;
+                    message = 'كاميرا التشخيص';
+                    break;
+                case 'chat':
+                    pointsToAdd = 2;
+                    message = 'الدردشة الذكية';
+                    break;
+                case 'save':
+                    pointsToAdd = 2;
+                    message = 'حفظ تقرير';
+                    break;
+            }
+            
+            userPoints += pointsToAdd;
+            localStorage.setItem('farmer_points', userPoints);
+            
+            showNotification(`🎉 +${pointsToAdd} نقطة (${message})`);
+            loadPointsData();
+            
+            // تأثير مرئي
+            createPointsAnimation(pointsToAdd);
+        }
+        
+        function watchAd() {
+            // محاكاة مشاهدة إعلان
+            showNotification('📺 جارٍ تحميل الإعلان...', 'info');
+            
+            setTimeout(() => {
+                userPoints += 10;
+                localStorage.setItem('farmer_points', userPoints);
+                
+                showNotification('🎁 +10 نقاط (مشاهدة إعلان)');
+                loadPointsData();
+                
+                // تأثير مرئي
+                createPointsAnimation(10);
+            }, 2000);
+        }
+        
+        function shareApp() {
+            const shareData = {
+                title: 'مرشد المزارع الذكي',
+                text: 'تطبيق زراعي ذكي مع نظام نقاط رائع!',
+                url: 'https://Almoqblymmasas.netlify.app'
+            };
+            
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .then(() => {
+                        userPoints += 15;
+                        localStorage.setItem('farmer_points', userPoints);
+                        showNotification('🎯 +15 نقطة (مشاركة التطبيق)');
+                        loadPointsData();
+                        createPointsAnimation(15);
+                    })
+                    .catch(err => {
+                        console.log('مشاركة ملغاة:', err);
+                        showNotification('يمكنك نسخ الرابط يدوياً', 'info');
+                    });
+            } else {
+                // نسخ الرابط يدوياً
+                navigator.clipboard.writeText(shareData.url)
+                    .then(() => {
+                        userPoints += 15;
+                        localStorage.setItem('farmer_points', userPoints);
+                        showNotification('📋 +15 نقطة (نسخ رابط التطبيق)');
+                        loadPointsData();
+                        createPointsAnimation(15);
+                    });
+            }
+        }
+        
+        function dailyRating() {
+            const today = new Date().toDateString();
+            const lastRating = localStorage.getItem('last_rating');
+            
+            if (lastRating === today) {
+                showNotification('⚠️ قمت بتقييم التطبيق اليوم بالفعل!', 'warning');
+                return;
+            }
+            
+            userPoints += 3;
+            localStorage.setItem('farmer_points', userPoints);
+            localStorage.setItem('last_rating', today);
+            
+            showNotification('⭐ +3 نقاط (التقييم اليومي)');
+            loadPointsData();
+            createPointsAnimation(3);
+        }
+        
+        function redeemReward(rewardName, cost) {
+            if (userPoints < cost) {
+                showNotification(`❌ لا تملك نقاطاً كافية! تحتاج ${cost - userPoints} نقطة إضافية`, 'error');
+                return;
+            }
+            
+            if (confirm(`هل تريد استبدال ${cost} نقطة لـ "${rewardName}"؟`)) {
+                userPoints -= cost;
+                localStorage.setItem('farmer_points', userPoints);
+                
+                showNotification(`🎁 تم استبدال النقاط بنجاح! ستصلك ${rewardName} قريباً`);
+                loadPointsData();
+                
+                // تسجيل الجائزة
+                const rewards = JSON.parse(localStorage.getItem('user_rewards') || '[]');
+                rewards.push({
+                    name: rewardName,
+                    date: new Date().toISOString(),
+                    cost: cost
+                });
+                localStorage.setItem('user_rewards', JSON.stringify(rewards));
+            }
+        }
+        
+        // ====== وظائف مساعدة ======
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#f44336' : type === 'warning' ? '#ff9800' : type === 'info' ? '#2196f3' : '#4caf50'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                font-family: 'Tajawal';
+                max-width: 400px;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'info' ? 'info-circle' : 'check-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+            
+            // إضافة أنيميشن CSS
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOutRight {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        function createPointsAnimation(points) {
+            const pointsElement = document.createElement('div');
+            pointsElement.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 60px;
+                font-weight: bold;
+                color: #FFD700;
+                z-index: 9999;
+                pointer-events: none;
+                animation: pointsFloat 2s ease-out forwards;
+                text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            `;
+            
+            pointsElement.textContent = `+${points} 🎯`;
+            document.body.appendChild(pointsElement);
+            
+            // إضافة أنيميشن CSS
+            if (!document.querySelector('#points-animation-styles')) {
+                const style = document.createElement('style');
+                style.id = 'points-animation-styles';
+                style.textContent = `
+                    @keyframes pointsFloat {
+                        0% {
+                            opacity: 1;
+                            transform: translate(-50%, -50%) scale(1);
+                        }
+                        100% {
+                            opacity: 0;
+                            transform: translate(-50%, -100px) scale(1.5);
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            setTimeout(() => {
+                pointsElement.remove();
+            }, 2000);
+        }
+        
+        // ====== الإحصائيات ======
+        function getUserStats() {
+            const stats = {
+                totalPoints: userPoints,
+                currentLevel: userLevel,
+                levelProgress: levelProgress,
+                nextLevelPoints: userLevel === 'مبتدئ' ? 100 - userPoints : 
+                                userLevel === 'نشط' ? 500 - userPoints : 
+                                userLevel === 'محترف' ? 1000 - userPoints : 0,
+                rewardsRedeemed: JSON.parse(localStorage.getItem('user_rewards') || '[]').length
+            };
+            
+            console.log('📊 إحصائيات المستخدم:', stats);
+            return stats;
+        }
+        
+        // ====== التصدير والاستيراد ======
+        function exportPointsData() {
+            const data = {
+                points: userPoints,
+                level: userLevel,
+                rewards: JSON.parse(localStorage.getItem('user_rewards') || '[]'),
+                exportDate: new Date().toISOString(),
+                developer: DEVELOPER_INFO
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `نقاط-مرشد-المزارع-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            showNotification('📤 تم تصدير بيانات النقاط بنجاح');
+        }
+        
+        // رسالة ترحيبية
+        setTimeout(() => {
+            console.log('💰 نظام النقاط جاهز!');
+            console.log('👤 المستخدم:', userPoints, 'نقطة');
+            console.log('📈 المستوى:', userLevel);
+            console.log('👨‍💻 المطور:', DEVELOPER_INFO.name);
+        }, 1500);
+    </script>
+</body>
+</html>

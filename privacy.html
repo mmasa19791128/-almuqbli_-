@@ -3,667 +3,1183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سياسة الخصوصية - المرشد الزراعي الذكي</title>
     
-    <!-- نفس مكتبات التطبيق الرئيسي -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
-          crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap&subset=arabic" 
-          rel="stylesheet" crossorigin="anonymous">
+    <!-- ====== ✅ المعلومات الحقيقية ====== -->
+    <title>سياسة الخصوصية - مرشد المزارع الذكي</title>
+    <meta name="description" content="سياسة خصوصية كاملة لتطبيق مرشد المزارع الذكي - تطبيق زراعي ذكي للمزارعين العرب">
+    <meta name="author" content="محمد مقبل عبدالله سيف">
+    <meta name="location" content="اليمن - تعز - ماوية - ذراح">
+    <meta name="email" content="mmasa197911282017@gmail.com">
+    <meta name="phone" content="+967734750438">
     
-    <!-- أنماط خاصة بصفحة الخصوصية -->
     <style>
-        /* إعادة استخدام متغيرات التطبيق الرئيسي */
-        :root {
-            --primary-color: #2E7D32;
-            --secondary-color: #4CAF50;
-            --accent-color: #FF9800;
-            --text-color: #333;
-            --bg-color: #f5f5f5;
-            --card-bg: #ffffff;
-            --warning-bg: #FFF3CD;
-            --warning-border: #FFC107;
-            --info-bg: #E8F5E9;
+        /* تصميم صفحة الخصوصية */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Tajawal', sans-serif;
-            background: var(--bg-color);
-            margin: 0;
-            padding: 20px;
-            color: var(--text-color);
+            font-family: 'Tajawal', 'Arial', sans-serif;
             line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #f5f5f5, #e8f5e9);
+            min-height: 100vh;
+            padding: 20px;
         }
         
-        /* رأس الصفحة */
-        .page-header {
-            text-align: center;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: 15px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+            overflow: hidden;
+        }
+        
+        /* الهيدر */
+        .privacy-header {
+            background: linear-gradient(135deg, #1B5E20, #2E7D32, #4CAF50);
             color: white;
-            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.2);
+            padding: 70px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        .page-header h1 {
-            margin: 0 0 0.5rem 0;
-            font-size: 2.2rem;
+        .privacy-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .privacy-icon {
+            font-size: 90px;
+            margin-bottom: 25px;
+            animation: shield 3s ease-in-out infinite;
+        }
+        
+        @keyframes shield {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .privacy-header h1 {
+            font-size: 52px;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .privacy-header .tagline {
+            font-size: 22px;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* محتوى السياسة */
+        .privacy-content {
+            padding: 60px;
+        }
+        
+        .section {
+            margin-bottom: 70px;
+            padding: 45px;
+            background: #fafafa;
+            border-radius: 25px;
+            border-right: 6px solid #2E7D32;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #2E7D32, #4CAF50);
+        }
+        
+        .section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+        
+        .section h2 {
+            color: #1B5E20;
+            font-size: 38px;
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 4px solid #C8E6C9;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .section h2 i {
+            background: #2E7D32;
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .section h3 {
+            color: #2E7D32;
+            font-size: 30px;
+            margin: 40px 0 25px;
+            padding-right: 25px;
+            border-right: 5px solid #4CAF50;
+        }
+        
+        .section h4 {
+            color: #1B5E20;
+            font-size: 24px;
+            margin: 30px 0 20px;
+            padding-right: 20px;
+        }
+        
+        .section p {
+            margin-bottom: 30px;
+            text-align: justify;
+            line-height: 2;
+            font-size: 19px;
+            color: #444;
+        }
+        
+        .section ul, .section ol {
+            margin: 30px 0 30px 50px;
+        }
+        
+        .section li {
+            margin-bottom: 20px;
+            line-height: 1.9;
+            padding-right: 20px;
+            position: relative;
+            font-size: 18px;
+        }
+        
+        .section li::before {
+            content: '';
+            position: absolute;
+            right: -25px;
+            top: 14px;
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        /* البطاقات المعلوماتية */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin: 50px 0;
+        }
+        
+        .info-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 6px solid;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1));
+            z-index: 0;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        
+        .info-card.primary {
+            border-top-color: #2E7D32;
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+        }
+        
+        .info-card.secondary {
+            border-top-color: #2196F3;
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+        }
+        
+        .info-card.tertiary {
+            border-top-color: #FF9800;
+            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+        }
+        
+        .info-card.warning {
+            border-top-color: #F44336;
+            background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+        }
+        
+        .info-card h4 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
             gap: 15px;
+            position: relative;
+            z-index: 1;
         }
         
-        .page-header p {
-            margin: 0;
-            opacity: 0.95;
+        /* الجداول */
+        .privacy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 40px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
-        /* الحاوية الرئيسية */
-        .privacy-container {
+        .privacy-table th {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            color: white;
+            padding: 25px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 20px;
+            border-bottom: 3px solid #1B5E20;
+        }
+        
+        .privacy-table td {
+            padding: 25px;
+            border-bottom: 2px solid #f0f0f0;
+            text-align: right;
+            font-size: 18px;
+        }
+        
+        .privacy-table tr:hover {
+            background: #F1F8E9;
+        }
+        
+        .privacy-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* علامات البيانات */
+        .data-tag {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+        
+        .tag-optional {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        
+        .tag-required {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .tag-local {
+            background: #F3E5F5;
+            color: #7B1FA2;
+        }
+        
+        .tag-external {
+            background: #FFF3E0;
+            color: #EF6C00;
+        }
+        
+        /* قسم التوثيق */
+        .verification-section {
+            background: linear-gradient(135deg, #FFFDE7, #FFF9C4);
+            padding: 45px;
+            border-radius: 25px;
+            margin: 50px 0;
+            border: 3px solid #FFD600;
+            text-align: center;
+        }
+        
+        .verification-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 35px;
+        }
+        
+        .verification-item {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        /* قسم المطور */
+        .developer-section {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 25px;
+            margin: 70px 0;
+            text-align: center;
+        }
+        
+        .developer-info {
             max-width: 900px;
             margin: 0 auto;
         }
         
-        /* أقسام السياسة */
-        .privacy-section {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
-        }
-        
-        .privacy-section:hover {
-            transform: translateY(-3px);
-        }
-        
-        .section-title {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--secondary-color);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.6rem;
-        }
-        
-        .section-title i {
-            color: var(--accent-color);
-        }
-        
-        /* قوائم السياسة */
-        .privacy-list {
-            padding-right: 2rem;
-            margin: 1rem 0;
-        }
-        
-        .privacy-list ul {
-            padding-right: 1.5rem;
-            margin: 0.5rem 0;
-        }
-        
-        .privacy-list li {
-            margin-bottom: 0.5rem;
-            padding: 0.25rem 0;
-        }
-        
-        .privacy-list strong {
-            color: var(--primary-color);
-            display: block;
-            margin-top: 1rem;
-        }
-        
-        /* ملاحظات مهمة */
-        .important-note {
-            background: var(--warning-bg);
-            border-right: 4px solid var(--warning-border);
-            padding: 1.2rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-        }
-        
-        .important-note strong {
-            color: #856404;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 0.5rem;
-        }
-        
-        /* صندوق الاتصال */
-        .contact-box {
-            background: var(--info-bg);
-            padding: 1.8rem;
-            border-radius: 12px;
-            margin: 1.5rem 0;
-        }
-        
-        .contact-info {
-            margin: 1rem 0;
-        }
-        
-        .contact-item {
-            padding: 0.8rem 1rem;
-            margin-bottom: 0.8rem;
+        .developer-avatar {
+            width: 140px;
+            height: 140px;
             background: white;
-            border-radius: 8px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            font-size: 60px;
+            color: #2E7D32;
+            border: 6px solid #FFD700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
         
-        .contact-item i {
-            color: var(--primary-color);
-            width: 24px;
+        .developer-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .developer-detail {
+            background: rgba(255,255,255,0.15);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .developer-detail i {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+        
+        /* الفوتر */
+        .privacy-footer {
+            background: #1B5E20;
+            color: white;
+            padding: 60px 40px;
             text-align: center;
         }
         
-        /* العلم اليمني */
-        .yemen-flag {
-            display: inline-block;
-            margin-left: 8px;
-            font-size: 1.2rem;
-            vertical-align: middle;
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
         }
         
-        /* الروابط */
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        a:hover {
-            color: var(--secondary-color);
-            text-decoration: underline;
-        }
-        
-        /* أزرار التنقل */
-        .navigation-buttons {
+        .footer-links {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            margin: 3rem 0;
+            gap: 40px;
+            margin: 40px 0;
             flex-wrap: wrap;
         }
         
-        .action-btn {
-            display: inline-flex;
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.12);
+            transition: all 0.4s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .copyright {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.85);
+            font-size: 17px;
+        }
+        
+        /* زر العودة */
+        .back-btn {
+            position: fixed;
+            bottom: 50px;
+            left: 50px;
+            background: #2E7D32;
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 12px;
+            font-size: 32px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            min-width: 200px;
-            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+            z-index: 1000;
+            transition: all 0.4s;
         }
         
-        .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(46, 125, 50, 0.4);
-            background: linear-gradient(135deg, #1B5E20, #2E7D32);
-            text-decoration: none;
+        .back-btn:hover {
+            background: #1B5E20;
+            transform: scale(1.15) rotate(10deg);
         }
         
-        .action-btn i {
-            font-size: 1.2rem;
+        /* تأثيرات التمرير */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s, transform 1s;
         }
         
-        /* تذييل الصفحة */
-        .page-footer {
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* اقتباسات */
+        .privacy-quote {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 50px 0;
+            border-right: 6px solid #2196F3;
             text-align: center;
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid #ddd;
-            color: #666;
-            font-size: 0.95rem;
-        }
-        
-        .page-footer p {
-            margin: 0.5rem 0;
-        }
-        
-        /* تنسيق قسم AdMob بشكل خاص */
-        .admob-section {
-            border: 2px solid #FF9800;
+            font-style: italic;
+            font-size: 22px;
+            color: #1565C0;
             position: relative;
         }
         
-        .admob-section .section-title {
-            color: #FF9800;
-        }
-        
-        .admob-badge {
+        .privacy-quote::before, .privacy-quote::after {
+            content: '"';
+            font-size: 60px;
+            color: #2196F3;
             position: absolute;
-            top: -12px;
-            left: 20px;
-            background: #FF9800;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
+            opacity: 0.3;
         }
         
-        /* تأثيرات متحركة */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .privacy-quote::before {
+            top: 10px;
+            right: 30px;
         }
         
-        .privacy-section {
-            animation: fadeInUp 0.6s ease forwards;
+        .privacy-quote::after {
+            bottom: 10px;
+            left: 30px;
         }
         
-        .privacy-section:nth-child(2) { animation-delay: 0.1s; }
-        .privacy-section:nth-child(3) { animation-delay: 0.2s; }
-        .privacy-section:nth-child(4) { animation-delay: 0.3s; }
-        .privacy-section:nth-child(5) { animation-delay: 0.4s; }
-        .privacy-section:nth-child(6) { animation-delay: 0.5s; }
-        .privacy-section:nth-child(7) { animation-delay: 0.6s; }
-        .privacy-section:nth-child(8) { animation-delay: 0.7s; }
-        .privacy-section:nth-child(9) { animation-delay: 0.8s; }
-        .privacy-section:nth-child(10) { animation-delay: 0.9s; }
-        .privacy-section:nth-child(11) { animation-delay: 1.0s; }
-        .privacy-section:nth-child(12) { animation-delay: 1.1s; }
-        .privacy-section:nth-child(13) { animation-delay: 1.2s; }
-        
-        /* تحسينات للهواتف */
+        /* التكيف مع الجوال */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
+            .privacy-header {
+                padding: 40px 20px;
             }
             
-            .page-header {
-                padding: 1.5rem;
+            .privacy-header h1 {
+                font-size: 38px;
             }
             
-            .page-header h1 {
-                font-size: 1.8rem;
+            .privacy-content {
+                padding: 25px;
+            }
+            
+            .section {
+                padding: 30px;
+            }
+            
+            .section h2 {
+                font-size: 30px;
                 flex-direction: column;
-                gap: 10px;
+                text-align: center;
+                gap: 20px;
             }
             
-            .privacy-section {
-                padding: 1.5rem;
+            .section h2 i {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
             }
             
-            .section-title {
-                font-size: 1.4rem;
+            .info-cards {
+                grid-template-columns: 1fr;
             }
             
-            .privacy-list {
-                padding-right: 1rem;
-            }
-            
-            .navigation-buttons {
+            .footer-links {
                 flex-direction: column;
                 align-items: center;
+                gap: 20px;
             }
             
-            .action-btn {
-                width: 100%;
-                max-width: 300px;
+            .back-btn {
+                bottom: 25px;
+                left: 25px;
+                width: 65px;
+                height: 65px;
+                font-size: 26px;
             }
             
-            .contact-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
+            .privacy-table {
+                display: block;
+                overflow-x: auto;
             }
         }
         
-        @media (max-width: 480px) {
-            .page-header h1 {
-                font-size: 1.6rem;
-            }
-            
-            .section-title {
-                font-size: 1.3rem;
-            }
-            
-            .action-btn {
-                padding: 0.9rem 1.5rem;
-                font-size: 1rem;
-            }
-            
-            .admob-badge {
-                left: 10px;
-                font-size: 0.8rem;
-            }
+        /* قسم التواريخ */
+        .dates-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+            border: 2px dashed #4CAF50;
         }
         
-        /* تنسيق النصوص العربية */
-        h1, h2, h3, p, li, span, a {
-            text-align: right;
-            letter-spacing: normal;
-            line-height: 1.6;
+        .dates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        
+        .date-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
     </style>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- رأس الصفحة -->
-    <header class="page-header">
-        <h1>
-            <i class="fas fa-shield-alt"></i>
-            سياسة الخصوصية
-        </h1>
-        <p>آخر تحديث: يناير 2026</p>
-    </header>
+    <!-- زر العودة -->
+    <a href="../index.html" class="back-btn" title="العودة للرئيسية">
+        <i class="fas fa-home"></i>
+    </a>
     
-    <!-- المحتوى الرئيسي -->
-    <div class="privacy-container">
-        <!-- ملاحظة مهمة -->
-        <div class="important-note">
-            <strong>
-                <i class="fas fa-exclamation-triangle"></i>
-                ملاحظة مهمة
-            </strong>
-            <p>هذا التطبيق يستخدم Google AdMob للإعلانات. يرجى قراءة قسم "إعلانات AdMob" بعناية.</p>
-        </div>
-        
-        <!-- مقدمة -->
-        <div class="privacy-section">
-            <h2 class="section-title">مقدمة</h2>
-            <p>نرحب بك في تطبيق "المرشد الزراعي الذكي". نحن نعمل على حماية خصوصيتك ونقدم هذه السياسة لشرح كيفية جمع واستخدام وحماية معلوماتك الشخصية.</p>
-            <p>باستخدامك لهذا التطبيق، فإنك توافق على شروط سياسة الخصوصية هذه.</p>
-        </div>
-        
-        <!-- المعلومات التي نجمعها -->
-        <div class="privacy-section">
-            <h2 class="section-title">المعلومات التي نجمعها</h2>
-            <div class="privacy-list">
-                <strong>1. المعلومات التي تقدمها لنا:</strong>
-                <ul>
-                    <li>استفساراتك وأسئلتك الزراعية</li>
-                    <li>الصور التي ترفعها للتشخيص (تخزن محلياً فقط)</li>
-                    <li>بيانات تحليل التربة التي تدخلها</li>
-                    <li>البريد الإلكتروني للتواصل (اختياري)</li>
-                </ul>
-                
-                <strong>2. المعلومات التي نجمعها تلقائياً:</strong>
-                <ul>
-                    <li>بيانات الاستخدام والتطبيق (لتحسين الخدمة)</li>
-                    <li>نوع الجهاز ونظام التشغيل والمتصفح</li>
-                    <li>معلومات الاتصال بالإنترنت (للعمل دون اتصال)</li>
-                    <li>إحصائيات استخدام الميزات المختلفة</li>
-                </ul>
+    <div class="container">
+        <!-- الهيدر -->
+        <header class="privacy-header">
+            <div class="header-content">
+                <div class="privacy-icon">🛡️</div>
+                <h1>سياسة الخصوصية</h1>
+                <p class="tagline">مرشد المزارع الذكي - نحمي خصوصيتك ونحترم بياناتك</p>
             </div>
-        </div>
+        </header>
         
-        <!-- كيف نستخدم معلوماتك -->
-        <div class="privacy-section">
-            <h2 class="section-title">كيف نستخدم معلوماتك</h2>
-            <ul class="privacy-list">
-                <li>تقديم خدمات التشخيص والتحليل الزراعي</li>
-                <li>تحسين وتطوير التطبيق وخدماته</li>
-                <li>تخصيص تجربة المستخدم واقتراح محتوى مناسب</li>
-                <li>إرسال تحديثات وإشعارات مهمة عن التطبيق</li>
-                <li>تحليل استخدام التطبيق لأغراض البحث والتطوير</li>
-                <li>إدارة نظام النقاط والمكافآت داخل التطبيق</li>
-                <li>عرض إعلانات مخصصة ومتوافقة مع اهتماماتك</li>
-            </ul>
-        </div>
-        
-        <!-- التخزين والحماية -->
-        <div class="privacy-section">
-            <h2 class="section-title">التخزين والحماية</h2>
-            <ul class="privacy-list">
-                <li>جميع البيانات الشخصية مشفرة باستخدام نظام تشفير متقدم</li>
-                <li>البيانات المخزنة محلياً على جهازك فقط (لا ترفع لخوادمنا)</li>
-                <li>لا نشارك بياناتك الشخصية مع أطراف ثالثة إلا كما هو موضح في سياسة AdMob</li>
-                <li>نستخدم تقنيات أمان متقدمة لحماية بياناتك من الوصول غير المصرح به</li>
-                <li>يمكنك حذف جميع بيانات التطبيق من خلال إعدادات الجهاز</li>
-            </ul>
-        </div>
-        
-        <!-- إعلانات Google AdMob -->
-        <div class="privacy-section admob-section">
-            <div class="admob-badge">AdMob</div>
-            <h2 class="section-title">
-                <i class="fas fa-ad"></i>
-                إعلانات Google AdMob
-            </h2>
+        <!-- المحتوى الرئيسي -->
+        <main class="privacy-content">
+            <!-- مقدمة -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-shield-alt"></i> مقدمة وسياسة الخصوصية</h2>
+                <p>مرحباً بك في سياسة خصوصية تطبيق <strong>"مرشد المزارع الذكي"</strong>. نحن ندرك أهمية خصوصيتك ونلتزم بحماية بياناتك الشخصية. تشرح هذه السياسة كيفية جمع معلوماتك واستخدامها والإفصاح عنها في تطبيقنا.</p>
+                
+                <div class="privacy-quote">
+                    "خصوصيتك ليست منتجاً للبيع، إنها حق أساسي نحميه بكل قوة"
+                </div>
+                
+                <div class="info-cards">
+                    <div class="info-card primary">
+                        <h4><i class="fas fa-lock"></i> مبدأنا الأساسي</h4>
+                        <p>لا نجمع أي بيانات شخصية من المستخدمين. جميع البيانات مخزنة محلياً على جهازك فقط.</p>
+                    </div>
+                    
+                    <div class="info-card secondary">
+                        <h4><i class="fas fa-user-shield"></i> شفافية كاملة</h4>
+                        <p>نقدم تفاصيل كاملة عن جميع أنواع البيانات ومعالجتها. لا يوجد شيء مخفي.</p>
+                    </div>
+                    
+                    <div class="info-card tertiary">
+                        <h4><i class="fas fa-handshake"></i> ثقتك غالية</h4>
+                        <p>ثقتك هي أهم ما نملك. نعمل بكل جهد للحفاظ عليها وحماية خصوصيتك.</p>
+                    </div>
+                </div>
+            </section>
             
-            <p>يستخدم هذا التطبيق <strong>Google AdMob</strong> لعرض الإعلانات. AdMob هي خدمة إعلانية مقدمة من Google.</p>
+            <!-- تعريفات -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-book"></i> تعريفات هامة</h2>
+                
+                <table class="privacy-table">
+                    <thead>
+                        <tr>
+                            <th>المصطلح</th>
+                            <th>التعريف</th>
+                            <th>الأمثلة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>البيانات الشخصية</td>
+                            <td>أي معلومات يمكن تحديد هوية الفرد من خلالها</td>
+                            <td>الاسم، البريد، الهاتف، العنوان</td>
+                        </tr>
+                        <tr>
+                            <td>البيانات التطبيقية</td>
+                            <td>بيانات يتم إنشاؤها وتخزينها داخل التطبيق</td>
+                            <td>النقاط، الإعدادات، التقارير المحفوظة</td>
+                        </tr>
+                        <tr>
+                            <td>التخزين المحلي</td>
+                            <td>تخزين البيانات على جهاز المستخدم فقط</td>
+                            <td>LocalStorage, IndexedDB, Cache</td>
+                        </tr>
+                        <tr>
+                            <td>بيانات الإعلانات</td>
+                            <td>بيانات مجهولة تجمعها منصات الإعلانات</td>
+                            <td>معرف الجهاز، نوع المتصفح، الموقع العام</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
             
-            <div class="important-note">
-                <strong>معلومات مهمة عن AdMob:</strong>
-            </div>
+            <!-- البيانات التي نجمعها -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-database"></i> البيانات التي نجمعها</h2>
+                
+                <div class="info-card warning" style="margin: 30px 0;">
+                    <h4><i class="fas fa-exclamation-triangle"></i> تأكيد هام</h4>
+                    <p><strong>لا نجمع أي بيانات شخصية على الإطلاق.</strong> جميع البيانات المذكورة أدناه هي بيانات تطبيقية محلية فقط.</p>
+                </div>
+                
+                <h3><i class="fas fa-mobile-alt"></i> أنواع البيانات المخزنة محلياً</h3>
+                
+                <table class="privacy-table">
+                    <thead>
+                        <tr>
+                            <th>نوع البيانات</th>
+                            <th>الوصف</th>
+                            <th>مكان التخزين</th>
+                            <th>النوع</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>نقاط التطبيق</td>
+                            <td>نظام النقاط والمكافآت داخل التطبيق</td>
+                            <td>LocalStorage</td>
+                            <td><span class="data-tag tag-optional">اختياري</span></td>
+                        </tr>
+                        <tr>
+                            <td>الإعدادات</td>
+                            <td>إعدادات المستخدم (اللغة، الوضع الداكن، الخ)</td>
+                            <td>LocalStorage</td>
+                            <td><span class="data-tag tag-optional">اختياري</span></td>
+                        </tr>
+                        <tr>
+                            <td>التقارير المحفوظة</td>
+                            <td>تقارير التشخيص وتحليل التربة</td>
+                            <td>IndexedDB</td>
+                            <td><span class="data-tag tag-optional">اختياري</span></td>
+                        </tr>
+                        <tr>
+                            <td>بيانات الكاش</td>
+                            <td>ملفات التطبيق المخزنة للعمل بدون إنترنت</td>
+                            <td>Cache Storage</td>
+                            <td><span class="data-tag tag-required">مطلوب</span></td>
+                        </tr>
+                        <tr>
+                            <td>بيانات الجلسة</td>
+                            <td>بيانات مؤقتة أثناء استخدام التطبيق</td>
+                            <td>SessionStorage</td>
+                            <td><span class="data-tag tag-required">مؤقت</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3><i class="fas fa-ban"></i> البيانات التي لا نجمعها أبداً</h3>
+                <ul>
+                    <li><strong>لا</strong> نطلب أو نخزن أسماء المستخدمين</li>
+                    <li><strong>لا</strong> نطلب أو نخزن عناوين البريد الإلكتروني</li>
+                    <li><strong>لا</strong> نطلب أو نخزن أرقام الهواتف</li>
+                    <li><strong>لا</strong> نطلب أو نخزن عناوين المنازل</li>
+                    <li><strong>لا</strong> نطلب أو نخزن صور المستخدمين</li>
+                    <li><strong>لا</strong> نطلب أو نخزن مواقع GPS</li>
+                    <li><strong>لا</strong> نطلب أو نخزن بيانات الاتصال</li>
+                    <li><strong>لا</strong> نطلب أو نخزن أي معلومات شخصية</li>
+                </ul>
+            </section>
             
-            <div class="privacy-list">
-                <strong>ما المعلومات التي يجمعها AdMob؟</strong>
-                <ul>
-                    <li><strong>معرف الجهاز الفريد</strong> (Device ID)</li>
-                    <li><strong>نوع الجهاز</strong> والموديل ونظام التشغيل</li>
-                    <li><strong>معرف الإعلان</strong> (Advertising ID)</li>
-                    <li><strong>الاهتمامات</strong> بناءً على نشاط التصفح والتطبيقات</li>
-                    <li><strong>الموقع التقريبي</strong> (عند السماح فقط)</li>
-                    <li><strong>بيانات الاستخدام</strong> في التطبيق</li>
-                    <li><strong>تفاعلات الإعلانات</strong> (مشاهدات، نقرات)</li>
-                </ul>
+            <!-- كيف نستخدم بياناتك -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-cogs"></i> كيف نستخدم بياناتك</h2>
                 
-                <strong>لماذا نستخدم AdMob؟</strong>
-                <ul>
-                    <li>لتمويل التطبيق والحفاظ عليه مجانياً للمستخدمين</li>
-                    <li>لتقديم إعلانات ذات صلة باهتمامات المستخدمين</li>
-                    <li>لتطوير وتحسين التطبيق باستمرار</li>
-                    <li>لتمويل نظام النقاط والمكافآت داخل التطبيق</li>
-                </ul>
+                <h3><i class="fas fa-tasks"></i> أغراض الاستخدام</h3>
+                <p>نستخدم البيانات المحلية فقط للأغراض التالية:</p>
                 
-                <strong>كيفية إدارة إعلانات AdMob:</strong>
-                <ul>
-                    <li>يمكنك إدارة تخصيص الإعلانات من خلال <a href="https://adssettings.google.com" target="_blank">إعدادات إعلانات Google</a></li>
-                    <li>يمكنك إعادة تعيين معرف الإعلان من إعدادات جهازك</li>
-                    <li>يمكنك تعطيل الإعلانات المخصصة من خلال إعدادات التطبيق</li>
-                    <li>لإلغاء الاشتراك من إعلانات AdMob، توقف عن استخدام التطبيق</li>
-                </ul>
-                
-                <strong>روابط مهمة:</strong>
-                <ul>
-                    <li><a href="https://policies.google.com/privacy" target="_blank">سياسة خصوصية Google</a></li>
-                    <li><a href="https://policies.google.com/technologies/ads" target="_blank">كيف تستخدم Google الإعلانات</a></li>
-                    <li><a href="https://support.google.com/admob" target="_blank">دعم AdMob</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- نظام النقاط والمكافآت -->
-        <div class="privacy-section">
-            <h2 class="section-title">نظام النقاط والمكافآت</h2>
-            <p>يحتوي التطبيق على نظام نقاط يمكنك كسبه من خلال:</p>
-            <ul class="privacy-list">
-                <li>مشاهدة الإعلانات المكتملة</li>
-                <li>إكمال المهام اليومية</li>
-                <li>استخدام ميزات التطبيق المختلفة</li>
-            </ul>
-            <p><strong>ملاحظة:</strong> النقاط تخزن محلياً على جهازك وترتبط بمعرف الجهاز.</p>
-        </div>
-        
-        <!-- ملفات تعريف الارتباط -->
-        <div class="privacy-section">
-            <h2 class="section-title">ملفات تعريف الارCookie والتقنيات المماثلة</h2>
-            <p>نستخدم ملفات تعريف الارCookie والتقنيات المماثلة ل:</p>
-            <ul class="privacy-list">
-                <li>تذكر تفضيلاتك وإعداداتك</li>
-                <li>تحسين تجربة المستخدم والأداء</li>
-                <li>تحليل استخدام التطبيق</li>
-                <li>تخصيص الإعلانات (من خلال AdMob)</li>
-            </ul>
-            <p>يمكنك تعطيل ملفات تعريف الارCookie من خلال إعدادات المتصفح، لكن هذا قد يؤثر على بعض وظائف التطبيق.</p>
-        </div>
-        
-        <!-- حقوق المستخدم -->
-        <div class="privacy-section">
-            <h2 class="section-title">حقوقك كمستخدم</h2>
-            <ul class="privacy-list">
-                <li><strong>الحق في الوصول:</strong> يمكنك معرفة البيانات التي نجمعها عنك</li>
-                <li><strong>الحق في التصحيح:</strong> يمكنك طلب تصحيح أي بيانات غير دقيقة</li>
-                <li><strong>الحق في الحذف:</strong> يمكنك حذف بياناتك الشخصية من جهازك</li>
-                <li><strong>الحق في الاعتراض:</strong> يمكنك الاعتراض على معالجة بياناتك للإعلانات</li>
-                <li><strong>الحق في التنقل:</strong> يمكنك نقل بياناتك بين الأجهزة</li>
-                <li><strong>الحق في الشكوى:</strong> يمكنك تقديم شكوى للجهات التنظيمية</li>
-            </ul>
-        </div>
-        
-        <!-- البيانات التي لا نجمعها -->
-        <div class="privacy-section">
-            <h2 class="section-title">البيانات التي لا نجمعها</h2>
-            <p>نؤكد أننا <strong>لا نجمع</strong>:</p>
-            <ul class="privacy-list">
-                <li>أرقام الهواتف (ما لم تقدمها للتواصل)</li>
-                <li>عنوان المنزل أو العمل الدقيق</li>
-                <li>البيانات المالية أو البنكية</li>
-                <li>بيانات الهوية الرسمية</li>
-                <li>بيانات الأطفال (التطبيق للمستخدمين فوق 13 سنة)</li>
-            </ul>
-        </div>
-        
-        <!-- تغييرات سياسة الخصوصية -->
-        <div class="privacy-section">
-            <h2 class="section-title">تغييرات سياسة الخصوصية</h2>
-            <p>قد نقوم بتحديث هذه السياسة من وقت لآخر. عند إجراء تغييرات جوهرية:</p>
-            <ul class="privacy-list">
-                <li>سنقوم بتحديث تاريخ "آخر تحديث" في أعلى الصفحة</li>
-                <li>سنقوم بإعلامك عبر إشعار داخل التطبيق</li>
-                <li>سنطلب موافقتك مرة أخرى إذا كانت التغييرات جوهرية</li>
-                <li>يمكنك دائماً مراجعة النسخة الحالية من هذه الصفحة</li>
-            </ul>
-        </div>
-        
-        <!-- التوافق مع القوانين -->
-        <div class="privacy-section">
-            <h2 class="section-title">التوافق مع القوانين</h2>
-            <p>نحن نلتزم بما يلي:</p>
-            <ul class="privacy-list">
-                <li>اللوائح العامة لحماية البيانات (GDPR) للاتحاد الأوروبي</li>
-                <li>قوانين حماية البيانات الشخصية في الجمهورية اليمنية</li>
-                <li>سياسات متجر Google Play و Apple App Store</li>
-                <li>شروط خدمة Google AdMob</li>
-            </ul>
-        </div>
-        
-        <!-- اتصل بنا -->
-        <div class="privacy-section">
-            <h2 class="section-title">
-                <i class="fas fa-headset"></i>
-                اتصل بنا
-            </h2>
-            <div class="contact-box">
-                <p>إذا كان لديك أي أسئلة أو استفسارات حول سياسة الخصوصية، يمكنك الاتصال بنا من خلال:</p>
-                
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <strong>البريد الإلكتروني للخصوصية:</strong>
-                            <div>privacy@agriculture-guide.com</div>
-                        </div>
+                <div class="info-cards">
+                    <div class="info-card primary">
+                        <h4><i class="fas fa-user-cog"></i> تحسين التجربة</h4>
+                        <p>حفظ إعداداتك المفضلة لتجربة استخدام أفضل وأسرع</p>
                     </div>
                     
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <strong>البريد الإلكتروني للدعم:</strong>
-                            <div>mmasa197911282017@gmail.com</div>
-                        </div>
+                    <div class="info-card secondary">
+                        <h4><i class="fas fa-wifi-slash"></i> العمل بدون إنترنت</h4>
+                        <p>تمكين التطبيق من العمل في المناطق النائية بدون اتصال</p>
                     </div>
                     
-                    <div class="contact-item">
-                        <i class="fab fa-whatsapp"></i>
-                        <div>
-                            <strong>واتساب الدعم:</strong>
-                            <div>+967 734 750 438</div>
-                        </div>
+                    <div class="info-card tertiary">
+                        <h4><i class="fas fa-trophy"></i> نظام النقاط</h4>
+                        <p>تتبع النقاط والمكافآت والأنشطة داخل التطبيق</p>
                     </div>
+                </div>
+                
+                <div class="privacy-quote">
+                    "كل ما نريده هو تجربة زراعية أفضل لك، لا بياناتك الشخصية"
+                </div>
+                
+                <h3><i class="fas fa-server"></i> أين يتم معالجة بياناتك؟</h3>
+                <ul>
+                    <li><strong>100% على جهازك:</strong> جميع البيانات تعالج على جهازك الشخصي</li>
+                    <li><strong>لا توجد خوادم خارجية:</strong> لا نرسل أي بيانات إلى أي مكان</li>
+                    <li><strong>تشفير محلي:</strong> البيانات مشفرة على جهازك فقط</li>
+                    <li><strong>تحكم كامل:</strong> يمكنك حذف جميع البيانات في أي وقت</li>
+                </ul>
+            </section>
+            
+            <!-- الإعلانات و AdMob -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-ad"></i> الإعلانات و AdMob</h2>
+                
+                <div class="verification-section">
+                    <h3><i class="fas fa-check-circle"></i> معلومات AdMob الحقيقية</h3>
+                    <p>يستخدم التطبيق خدمة Google AdMob للإعلانات مع الشفافية الكاملة:</p>
                     
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <strong>العنوان:</strong>
-                            <div>
-                                <span class="yemen-flag">🇾🇪</span>
-                                الجمهورية اليمنية - محافظة تعز - مديرية ماوية - ذراح
-                            </div>
+                    <div class="verification-grid">
+                        <div class="verification-item">
+                            <h4><i class="fas fa-id-card"></i> Publisher ID</h4>
+                            <p style="font-family: monospace; font-size: 16px;">pub-9866663686163267</p>
                         </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <strong>وقت الاستجابة:</strong>
-                            <div>خلال 48 ساعة عمل</div>
+                        
+                        <div class="verification-item">
+                            <h4><i class="fas fa-mobile-alt"></i> App ID</h4>
+                            <p style="font-family: monospace; font-size: 16px;">ca-app-pub-9866663686163267~8599429687</p>
+                        </div>
+                        
+                        <div class="verification-item">
+                            <h4><i class="fas fa-link"></i> ملف التحقق</h4>
+                            <p>app-ads.txt متوفر على الموقع</p>
                         </div>
                     </div>
                 </div>
                 
-                <p><strong>لطلبات حذف البيانات:</strong> يرجى إرسال طلب إلى البريد الإلكتروني مع ذكر معرف جهازك.</p>
+                <h3><i class="fas fa-user-secret"></i> بيانات الإعلانات</h3>
+                <p>قد تجمع Google بيانات مجهولة لتحسين الإعلانات، مثل:</p>
+                
+                <table class="privacy-table">
+                    <thead>
+                        <tr>
+                            <th>نوع البيانات</th>
+                            <th>الوصف</th>
+                            <th>مستوى الخصوصية</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>معرف الجهاز</td>
+                            <td>معرف مجهول للجهاز</td>
+                            <td><span class="data-tag tag-external">مجهول</span></td>
+                        </tr>
+                        <tr>
+                            <td>نوع الجهاز</td>
+                            <td>هاتف، تابلت، كمبيوتر</td>
+                            <td><span class="data-tag tag-external">مجهول</span></td>
+                        </tr>
+                        <tr>
+                            <td>الموقع العام</td>
+                            <td>البلد أو المنطقة (ليست الموقع الدقيق)</td>
+                            <td><span class="data-tag tag-external">مجهول</span></td>
+                        </tr>
+                        <tr>
+                            <td>اهتمامات الإعلانات</td>
+                            <td>فئات الإعلانات المناسبة</td>
+                            <td><span class="data-tag tag-external">مجهول</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info-card secondary" style="margin: 30px 0;">
+                    <h4><i class="fas fa-info-circle"></i> معلومات هامة</h4>
+                    <p>يمكنك إدارة إعدادات الإعلانات الشخصية من خلال <a href="https://adssettings.google.com" style="color: #2196F3; font-weight: bold;">إعدادات إعلانات Google</a>. البيانات التي تجمعها Google لا يمكن ربطها بهويتك الشخصية.</p>
+                </div>
+            </section>
+            
+            <!-- حماية البيانات -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-shield-virus"></i> حماية البيانات</h2>
+                
+                <h3><i class="fas fa-lock"></i> تدابير الحماية</h3>
+                <p>نتخذ تدابير متعددة لحماية بياناتك:</p>
+                
+                <div class="info-cards">
+                    <div class="info-card primary">
+                        <h4><i class="fas fa-key"></i> التشفير المحلي</h4>
+                        <p>جميع البيانات المخزنة محلياً مشفرة باستخدام تقنيات متقدمة</p>
+                    </div>
+                    
+                    <div class="info-card secondary">
+                        <h4><i class="fas fa-lock"></i> HTTPS كامل</h4>
+                        <p>جميع الاتصالات مشفرة باستخدام بروتوكول HTTPS الآمن</p>
+                    </div>
+                    
+                    <div class="info-card tertiary">
+                        <h4><i class="fas fa-user-check"></i> التحكم الكامل</h4>
+                        <p>لديك تحكم كامل في بياناتك ويمكن حذفها في أي وقت</p>
+                    </div>
+                </div>
+                
+                <h3><i class="fas fa-user-cog"></i> حقوق المستخدم</h3>
+                <ul>
+                    <li><strong>حق الحذف:</strong> يمكنك حذف جميع بيانات التطبيق من إعدادات المتصفح</li>
+                    <li><strong>حق الوصول:</strong> جميع بياناتك مخزنة على جهازك فقط يمكنك الوصول إليها</li>
+                    <li><strong>حق التصحيح:</strong> يمكنك تعديل إعداداتك في أي وقت</li>
+                    <li><strong>حق المعارضة:</strong> يمكنك رفض الأذونات والمتابعة في التطبيق</li>
+                    <li><strong>حق التنقل:</strong> يمكنك تصدير تقاريرك المحفوظة</li>
+                </ul>
+            </section>
+            
+            <!-- أذونات التطبيق -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-key"></i> أذونات التطبيق</h2>
+                
+                <table class="privacy-table">
+                    <thead>
+                        <tr>
+                            <th>الإذن</th>
+                            <th>الغرض</th>
+                            <th>الإلزامية</th>
+                            <th>معالجة البيانات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><i class="fas fa-camera"></i> الكاميرا</td>
+                            <td>تشخيص الأمراض وتحليل التربة</td>
+                            <td><span class="data-tag tag-optional">اختياري</span></td>
+                            <td>معالجة محلية فقط - لا يتم رفع الصور</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-wifi"></i> الإنترنت</td>
+                            <td>تحميل المحتوى والإعلانات</td>
+                            <td><span class="data-tag tag-optional">جزئي</span></td>
+                            <td>لعمل التطبيق بشكل كامل</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-hdd"></i> التخزين</td>
+                            <td>حفظ البيانات والتقارير</td>
+                            <td><span class="data-tag tag-optional">اختياري</span></td>
+                            <td>تخزين محلي فقط على جهازك</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-bell"></i> الإشعارات</td>
+                            <td>إرسال إشعارات مهمة</td>
+                            <td><span class="data-tag tag-optional">اختياري</span></td>
+                            <td>إشعارات تطبيقية فقط</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info-card primary" style="margin: 30px 0;">
+                    <h4><i class="fas fa-camera"></i> ملاحظة هامة عن الكاميرا</h4>
+                    <p>جميع الصور التي تلتقطها بالكاميرا <strong>تتم معالجتها على جهازك فقط ولا يتم إرسالها إلى أي مكان</strong>. يمكنك استخدام التطبيق بدون منح أذونات الكاميرا.</p>
+                </div>
+            </section>
+            
+            <!-- ملفات الكوكيز -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-cookie-bite"></i> ملفات الكوكيز والتخزين المحلي</h2>
+                
+                <p>يستخدم التطبيق تقنيات تخزين محلية مشابهة للكوكيز:</p>
+                
+                <div class="info-cards">
+                    <div class="info-card secondary">
+                        <h4><i class="fas fa-database"></i> LocalStorage</h4>
+                        <p>لتخزين الإعدادات والنقاط والتفضيلات الشخصية</p>
+                    </div>
+                    
+                    <div class="info-card tertiary">
+                        <h4><i class="fas fa-database"></i> IndexedDB</h4>
+                        <p>لتخزين التقارير والبيانات الكبيرة</p>
+                    </div>
+                    
+                    <div class="info-card primary">
+                        <h4><i class="fas fa-database"></i> Cache Storage</h4>
+                        <p>لتخزين الملفات للعمل بدون إنترنت</p>
+                    </div>
+                </div>
+                
+                <h3><i class="fas fa-trash-alt"></i> كيفية الحذف</h3>
+                <p>يمكنك حذف جميع هذه البيانات من خلال:</p>
+                <ul>
+                    <li><strong>إعدادات المتصفح:</strong> مسح بيانات التصفح</li>
+                    <li><strong>إعدادات التطبيق:</strong> إعادة تعيين الإعدادات</li>
+                    <li><strong>أداة التطبيق:</strong> حذف جميع البيانات</li>
+                </ul>
+            </section>
+            
+            <!-- الخصوصية للأطفال -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-child"></i> الخصوصية للأطفال</h2>
+                
+                <div class="info-card tertiary" style="margin: 30px 0;">
+                    <h4><i class="fas fa-heart"></i> مناسب لجميع الأعمار</h4>
+                    <p>تطبيق "مرشد المزارع الذكي" <strong>مناسب وآمن لجميع الأعمار</strong> ولا يتطلب أي بيانات شخصية.</p>
+                </div>
+                
+                <h3><i class="fas fa-user-friends"></i> توصيات للوالدين</h3>
+                <ol>
+                    <li>يمكن للأطفال استخدام التطبيق بأمان تام</li>
+                    <li>لا يوجد محتوى غير مناسب للأطفال</li>
+                    <li>لا يوجد تفاعل اجتماعي أو دردشة مع الآخرين</li>
+                    <li>جميع المحتويات زراعية وتعليمية</li>
+                    <li>يمكن مراقبة استخدام التطبيق دون مخاوف</li>
+                </ol>
+            </section>
+            
+            <!-- التغييرات في السياسة -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-history"></i> التغييرات في سياسة الخصوصية</h2>
+                
+                <div class="dates-section">
+                    <h3><i class="fas fa-calendar-alt"></i> سجل التحديثات</h3>
+                    
+                    <div class="dates-grid">
+                        <div class="date-item">
+                            <h4><i class="fas fa-star"></i> الإصدار الأول</h4>
+                            <p>01 فبراير 2026</p>
+                        </div>
+                        
+                        <div class="date-item">
+                            <h4><i class="fas fa-sync-alt"></i> آخر تحديث</h4>
+                            <p>01 فبراير 2026</p>
+                        </div>
+                        
+                        <div class="date-item">
+                            <h4><i class="fas fa-calendar-check"></i> التحديث القادم</h4>
+                            <p>مارس 2026</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <p>قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر. وسنعلمك بأي تغييرات جوهرية عن طريق:</p>
+                <ul>
+                    <li>نشر السياسة المحدثة على هذه الصفحة</li>
+                    <li>إرسال إشعار داخل التطبيق (إذا كان ذلك مناسباً)</li>
+                    <li>تحديث تاريخ "آخر تحديث" في أسفل الصفحة</li>
+                    <li>تغيير رقم الإصدار في التطبيق</li>
+                </ul>
+            </section>
+            
+            <!-- قسم المطور -->
+            <section class="developer-section fade-in">
+                <h2 style="color: white; margin-bottom: 35px; font-size: 40px;">👨‍💻 معلومات المطور</h2>
+                
+                <div class="developer-info">
+                    <div class="developer-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    
+                    <h3 style="font-size: 36px; margin-bottom: 20px;">محمد مقبل عبدالله سيف</h3>
+                    <p style="opacity: 0.9; font-size: 22px; margin-bottom: 30px;">مطور ومبرمج تطبيق مرشد المزارع الذكي</p>
+                    
+                    <div class="developer-details">
+                        <div class="developer-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>اليمن - تعز - ماوية - ذراح</p>
+                        </div>
+                        
+                        <div class="developer-detail">
+                            <i class="fas fa-envelope"></i>
+                            <p>mmasa197911282017@gmail.com</p>
+                        </div>
+                        
+                        <div class="developer-detail">
+                            <i class="fas fa-phone"></i>
+                            <p>+967734750438</p>
+                        </div>
+                        
+                        <div class="developer-detail">
+                            <i class="fas fa-globe"></i>
+                            <p>Almoqblymmasas.netlify.app</p>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 45px; font-style: italic; opacity: 0.9; font-size: 20px; line-height: 1.8;">
+                        "طورت هذا التطبيق بكل حب لخدمة المزارعين العرب. خصوصيتك ليست مجرد سياسة، إنها وعد والتزام أخلاقي أحمله بكل فخر ومسؤولية."
+                    </p>
+                </div>
+            </section>
+            
+            <!-- معلومات قانونية -->
+            <section class="section fade-in">
+                <h2><i class="fas fa-gavel"></i> معلومات قانونية</h2>
+                
+                <h3><i class="fas fa-balance-scale"></i> الامتثال القانوني</h3>
+                <ul>
+                    <li><strong>اليمن:</strong> نلتزم بقوانين الجمهورية اليمنية</li>
+                    <li><strong>الدول العربية:</strong> نحترم قوانين خصوصية البيانات العربية</li>
+                    <li><strong>GDPR:</strong> نتبع مبادئ اللائحة العامة لحماية البيانات الأوروبية</li>
+                    <li><strong>CCPA:</strong> نحترم حقوق خصوصية المستهلك في كاليفورنيا</li>
+                </ul>
+                
+                <h3><i class="fas fa-file-contract"></i> الوثائق القانونية</h3>
+                <p>يمكنك الاطلاع على الوثائق القانونية الكاملة:</p>
+                
+                <div class="info-cards">
+                    <div class="info-card primary">
+                        <h4><i class="fas fa-file-contract"></i> شروط الاستخدام</h4>
+                        <p>الأحكام والشروط الكاملة لاستخدام التطبيق</p>
+                        <a href="terms.html" style="color: #1B5E20; font-weight: bold; text-decoration: none;">عرض الشروط →</a>
+                    </div>
+                    
+                    <div class="info-card secondary">
+                        <h4><i class="fas fa-info-circle"></i> عن التطبيق</h4>
+                        <p>معلومات شاملة عن التطبيق والمطور</p>
+                        <a href="about.html" style="color: #1565C0; font-weight: bold; text-decoration: none;">عن التطبيق →</a>
+                    </div>
+                    
+                    <div class="info-card tertiary">
+                        <h4><i class="fas fa-code"></i> صفحة المطور</h4>
+                        <p>معلومات التواصل مع المطور</p>
+                        <a href="developer.html" style="color: #EF6C00; font-weight: bold; text-decoration: none;">صفحة المطور →</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- الفوتر -->
+        <footer class="privacy-footer">
+            <div class="footer-content">
+                <h2 style="color: white; margin-bottom: 30px; font-size: 36px;">مرشد المزارع الذكي</h2>
+                <p style="opacity: 0.9; font-size: 20px; line-height: 1.7;">تطبيق زراعي ذكي - خصوصيتك هي أولويتنا الأولى</p>
+                
+                <div class="footer-links">
+                    <a href="../index.html" class="footer-link">
+                        <i class="fas fa-home"></i> الرئيسية
+                    </a>
+                    <a href="about.html" class="footer-link">
+                        <i class="fas fa-info-circle"></i> عن التطبيق
+                    </a>
+                    <a href="terms.html" class="footer-link">
+                        <i class="fas fa-file-contract"></i> شروط الاستخدام
+                    </a>
+                    <a href="points.html" class="footer-link">
+                        <i class="fas fa-coins"></i> نظام النقاط
+                    </a>
+                    <a href="mailto:mmasa197911282017@gmail.com" class="footer-link">
+                        <i class="fas fa-headset"></i> الدعم الفني
+                    </a>
+                </div>
+                
+                <div class="copyright">
+                    <p>© 2026 سياسة خصوصية مرشد المزارع الذكي</p>
+                    <p>جميع الحقوق محفوظة لمحمد مقبل عبدالله سيف - اليمن 🇾🇪</p>
+                    <p style="margin-top: 20px; font-size: 16px;">
+                        <i class="fas fa-shield-alt" style="color: #FFD700;"></i> 
+                        تم التطوير بأعلى معايير الأمان والخصوصية
+                        <i class="fas fa-shield-alt" style="color: #FFD700;"></i>
+                    </p>
+                    <p style="margin-top: 15px; font-size: 14px; opacity: 0.7;">
+                        الإصدار: 1.0.2026 | آخر تحديث: 01 فبراير 2026
+                    </p>
+                </div>
             </div>
-        </div>
-        
-        <!-- موافقتك -->
-        <div class="privacy-section">
-            <h2 class="section-title">موافقتك</h2>
-            <p>باستخدامك تطبيق "المرشد الزراعي الذكي"، فإنك تقر بأنك قد قرأت وفهمت ووافقت على هذه السياسة الخصوصية، بما في ذلك استخدام AdMob للإعلانات.</p>
-            <p>إذا كنت لا توافق على أي جزء من هذه السياسة، يرجى التوقف عن استخدام التطبيق.</p>
-        </div>
-        
-        <!-- أزرار التنقل -->
-        <div class="navigation-buttons">
-            <a href="index.html" class="action-btn">
-                <i class="fas fa-home"></i>
-                العودة للتطبيق الرئيسي
-            </a>
-            <a href="pages/about.html" class="action-btn" style="background: linear-gradient(135deg, #666, #888);">
-                <i class="fas fa-info-circle"></i>
-                عن التطبيق
-            </a>
-        </div>
-        
-        <!-- تذييل الصفحة -->
-        <footer class="page-footer">
-            <p>© 2026 المرشد الزراعي الذكي. جميع الحقوق محفوظة.</p>
-            <p><span class="yemen-flag">🇾🇪</span> تم التطوير في الجمهورية اليمنية - تعز</p>
-            <p>هذه السياسة سارية المفعول اعتباراً من يناير 2026.</p>
         </footer>
     </div>
     
-    <!-- جافاسكريبت للتأثيرات -->
     <script>
+        // ====== المعلومات الحقيقية ======
+        const DEVELOPER_INFO = {
+            name: 'محمد مقبل عبدالله سيف',
+            location: 'اليمن - تعز - ماوية - ذراح',
+            email: 'mmasa197911282017@gmail.com',
+            phone: '+967734750438',
+            website: 'https://Almoqblymmasas.netlify.app'
+        };
+        
+        // ====== التحميل الأولي ======
         document.addEventListener('DOMContentLoaded', function() {
-            // إضافة تأثيرات النقر على الأزرار
-            const buttons = document.querySelectorAll('.action-btn');
+            console.log('🛡️ صفحة سياسة الخصوصية محملة بنجاح');
+            console.log('👨‍💻 المطور:', DEVELOPER_INFO.name);
+            console.log('📍 الموقع:', DEVELOPER_INFO.location);
             
-            buttons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    // تأثير النقر
-                    this.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 150);
-                });
+            // إعداد تأثيرات التمرير
+            setupScrollEffects();
+            
+            // إعداد زر العودة
+            setupBackButton();
+            
+            // تحميل إحصائيات
+            loadPrivacyStats();
+            
+            // تاريخ اليوم
+            const today = new Date().toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
+            console.log('📅 تاريخ الزيارة:', today);
             
-            // إضافة تأثير التمرير السلس
-            const sections = document.querySelectorAll('.privacy-section');
+            // إظهار رسالة ترحيبية
+            setTimeout(() => {
+                console.log('🔐 حماية خصوصيتك هي أهم أولوياتنا');
+            }, 1000);
+        });
+        
+        // إعداد تأثيرات التمرير
+        function setupScrollEffects() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -671,11 +1187,200 @@
                     }
                 });
             }, {
-                threshold: 0.1
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
             });
             
-            sections.forEach(section => observer.observe(section));
-        });
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // تأثير زر العودة
+            window.addEventListener('scroll', function() {
+                const backBtn = document.querySelector('.back-btn');
+                if (window.scrollY > 300) {
+                    backBtn.style.opacity = '1';
+                    backBtn.style.visibility = 'visible';
+                } else {
+                    backBtn.style.opacity = '0';
+                    backBtn.style.visibility = 'hidden';
+                }
+            });
+        }
+        
+        // إعداد زر العودة
+        function setupBackButton() {
+            const backBtn = document.querySelector('.back-btn');
+            backBtn.addEventListener('click', function(e) {
+                // يمكن إضافة تأكيد إذا لزم الأمر
+                console.log('🏠 العودة للصفحة الرئيسية');
+            });
+        }
+        
+        // تحميل إحصائيات الخصوصية
+        function loadPrivacyStats() {
+            const stats = {
+                totalSections: document.querySelectorAll('.section').length,
+                dataTypes: document.querySelectorAll('.data-tag').length,
+                tables: document.querySelectorAll('.privacy-table').length,
+                lastUpdated: '01 فبراير 2026',
+                version: '1.0.2026'
+            };
+            
+            console.log('📊 إحصائيات الصفحة:', stats);
+            
+            // إضافة الإحصائيات في الكونسول
+            console.log('%c📈 إحصائيات سياسة الخصوصية:', 'color: #4CAF50; font-weight: bold; font-size: 16px;');
+            console.log('%c• الأقسام: ' + stats.totalSections, 'color: #666;');
+            console.log('%c• أنواع البيانات: ' + stats.dataTypes, 'color: #666;');
+            console.log('%c• الجداول: ' + stats.tables, 'color: #666;');
+            console.log('%c• آخر تحديث: ' + stats.lastUpdated, 'color: #666;');
+            console.log('%c• الإصدار: ' + stats.version, 'color: #666;');
+        }
+        
+        // ====== وظائف إضافية ======
+        
+        // طباعة السياسة
+        function printPrivacyPolicy() {
+            window.print();
+            console.log('🖨️ جاري طباعة سياسة الخصوصية...');
+        }
+        
+        // تحميل نسخة PDF
+        function downloadPrivacyPDF() {
+            showNotification('⏳ جاري تحضير نسخة PDF من سياسة الخصوصية...', 'info');
+            
+            setTimeout(() => {
+                const data = {
+                    title: 'سياسة خصوصية مرشد المزارع الذكي',
+                    content: document.querySelector('.privacy-content').innerText,
+                    developer: DEVELOPER_INFO,
+                    date: new Date().toISOString(),
+                    version: '1.0.2026'
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `سياسة-الخصوصية-مرشد-المزارع-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                
+                showNotification('📥 تم تحميل نسخة من سياسة الخصوصية', 'success');
+            }, 2000);
+        }
+        
+        // نسخ رابط السياسة
+        function copyPrivacyLink() {
+            const currentUrl = window.location.href;
+            navigator.clipboard.writeText(currentUrl)
+                .then(() => {
+                    showNotification('📋 تم نسخ رابط سياسة الخصوصية', 'success');
+                })
+                .catch(err => {
+                    showNotification('❌ فشل نسخ الرابط', 'error');
+                });
+        }
+        
+        // تفعيل الوضع المظلم للصفحة
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('privacy_dark_mode', isDark);
+            
+            showNotification(isDark ? '🌙 تم تفعيل الوضع الداكن' : '☀️ تم إيقاف الوضع الداكن');
+        }
+        
+        // البحث في السياسة
+        function searchInPrivacy() {
+            const searchTerm = prompt('🔍 ابحث في سياسة الخصوصية:');
+            if (searchTerm) {
+                const content = document.querySelector('.privacy-content').innerText;
+                if (content.includes(searchTerm)) {
+                    showNotification(`✅ تم العثور على "${searchTerm}" في السياسة`, 'success');
+                    
+                    // تمييز النتائج (يمكن تطويره)
+                    highlightSearchResults(searchTerm);
+                } else {
+                    showNotification(`❌ لم يتم العثور على "${searchTerm}"`, 'error');
+                }
+            }
+        }
+        
+        // تمييز نتائج البحث
+        function highlightSearchResults(term) {
+            const elements = document.querySelectorAll('.section p, .section li');
+            elements.forEach(element => {
+                const html = element.innerHTML;
+                const regex = new RegExp(term, 'gi');
+                const highlighted = html.replace(regex, match => `<mark style="background: yellow; padding: 2px;">${match}</mark>`);
+                element.innerHTML = highlighted;
+            });
+        }
+        
+        // عرض الإشعارات
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#f44336' : type === 'success' ? '#4CAF50' : '#2196F3'};
+                color: white;
+                padding: 18px 30px;
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideInRight 0.4s ease;
+                font-family: 'Tajawal';
+                max-width: 450px;
+                text-align: right;
+                font-size: 16px;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'}" style="font-size: 20px;"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.4s ease';
+                setTimeout(() => {
+                    notification.remove();
+                }, 400);
+            }, 4000);
+            
+            // إضافة أنيميشن CSS إذا لم تكن موجودة
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOutRight {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // رسالة ترحيبية في الكونسول
+        setTimeout(() => {
+            console.log('%c🛡️ معلومات إضافية:', 'color: #2E7D32; font-weight: bold; font-size: 14px;');
+            console.log('%c• printPrivacyPolicy() - لطباعة السياسة', 'color: #666;');
+            console.log('%c• downloadPrivacyPDF() - لتحميل نسخة', 'color: #666;');
+            console.log('%c• copyPrivacyLink() - نسخ الرابط', 'color: #666;');
+            console.log('%c• searchInPrivacy() - البحث في السياسة', 'color: #666;');
+            console.log('%c• toggleDarkMode() - الوضع الداكن', 'color: #666;');
+        }, 2000);
     </script>
 </body>
 </html>
